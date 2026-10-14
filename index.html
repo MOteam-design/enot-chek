@@ -1,0 +1,1672 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Академия Енота Чека</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Caveat:wght@700&display=swap">
+<style>
+/* Layout: one centred column of "case file" cards with comic ink shadows; home = grid of trainer cards */
+:root{
+  --paper:#FFF8EC; --card:#FFFDF8; --ink:#1F2A44; --muted:#55607A; --line:#1F2A44; --shadow:#1F2A44;
+  --accent:#F07F2E; --accent-ink:#B9530F; --on-accent:#1F2A44; --tint:#EAF2FB;
+  --good:#1E7A4C; --good-bg:#E3F4EA; --bad:#B42318; --bad-bg:#FBE7E4;
+  --display:'Rubik', Arial, sans-serif; --body:'Nunito', Verdana, sans-serif; --hand:'Caveat', 'Brush Script MT', cursive;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#131A2B; --card:#1C2540; --ink:#F2ECE0; --muted:#AEB8CC; --line:#8C98B3; --shadow:#070B16;
+  --accent:#F28C45; --accent-ink:#FFB47A; --on-accent:#1F2A44; --tint:#22304F;
+  --good:#6FD39C; --good-bg:#17382A; --bad:#FF8F85; --bad-bg:#3D1F22; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --paper:#131A2B; --card:#1C2540; --ink:#F2ECE0; --muted:#AEB8CC; --line:#8C98B3; --shadow:#070B16;
+  --accent:#F28C45; --accent-ink:#FFB47A; --on-accent:#1F2A44; --tint:#22304F;
+  --good:#6FD39C; --good-bg:#17382A; --bad:#FF8F85; --bad-bg:#3D1F22; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+header.top{display:flex;align-items:center;gap:12px;padding-block:16px;border-bottom:2px solid var(--line)}
+header.top .name{font-family:var(--display);font-weight:800;font-size:20px;flex:1;min-width:0}
+header.top svg{width:52px;height:52px;flex:none}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,6vw,44px);line-height:1.1;font-weight:800}
+h2{font-size:clamp(21px,4vw,26px);line-height:1.25;font-weight:700}
+h3{font-size:20px;font-weight:700}
+p{margin:0}
+.eyebrow{font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink)}
+.lead{font-size:18px;color:var(--muted);max-width:62ch}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{background:var(--accent);color:var(--on-accent);border:3px solid var(--line);border-radius:14px;padding:12px 22px;font-weight:800;box-shadow:4px 4px 0 var(--shadow);transition:transform .08s}
+.btn:active:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 var(--shadow)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.back,.link{background:none;border:none;padding:6px 0;color:var(--accent-ink);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.card{background:var(--card);border:3px solid var(--line);border-radius:20px;box-shadow:6px 6px 0 var(--shadow);padding:22px}
+.final{display:flex;gap:18px;align-items:center;text-align:left;width:100%;background:var(--ink);color:var(--paper);border:3px solid var(--line);border-radius:20px;box-shadow:6px 6px 0 var(--accent);padding:22px}
+.final h2{color:var(--paper)}
+.final p{color:var(--paper);opacity:.85}
+.final .go{margin-left:auto;font-family:var(--display);font-weight:800;font-size:28px;color:var(--accent)}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.cat{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--card);border:3px solid var(--line);border-radius:18px;box-shadow:5px 5px 0 var(--shadow);padding:18px;min-width:0}
+.cat:hover{background:var(--tint)}
+.cat .meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:14px;font-weight:700;color:var(--muted)}
+.cat p{color:var(--muted);font-size:15px}
+.best{color:var(--good);font-weight:800}
+.note{font-size:14px;color:var(--muted)}
+.tip{display:flex;gap:14px;align-items:center;background:var(--tint);border-radius:18px;padding:14px 18px}
+.tip svg{width:64px;height:64px;flex:none}
+.hand{font-family:var(--hand);font-size:26px;line-height:1.15}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.mode{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.mode p{color:var(--muted);flex:1}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.qcount{font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{height:12px;border:2px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}
+.bar span{display:block;height:100%;background:var(--accent)}
+.qcard{display:flex;flex-direction:column;gap:16px}
+.ctx{margin:0;background:var(--tint);border-radius:14px;padding:14px 18px;font-size:19px;font-weight:700}
+.hint{color:var(--muted);font-size:15px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 16px;font-weight:600}
+.opt:hover:not(:disabled){background:var(--tint)}
+.opt.sel{background:var(--tint);box-shadow:inset 0 0 0 2px var(--accent)}
+.opt.right{background:var(--good-bg);border-color:var(--good);color:var(--ink)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.tf{flex-direction:row;flex-wrap:wrap}
+.tf .opt{flex:1;min-width:150px;text-align:center;font-family:var(--display);font-size:20px}
+.chosen{margin:0;padding-left:28px;display:flex;flex-direction:column;gap:8px;min-height:24px}
+.chosen li{padding:8px 12px;border:2px dashed var(--line);border-radius:12px;font-weight:600}
+.chosen li.right{border-style:solid;border-color:var(--good);background:var(--good-bg)}
+.chosen li.wrong{border-style:solid;border-color:var(--bad);background:var(--bad-bg)}
+.pool{display:flex;flex-wrap:wrap;gap:10px}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-weight:600;text-align:left}
+.chip:disabled{opacity:.3;cursor:default}
+.sort{display:flex;flex-direction:column;gap:10px}
+.srow{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:2px solid var(--line);border-radius:14px;padding:10px 14px;background:var(--card)}
+.srow p{flex:1;min-width:180px;font-weight:600}
+.srow.right{background:var(--good-bg);border-color:var(--good)}
+.srow.wrong{background:var(--bad-bg);border-color:var(--bad)}
+.seg{display:flex;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{background:var(--card);border:none;padding:8px 14px;font-weight:800}
+.seg button+button{border-left:2px solid var(--line)}
+.seg button.on{background:var(--accent);color:var(--on-accent)}
+.grid{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:4px;max-width:440px;width:100%;user-select:none}
+.cell{aspect-ratio:1;border:2px solid var(--line);border-radius:8px;background:var(--card);font-family:var(--display);font-weight:700;font-size:clamp(13px,3.6vw,19px);padding:0;display:flex;align-items:center;justify-content:center}
+.cell.pick{background:var(--accent);color:var(--on-accent)}
+.cell.found{background:var(--good-bg);border-color:var(--good)}
+.cell.miss{background:var(--bad-bg);border-color:var(--bad)}
+.cell.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.wlist{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.wlist li{border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:800;font-size:15px}
+.wlist li.done{background:var(--good-bg);border-color:var(--good);text-decoration:line-through}
+.fb{border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:6px}
+.fb.good{background:var(--good-bg);border:2px solid var(--good)}
+.fb.bad{background:var(--bad-bg);border:2px solid var(--bad)}
+.fb-title{font-family:var(--display);font-weight:800;font-size:20px}
+.qnav{display:flex;justify-content:flex-end}
+.score{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.big{font-family:var(--display);font-weight:800;font-size:clamp(48px,12vw,72px);line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:.4em;color:var(--muted)}
+.stats{display:flex;flex-direction:column;gap:6px;font-weight:700}
+.stats .ok{color:var(--good)} .stats .no{color:var(--bad)}
+.mark{display:inline-block;background:var(--accent);color:var(--on-accent);border:2px solid var(--line);border-radius:999px;padding:6px 16px;font-family:var(--display);font-weight:800}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:2px solid var(--tint)}
+th{font-family:var(--display)}
+td.num{text-align:right;white-space:nowrap}
+.mist{display:flex;flex-direction:column;gap:14px}
+.mitem{border-left:6px solid var(--bad);background:var(--card);border-radius:0 14px 14px 0;padding:12px 16px;display:flex;flex-direction:column;gap:6px;border-top:2px solid var(--tint);border-bottom:2px solid var(--tint);border-right:2px solid var(--tint)}
+.mitem .lbl{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.mitem .yours{color:var(--bad);font-weight:700}
+.mitem .rightans{color:var(--good);font-weight:700}
+.actions{display:flex;gap:14px;flex-wrap:wrap}
+.ctx{white-space:pre-line}
+.paw{width:1.1em;height:1.1em;fill:currentColor;flex:none;vertical-align:-0.15em}
+.hud{display:flex;align-items:center;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:800;color:var(--accent-ink)}
+.hud-rank{color:var(--muted);font-weight:700;font-size:14px}
+@media (max-width:560px){ .hud-rank{display:none} header.top .name{font-size:16px} }
+.plus{color:var(--good);display:inline-flex;align-items:center;gap:4px;font-size:18px;margin-left:8px}
+.pawline{display:flex;align-items:center;gap:10px;font-weight:600}
+.pawline .paw{color:var(--accent-ink);width:32px;height:32px}
+.pawbig{display:flex;align-items:center;gap:10px;color:var(--accent-ink)}
+.lessons{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.lesson{display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 14px;font-weight:700;min-width:0}
+.lesson:hover{background:var(--tint)}
+.lesson .ln{flex:none;width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800}
+.lesson .lt{flex:1;min-width:0}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.badge{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:2px dashed var(--line);border-radius:16px;padding:14px;opacity:.55}
+.badge.on{opacity:1;border-style:solid;box-shadow:4px 4px 0 var(--shadow)}
+.badge h3{font-size:17px}
+.badge p{font-size:14px;color:var(--muted)}
+.badge .bstate{font-weight:800;color:var(--muted)}
+.badge.on .bstate{color:var(--good)}
+.medal{flex:none;width:52px;height:52px;border-radius:50%;background:var(--tint);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.badge.on .medal{background:var(--accent);color:var(--on-accent)}
+.medal .paw{width:28px;height:28px}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column;gap:8px;z-index:10;width:max-content;max-width:calc(100% - 32px)}
+.toast-item{display:flex;align-items:center;gap:12px;background:var(--ink);color:var(--paper);border:2px solid var(--accent);border-radius:14px;padding:10px 16px;box-shadow:4px 4px 0 var(--accent);animation:pop .3s ease-out}
+.toast-item .paw{color:var(--accent);width:28px;height:28px}
+@keyframes pop{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+body.wide .wrap{max-width:none}
+#app{width:100%}
+.course{display:grid;grid-template-columns:270px minmax(0,1fr);gap:32px;align-items:start}
+.course .stage{max-width:980px;width:100%;justify-self:center}
+.navtoggle{display:none}
+.side-hide{align-self:flex-start;font-size:14px}
+@media (min-width:901px){
+  body.side-collapsed .course{grid-template-columns:minmax(0,1fr)}
+  body.side-collapsed .side{display:none}
+  body.side-collapsed .navtoggle{display:inline-flex;justify-self:start}
+}
+.side{position:sticky;top:calc(12px + env(safe-area-inset-top, 0px));max-height:calc(100vh - 24px);overflow:auto;background:var(--card);border:3px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.sidehead{display:flex;flex-direction:column;gap:6px}
+.timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.tl-btn{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:none;padding:8px;border-radius:12px}
+.tl-btn:hover,.tl.active>.tl-btn{background:var(--tint)}
+.tl-dot{flex:none;width:34px;height:34px;border-radius:50%;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;background:var(--card)}
+.tl.done .tl-dot{background:var(--good);border-color:var(--good);color:var(--card)}
+.tl.active .tl-dot{background:var(--accent);color:var(--on-accent)}
+.tl.lock{opacity:.5}
+.tl-txt{display:flex;flex-direction:column;min-width:0;font-size:14px;line-height:1.3}
+.tl-txt span{color:var(--muted)}
+.tl-steps{list-style:none;margin:2px 0 8px 24px;padding-left:12px;border-left:3px solid var(--tint);display:flex;flex-direction:column;gap:2px}
+.tl-step{display:flex;gap:8px;align-items:center;background:none;border:none;text-align:left;padding:5px 8px;border-radius:8px;font-size:14px;width:100%}
+.tl-step:hover{background:var(--tint)}
+.tl-step.cur{background:var(--accent);color:var(--on-accent);font-weight:800}
+.tl-step.done:not(.cur){color:var(--good)}
+.ico{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;display:inline-block}
+.tl-dot .ico{width:18px;height:18px}
+.sidefoot{display:flex;flex-direction:column;gap:6px;align-items:flex-start;border-top:2px solid var(--tint);padding-top:10px}
+.stage{display:flex;flex-direction:column;gap:16px;min-width:0}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{width:30px;height:12px;border-radius:999px;border:2px solid var(--line);background:var(--card);padding:0}
+.dot.done{background:var(--good);border-color:var(--good)}
+.dot.cur{background:var(--accent)}
+.step{display:flex;flex-direction:column;gap:16px}
+.steptitle{font-size:clamp(26px,5vw,38px)}
+.bigq{font-size:20px;font-weight:700}
+.prose{display:flex;flex-direction:column;gap:12px;font-size:18px;min-width:0}
+.prose ul,.prose ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.tile{background:var(--tint);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.tile .big{font-family:var(--display);font-size:22px;color:var(--accent-ink)}
+.tag{align-self:flex-start;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:2px 10px;border-radius:999px;border:2px solid var(--line);background:var(--card)}
+.tag.good{background:var(--good-bg);border-color:var(--good)}
+.tag.bad{background:var(--bad-bg);border-color:var(--bad)}
+.src{color:var(--muted);font-size:14px}
+.bignum{font-family:var(--display);font-weight:800;font-size:clamp(24px,5vw,34px);color:var(--accent-ink)}
+.people{width:100%;max-width:440px;height:auto}
+.motto{font-family:var(--hand);font-size:28px;line-height:1.15}
+.hero{display:flex;gap:18px;align-items:flex-start}
+.hero>svg{width:120px;height:120px;flex:none}
+@media (max-width:560px){ .hero{flex-direction:column} }
+.chain{display:flex;flex-direction:column;gap:8px}
+.concl{background:var(--accent);color:var(--on-accent);font-weight:800}
+.cz{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;font-weight:700}
+.cz .top{grid-column:1 / -1;background:var(--accent);color:var(--on-accent)}
+.cz .no{grid-column:1 / -1;background:var(--bad-bg);border:2px dashed var(--bad);color:var(--bad)}
+.comic{display:flex;flex-direction:column;gap:12px}
+.bubble{display:flex;gap:10px;align-items:flex-end;max-width:92%}
+.bubble.r{align-self:flex-end;flex-direction:row-reverse}
+.bubble .ava svg{width:64px;height:64px;display:block}
+.bubble>div{background:var(--tint);border:2px solid var(--line);border-radius:18px;padding:10px 14px;min-width:0}
+.bubble.r>div{background:var(--card);box-shadow:4px 4px 0 var(--accent)}
+.bubble:not([hidden]){animation:pop .3s ease-out}
+.who{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.bubble.r .who{color:var(--accent-ink)}
+.msg{background:var(--tint);border-radius:18px;padding:16px;font-size:18px;display:flex;flex-direction:column;gap:6px}
+.reveal{background:var(--card);border:2px solid var(--good);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.stepnav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.checks{display:flex;flex-direction:column;gap:10px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:17px}
+.chk input{width:22px;height:22px;flex:none;accent-color:var(--accent)}
+.chk.small{font-size:14px;color:var(--muted)}
+.chk.small input{width:18px;height:18px}
+.field{display:flex;flex-direction:column;gap:6px;font-weight:700}
+.field input{font:inherit;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);max-width:420px}
+.cert{border:6px double var(--accent-ink);border-radius:20px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center;background:var(--card)}
+.cert>svg{width:120px;height:120px}
+.certname{font-family:var(--hand);font-size:44px;line-height:1.1}
+.course-card{box-shadow:6px 6px 0 var(--accent)}
+.codebox{font:14px/1.4 ui-monospace, Consolas, monospace;width:100%;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);resize:vertical}
+.prof.on{background:var(--tint)}
+.form{display:flex;flex-direction:column;gap:14px;max-width:560px}
+.err{color:var(--bad);font-weight:700;min-height:1.2em}
+.pc-good{color:var(--good);font-weight:800}
+.pc-bad{color:var(--bad);font-weight:800}
+.pc-none{color:var(--muted)}
+.jt th,.jt td{white-space:nowrap}
+.course-card .bar{border-color:var(--paper);background:transparent}
+@media (max-width:900px){
+  .course{grid-template-columns:minmax(0,1fr)}
+  .navtoggle{display:inline-flex;justify-self:start}
+  .side{position:fixed;left:0;top:0;bottom:0;width:min(330px,86vw);max-height:none;border-radius:0 20px 20px 0;z-index:30;transform:translateX(-105%);transition:transform .2s;padding-top:calc(18px + env(safe-area-inset-top, 0px));padding-left:max(18px, env(safe-area-inset-left, 0px));padding-bottom:calc(18px + env(safe-area-inset-bottom, 0px))}
+  .side.open{transform:none}
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:25}
+}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span id="logo"></span>
+    <span class="name">Академия Енота Чека</span>
+    <button class="hud" id="hud" type="button" aria-label="Мои лапки и ачивки"></button>
+    <button class="back" id="home-btn" type="button">Главная</button>
+  </header>
+  <main id="app" class="wrap" aria-live="polite"></main>
+</div>
+
+<script>
+const RACCOON = `<svg viewBox="0 0 420 420" aria-hidden="true"><defs><radialGradient id="rcHead" cx="0.4" cy="0.32" r="0.75"><stop offset="0" stop-color="#C9CED6"/><stop offset="0.55" stop-color="#99A0AB"/><stop offset="1" stop-color="#5F6673"/></radialGradient><radialGradient id="rcEar" cx="0.45" cy="0.35" r="0.7"><stop offset="0" stop-color="#8C93A0"/><stop offset="1" stop-color="#474E5C"/></radialGradient><radialGradient id="rcInner" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#FBDCC6"/><stop offset="1" stop-color="#D49A78"/></radialGradient><radialGradient id="rcMuzzle" cx="0.45" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.6" stop-color="#F0E8DB"/><stop offset="1" stop-color="#CFC3B1"/></radialGradient><radialGradient id="rcMask" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stop-color="#4B5266"/><stop offset="1" stop-color="#1E2331"/></radialGradient><radialGradient id="rcEye" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D5DCE5"/></radialGradient><radialGradient id="rcIris" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#8A5E36"/><stop offset="1" stop-color="#2A1A0E"/></radialGradient><radialGradient id="rcNose" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#5A6480"/><stop offset="1" stop-color="#121826"/></radialGradient><linearGradient id="rcScarf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAD6B"/><stop offset="1" stop-color="#D9621A"/></linearGradient><linearGradient id="rcHandle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#B9530F"/></linearGradient><radialGradient id="rcLens" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.95"/><stop offset="0.45" stop-color="#CFE6F7" stop-opacity="0.7"/><stop offset="1" stop-color="#6FA3D4" stop-opacity="0.6"/></radialGradient><linearGradient id="rcRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B6680"/><stop offset="1" stop-color="#151B2B"/></linearGradient></defs><ellipse cx="200" cy="402" rx="140" ry="12" fill="#1F2A44" opacity="0.18"/><ellipse cx="95" cy="95" rx="48" ry="58" fill="url(#rcEar)" transform="rotate(-20 95 95)"/><ellipse cx="97" cy="104" rx="26" ry="34" fill="url(#rcInner)" transform="rotate(-20 97 104)"/><ellipse cx="285" cy="95" rx="48" ry="58" fill="url(#rcEar)" transform="rotate(20 285 95)"/><ellipse cx="283" cy="104" rx="26" ry="34" fill="url(#rcInner)" transform="rotate(20 283 104)"/><path d="M60 238 L20 256 L58 268 L28 296 L84 286 Z" fill="#6E7582"/><path d="M320 238 L360 256 L322 268 L352 296 L296 286 Z" fill="#6E7582"/><ellipse cx="190" cy="205" rx="150" ry="128" fill="url(#rcHead)"/><ellipse cx="135" cy="125" rx="68" ry="30" fill="#FFFFFF" opacity="0.25" transform="rotate(-20 135 125)"/><ellipse cx="190" cy="262" rx="108" ry="78" fill="url(#rcMuzzle)"/><ellipse cx="190" cy="118" rx="16" ry="44" fill="#4E5563"/><path d="M48 200 Q110 140 190 185 Q270 140 332 200 Q300 252 238 236 Q190 222 142 236 Q80 252 48 200 Z" fill="url(#rcMask)"/><path d="M78 192 Q118 160 166 178" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="142" cy="200" r="26" fill="url(#rcEye)"/><circle cx="238" cy="200" r="26" fill="url(#rcEye)"/><circle cx="146" cy="204" r="15" fill="url(#rcIris)"/><circle cx="242" cy="204" r="15" fill="url(#rcIris)"/><circle cx="146" cy="205" r="7" fill="#0E1320"/><circle cx="242" cy="205" r="7" fill="#0E1320"/><circle cx="152" cy="197" r="5" fill="#FFFFFF"/><circle cx="248" cy="197" r="5" fill="#FFFFFF"/><circle cx="141" cy="211" r="2.5" fill="#FFFFFF" opacity="0.8"/><circle cx="237" cy="211" r="2.5" fill="#FFFFFF" opacity="0.8"/><path d="M212 158 Q240 140 272 156" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M112 168 Q140 162 168 170" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><ellipse cx="190" cy="262" rx="22" ry="16" fill="url(#rcNose)"/><ellipse cx="183" cy="256" rx="7" ry="4" fill="#FFFFFF" opacity="0.6"/><path d="M168 290 Q190 306 214 288" stroke="#1F2A44" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M150 346 L130 392 L156 396 L174 346 Z" fill="url(#rcScarf)"/><path d="M110 318 Q190 350 270 318 L262 345 Q190 372 118 345 Z" fill="url(#rcScarf)"/><path d="M124 334 Q190 360 256 334" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="345" y1="345" x2="400" y2="400" stroke="url(#rcHandle)" stroke-width="22" stroke-linecap="round"/><circle cx="315" cy="315" r="52" fill="url(#rcLens)" stroke="url(#rcRim)" stroke-width="14"/><path d="M284 296 Q292 282 308 278" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"/></svg>`;
+
+const AL = ['Всегда', 'Иногда', 'Никогда'];
+
+const VAL3 = ['Истинное высказывание', 'Ложное высказывание', 'Не высказывание'];
+const DI = ['Дедукция: от общего правила к частному случаю', 'Индукция: от примеров к общему правилу'];
+const FOM = ['Факт', 'Мнение', 'Ложный факт'];
+const TRAPS = ['Все так делают', 'Переход на личности', 'Или — или', 'После — значит из-за', 'Снежный ком', 'Соломенное чучело'];
+const CZ = ['Это причина', 'Это совпадение'];
+
+const CATS = [
+{ id:'logic', title:'Азбука логики', kind:'choice',
+  short:'Высказывания, посылки и выводы, дедукция и индукция, «если…, то…».',
+  intro:'Логика — наука о правильных рассуждениях. Здесь задания на высказывания, посылки и выводы, дедукцию и индукцию и ловушку «если…, то…».',
+  tip:'Выводу можно доверять, только если посылки истинны и вывод действительно из них следует.',
+  items:[
+  {tag:'st', ctx:'«Москва — столица России».', q:'Что это?', opts:VAL3, fixed:true, a:0, ex:'Про это можно сказать «истинно» — и это правда.'},
+  {tag:'st', ctx:'«Кит — это рыба».', q:'Что это?', opts:VAL3, fixed:true, a:1, ex:'Это высказывание, но ложное: кит — млекопитающее.'},
+  {tag:'st', ctx:'«Закрой, пожалуйста, дверь».', q:'Что это?', opts:VAL3, fixed:true, a:2, ex:'Просьба не бывает истинной или ложной.'},
+  {tag:'st', ctx:'«Сколько тебе лет?»', q:'Что это?', opts:VAL3, fixed:true, a:2, ex:'Вопрос ничего не утверждает, поэтому это не высказывание.'},
+  {tag:'st', ctx:'«5 больше 3».', q:'Что это?', opts:VAL3, fixed:true, a:0, ex:'Это верное утверждение о числах.'},
+  {tag:'st', ctx:'«В неделе восемь дней».', q:'Что это?', opts:VAL3, fixed:true, a:1, ex:'Это высказывание, но ложное: в неделе семь дней.'},
+  {tag:'st', ctx:'«Давай дружить!»', q:'Что это?', opts:VAL3, fixed:true, a:2, ex:'Это предложение дружить, оно не бывает истинным или ложным.'},
+  {tag:'st', ctx:'«Пресная вода замерзает при 0 °C».', q:'Что это?', opts:VAL3, fixed:true, a:0, ex:'Это истинно для обычной пресной воды при нормальном давлении.'},
+  {tag:'arg', ctx:'«Все птицы откладывают яйца. Воробей — птица. Значит, воробей откладывает яйца».', q:'Что здесь вывод?', opts:['Воробей откладывает яйца','Все птицы откладывают яйца','Воробей — птица'], a:0, ex:'Вывод идёт после слова «значит».'},
+  {tag:'arg', ctx:'«Сегодня суббота, а по субботам школа закрыта. Поэтому уроков не будет».', q:'Что здесь посылки?', opts:['«Сегодня суббота» и «по субботам школа закрыта»','«Уроков не будет»','Здесь нет посылок'], a:0, ex:'Посылки — то, на что опирается вывод «уроков не будет».'},
+  {tag:'arg', q:'Какое слово обычно стоит перед выводом?', opts:['Значит','Потому что','Так как'], a:0, ex:'«Потому что» и «так как» обычно вводят посылку.'},
+  {tag:'arg', q:'Какие слова обычно вводят посылку (довод)?', opts:['Потому что, так как','Следовательно, поэтому','Значит, итак'], a:0, ex:'«Следовательно», «поэтому», «значит» обычно вводят вывод.'},
+  {tag:'arg', ctx:'«Я возьму зонт, потому что по прогнозу будет дождь».', q:'Что здесь вывод (решение)?', opts:['Я возьму зонт','По прогнозу будет дождь','Здесь нет вывода'], a:0, ex:'Довод — прогноз дождя, вывод — взять зонт.'},
+  {tag:'arg', ctx:'«Все жители города Солнечного весёлые. Вася весёлый. Значит, Вася живёт в Солнечном».', q:'Следует ли вывод из посылок?', opts:['Нет: весёлые люди живут и в других городах','Да, вывод точный','Да, если Вася улыбается'], a:0, ex:'Из посылок не следует, что весёлые люди живут только в Солнечном.'},
+  {tag:'arg', ctx:'«Все квадраты — прямоугольники. Эта фигура — квадрат. Значит, …»', q:'Какой вывод следует?', opts:['Эта фигура — прямоугольник','Эта фигура — круг','Все прямоугольники — квадраты'], a:0, ex:'Вывод применяет общее правило к этой фигуре.'},
+  {tag:'val', ctx:'«Все кошки умеют летать. Мурка — кошка. Значит, Мурка умеет летать».', q:'Что не так?', opts:['Первая посылка ложная, поэтому и вывод ложный','Вывод не следует из посылок','Всё правильно'], a:0, ex:'Рассуждение построено по правилам, но кирпич «все кошки летают» — ложный.'},
+  {tag:'val', ctx:'«Все ученики нашей школы носят форму. Аня носит форму. Значит, Аня учится в нашей школе».', q:'Что не так?', opts:['Вывод не следует: форму носят и в других школах','Посылки ложные','Всё правильно'], a:0, ex:'Посылки могут быть верными, но вывод из них не следует.'},
+  {tag:'val', q:'Когда выводу можно доверять?', opts:['Когда посылки истинны и вывод действительно из них следует','Когда вывод звучит уверенно','Когда с ним согласны друзья'], a:0, ex:'Нужны оба условия сразу.'},
+  {tag:'val', ctx:'«Все планеты Солнечной системы вращаются вокруг Солнца. Земля — планета Солнечной системы. Значит, Земля вращается вокруг Солнца».', q:'Это рассуждение…', opts:['Надёжное: посылки истинны и вывод следует','Ненадёжное: посылка ложная','Нелогичное'], a:0, ex:'Здесь всё в порядке: и кирпичи, и дом.'},
+  {tag:'val', ctx:'«Если съесть морковку, будешь видеть в темноте как кошка. Я съел морковку. Значит, я вижу в темноте как кошка».', q:'Что не так?', opts:['Первая посылка — миф, поэтому вывод ложный','Вывод не следует из посылок','Всё правильно'], a:0, ex:'Морковь полезна, но кошачьего ночного зрения не даёт.'},
+  {tag:'ind', ctx:'«Все металлы проводят электрический ток. Медь — металл. Значит, медь проводит ток».', q:'Какой это способ рассуждать?', opts:DI, fixed:true, a:0, ex:'От общего правила к частному случаю — дедукция.'},
+  {tag:'ind', ctx:'«Мои три кота любят рыбу. Значит, все коты любят рыбу».', q:'Какой это способ рассуждать?', opts:DI, fixed:true, a:1, ex:'Вывод сделан по нескольким примерам — это индукция, и он может не подтвердиться.'},
+  {tag:'ind', ctx:'«Я видел 100 белых лебедей. Значит, все лебеди белые».', q:'Этот вывод…', opts:['Только вероятный: в Австралии живут чёрные лебеди','Точный и бесспорный','Невозможный'], a:0, ex:'Один новый пример может опровергнуть правило, выведенное индукцией.'},
+  {tag:'ind', q:'Какой вывод надёжнее, если посылки верны?', opts:['Вывод дедукции','Вывод индукции','Они одинаково надёжны'], a:0, ex:'Дедукция при верных посылках даёт точный вывод, индукция — вероятный.'},
+  {tag:'ind', ctx:'«Три понедельника подряд у нас была контрольная. Значит, контрольные всегда по понедельникам».', q:'Что можно сказать об этом выводе?', opts:['Это индукция, вывод только вероятный','Это дедукция, вывод точный','Это не рассуждение'], a:0, ex:'Три примера — мало для общего правила.'},
+  {tag:'if', ctx:'«Если идёт дождь, то асфальт мокрый. Асфальт мокрый».', q:'Можно ли точно сказать, что шёл дождь?', opts:['Нет: могла проехать поливальная машина','Да, точно','Да, если сейчас лето'], a:0, ex:'«Если А, то Б» не значит «если Б, то А».'},
+  {tag:'if', ctx:'«Если идёт дождь, то асфальт мокрый. Идёт дождь».', q:'Что можно сказать точно?', opts:['Асфальт мокрый','Скоро выйдет солнце','Ничего нельзя сказать'], a:0, ex:'Это правильный ход: от А к Б.'},
+  {tag:'if', ctx:'«Каждый пятиклассник — школьник».', q:'Верно ли, что каждый школьник — пятиклассник?', opts:['Нет','Да'], fixed:true, a:0, ex:'Школьники бывают и из других классов.'},
+  {tag:'if', ctx:'«Если человек — футболист, то он умеет бить по мячу. Петя умеет бить по мячу».', q:'Петя точно футболист?', opts:['Нет: бить по мячу умеют многие','Да, точно'], fixed:true, a:0, ex:'Ловушка обратного хода.'},
+  {tag:'if', ctx:'Реклама: «Успешные люди пьют кофе "Бодрость"».', q:'Значит ли это, что кофе "Бодрость" сделает тебя успешным?', opts:['Нет: это ловушка обратного хода','Да, это логично'], fixed:true, a:0, ex:'Даже если успешные люди его пьют, из этого не следует, что кофе делает успешным.'},
+  {tag:'if', ctx:'«Если число делится на 4, то оно чётное. Число 6 чётное».', q:'Делится ли 6 на 4?', opts:['Нет: чётное число не обязательно делится на 4','Да, раз оно чётное'], fixed:true, a:0, ex:'Проверка: 6 : 4 = 1,5 — не делится нацело.'}
+]},
+{ id:'factopinion', title:'Факт или мнение', kind:'choice',
+  short:'Отличаем проверяемые факты от мнений и замечаем ложные «факты».',
+  intro:'Факт можно проверить. Мнение — чья-то оценка или вкус. А «ложный факт» — утверждение, которое можно проверить, и проверка покажет, что оно неверно.',
+  tip:'Главный вопрос: «Можно ли это проверить?» Если да — проверь, правда ли это.',
+  items:[
+  {ctx:'«В году 12 месяцев».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это легко проверить по календарю.'},
+  {ctx:'«Зима — самое красивое время года».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'«Самое красивое» — оценка, у каждого своя.'},
+  {ctx:'«Эверест — самая высокая гора над уровнем моря».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Высоту гор измеряют, это проверяемо.'},
+  {ctx:'«Футбол — самая интересная игра».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Интерес — дело вкуса.'},
+  {ctx:'«Солнце вращается вокруг Земли».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Проверяемо — и неверно: Земля вращается вокруг Солнца.'},
+  {ctx:'«В неделе семь дней».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это легко проверить.'},
+  {ctx:'«Математика — скучный предмет».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Кому-то скучно, а кому-то очень интересно.'},
+  {ctx:'«Пауки — это насекомые».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'У пауков восемь ног, а у насекомых шесть. Пауки — паукообразные.'},
+  {ctx:'«Вода состоит из водорода и кислорода».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это установлено химиками и многократно проверено.'},
+  {ctx:'«Этот мультфильм самый смешной».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'«Самый смешной» — оценка.'},
+  {ctx:'«Москва — столица России».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это записано в Конституции.'},
+  {ctx:'«Летучие мыши слепые».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Проверяемо — и неверно: летучие мыши видят.'},
+  {ctx:'«Пицца вкуснее супа».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'О вкусах спорят, но вкус доказать нельзя.'},
+  {ctx:'«Луна светится сама».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Неверно: Луна отражает свет Солнца.'},
+  {ctx:'«Сахара — пустыня в Африке».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это можно проверить по карте.'},
+  {ctx:'«Кошки лучше собак».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'«Лучше» — это оценка.'},
+  {ctx:'«Человек использует только 10% мозга».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Это известный миф: работают все отделы мозга.'},
+  {ctx:'«Синий — самый красивый цвет».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Любимый цвет у всех разный.'},
+  {ctx:'«Сердце человека находится в грудной клетке».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это известно из анатомии.'},
+  {ctx:'«Пингвины умеют летать».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Неверно: пингвины не летают, зато отлично плавают.'},
+  {ctx:'«Электронные книги удобнее бумажных».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Кому-то удобнее одно, кому-то — другое.'},
+  {ctx:'«Лучше всего учить уроки утром».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Кому-то удобнее утром, кому-то — днём.'},
+  {q:'Какое из утверждений — мнение?', opts:['Этот фильм слишком длинный','Фильм идёт 2 часа','Фильм вышел в прокат в прошлом году'], a:0, ex:'«Слишком длинный» — оценка, а длительность можно проверить.'},
+  {q:'Какое из утверждений — факт?', opts:['В этой книге 300 страниц','Книга очень интересная','Книга лучше фильма'], a:0, ex:'Страницы можно посчитать.'},
+  {q:'Какие слова подсказывают, что перед тобой мнение?', opts:['«по-моему», «лучший», «скучный»','«в 2020 году», «300 страниц»','«на карте», «в учебнике»'], a:0, ex:'Это слова-оценки.'},
+  {q:'Может ли «факт» оказаться неправдой?', opts:['Да: утверждение можно проверить, и проверка покажет, что оно неверно','Нет, факты всегда правда','Только если это мнение'], a:0, ex:'Поэтому факты и нужно проверять.'}
+]},
+{ id:'ambiguity', title:'Двусмысленность', kind:'choice',
+  short:'Одна фраза — два смысла. Замечаем, где слова можно понять по-разному.',
+  intro:'Одна и та же фраза может значить разное. Учимся замечать двусмысленность — в объявлениях, рекламе и разговорах — и говорить так, чтобы нас поняли правильно.',
+  tip:'Спроси себя: «А можно понять это иначе?» Особенно когда читаешь рекламу.',
+  items:[
+  {ctx:'«Я видел девочку в бинокль.»', q:'Почему эту фразу можно понять по-разному?', opts:['Непонятно, у кого бинокль: у меня или у девочки','Непонятно, какого цвета бинокль','Непонятно, когда это было'], a:0, ex:'Либо я смотрел в бинокль, либо видел девочку, у которой был бинокль.'},
+  {ctx:'«Казнить нельзя помиловать»', q:'Что решает, казнить или помиловать?', opts:['Где поставить запятую','Каким шрифтом это написано','Сколько в тексте слов'], a:0, ex:'«Казнить, нельзя помиловать» и «Казнить нельзя, помиловать» — противоположные решения.'},
+  {ctx:'«Мальчик долго рассматривал старинный замок.»', q:'Какое слово можно понять двумя способами?', opts:['замок','мальчик','долго'], a:0, ex:'зАмок — дворец, замОк — устройство на двери.'},
+  {ctx:'«Петя встретил Васю, когда он шёл из школы.»', q:'Кто шёл из школы?', opts:['Непонятно: и Петя, и Вася','Только Петя','Только Вася'], a:0, ex:'Слово «он» может относиться к любому из мальчиков.'},
+  {ctx:'«Учитель попросил ученика принести его тетрадь.»', q:'Чью тетрадь нужно принести?', opts:['Непонятно: учителя или ученика','Только учителя','Только ученика'], a:0, ex:'«Его» подходит к обоим. Яснее сказать: «свою тетрадь» или «тетрадь учителя».'},
+  {ctx:'«Солнце закрыло облако.»', q:'Что здесь произошло, если читать только по словам?', opts:['Непонятно, что что закрыло: облако солнце или солнце облако','Солнце погасло','Пошёл дождь'], a:0, ex:'Слова «солнце» и «облако» выглядят одинаково в обеих ролях. Здравый смысл подсказывает: облако закрыло солнце.'},
+  {ctx:'«Девочка ехала на велосипеде в шляпе.»', q:'Как сказать, чтобы не было смешного второго смысла?', opts:['«Девочка в шляпе ехала на велосипеде»','«На велосипеде в шляпе ехала девочка»','«В шляпе ехал велосипед с девочкой»'], a:0, ex:'Ставим «в шляпе» рядом с тем, к кому это относится.'},
+  {ctx:'«Он нашёл ключ.»', q:'Что может значить слово «ключ»?', opts:['Ключ от замка, родник или разгадку задачи','Только ключ от двери','Только музыкальный знак'], a:0, ex:'Многозначные слова понятны только из контекста.'},
+  {ctx:'«Наш сок — это 100% вкуса!»', q:'Что на самом деле обещает реклама?', opts:['Ничего проверяемого: «100% вкуса» нельзя измерить','Что сок на 100% из фруктов','Что сок полезнее воды'], a:0, ex:'Звучит как цифра, но это не факт. Состав сока написан на упаковке.'},
+  {ctx:'«Скидки до 70%!»', q:'Значит ли это, что всё стоит на 70% дешевле?', opts:['Нет: «до» значит, что скидка может быть и 5%','Да, на все товары','Да, но только сегодня'], a:0, ex:'Слово «до» прячет главное: 70% может быть на один-единственный товар.'},
+  {ctx:'«Врачи рекомендуют!»', q:'Что здесь непонятно?', opts:['Какие врачи, сколько их и где это написано','Кто такие врачи','Ничего, всё понятно'], a:0, ex:'Расплывчатая ссылка на авторитет — повод спросить: «Кто именно?»'},
+  {ctx:'«Это мука!»', q:'Как можно прочитать эту фразу?', opts:['мУка (страдание) или мукА (из зерна)','Только про муку для блинов','Только про страдание'], a:0, ex:'Смысл меняет ударение. В письменной речи помогает контекст.'},
+  {ctx:'«Вася сказал Пете, что его выгнали из команды.»', q:'Кого выгнали из команды?', opts:['Непонятно: Васю или Петю','Точно Васю','Точно Петю'], a:0, ex:'Слово «его» может относиться к обоим.'},
+  {ctx:'«Каждый второй покупатель получает подарок!»', q:'Что здесь неясно?', opts:['Как считают «каждого второго» и хватит ли подарков','Что такое подарок','Всё ясно'], a:0, ex:'Перед покупкой стоит прочитать условия акции целиком.'},
+  {ctx:'«Вечером мне позвонила подруга из Москвы.»', q:'Что можно понять двумя способами?', opts:['Подруга живёт в Москве или звонила, находясь в Москве','Когда был звонок','Кто кому звонил'], a:0, ex:'«Из Москвы» может относиться к подруге или к звонку.'},
+  {ctx:'«В библиотеке выдают старые книги и журналы.»', q:'Что здесь двусмысленно?', opts:['Старые только книги или журналы тоже','Где находится библиотека','Сколько стоят книги'], a:0, ex:'Непонятно, к чему относится слово «старые».'},
+  {ctx:'«Мальчик съел на обед котлету и пирожок с мамой.»', q:'Почему фраза звучит смешно?', opts:['Можно понять, что пирожок был «с мамой» вместо начинки','Мальчик съел слишком много','В ней нет глагола'], a:0, ex:'Лучше: «Мальчик вместе с мамой съел на обед котлету и пирожок».'},
+  {ctx:'Подруга посмотрела на тебя и сказала: «Ну, классная причёска…»', q:'Как понять, похвала это или насмешка?', opts:['По интонации, выражению лица и ситуации','Только по словам','Никак нельзя понять'], a:0, ex:'Одни и те же слова могут значить противоположное. Если не уверен — переспроси.'},
+  {ctx:'«Покупайте наш лимонад: в нём нет ничего лишнего!»', q:'Что не так с этим обещанием?', opts:['Непонятно, что считается «лишним»; надо смотреть состав','Лимонад не бывает вкусным','Всё ясно и честно'], a:0, ex:'Размытые слова звучат хорошо, но ничего конкретного не обещают.'},
+  {ctx:'«Подросткам наш новый телефон нравится всё больше!»', q:'Что здесь упущено?', opts:['Больше, чем что? Кто это считал и как?','Как зовут подростков','Какого цвета телефон'], a:0, ex:'Сравнение без «чем» — частая уловка рекламы.'},
+  {ctx:'«Продаём новые и подержанные велосипеды и самокаты.»', q:'Подержанными могут быть…', opts:['Непонятно: только велосипеды или самокаты тоже','Только самокаты','Только велосипеды'], a:0, ex:'Чтобы не путать, пишут точнее: «подержанные велосипеды и новые самокаты».'},
+  {ctx:'Табличка в парке: «Собак без поводка не выгуливать».', q:'Есть ли здесь двусмысленность?', opts:['Нет, смысл один: собаку выгуливают только на поводке','Да: можно понять «собак не выгуливать вообще»','Да: можно понять «гулять без собак»'], a:0, ex:'Не всё двусмысленно! Хороший детектив не придумывает загадку там, где её нет.'},
+  {ctx:'«Я не могу не прийти.»', q:'Что это значит?', opts:['Я обязательно приду','Я не приду','Я не знаю, приду ли'], a:0, ex:'Два «не» гасят друг друга: «не могу не прийти» = «точно приду».'}
+]},
+{ id:'conditions', title:'При каких условиях', kind:'choice',
+  short:'Многое верно не всегда. Находим условия, при которых утверждение правда.',
+  intro:'Многие утверждения верны не всегда, а только при определённых условиях. Учимся находить эти условия и не попадаться на слова «всегда» и «никогда».',
+  tip:'Перед словами «всегда» и «никогда» включай детектор: часто правильный ответ — «иногда».',
+  items:[
+  {ctx:'«Вода кипит при 100 °C».', q:'При каком условии это верно?', opts:['При обычном атмосферном давлении, как на уровне моря','Всегда и везде','Только если вода солёная'], a:0, ex:'В горах давление ниже, и вода закипает при более низкой температуре.'},
+  {ctx:'«Лёд тает».', q:'При каком условии?', opts:['Когда температура выше 0 °C','Когда наступает ночь','Всегда'], a:0, ex:'Обычный лёд плавится при температуре выше нуля.'},
+  {ctx:'«Чем больше учишь, тем лучше оценки».', q:'Это верно…', opts:AL, fixed:true, a:1, ex:'Часто, но важно и как учишь: понимаешь ли материал, высыпаешься ли.'},
+  {ctx:'«Растение растёт».', q:'Что ему для этого нужно?', opts:['Свет, вода, тепло и питательные вещества','Только темнота','Только музыка'], a:0, ex:'Без света большинство растений не может создавать себе питание.'},
+  {ctx:'«Железный гвоздь ржавеет».', q:'При каком условии?', opts:['Когда есть влага и воздух','Только в темноте','Когда его красят'], a:0, ex:'Ржавчина появляется, когда железо реагирует с кислородом и водой. Краска, наоборот, защищает.'},
+  {ctx:'«Число, которое делится на 2, — чётное».', q:'Это верно…', opts:AL, fixed:true, a:0, ex:'Это и есть определение чётного числа.'},
+  {ctx:'«Сумма двух нечётных чисел — нечётная».', q:'Это верно…', opts:AL, fixed:true, a:2, ex:'3 + 5 = 8, 7 + 9 = 16. Сумма двух нечётных чисел всегда чётная.'},
+  {ctx:'«Квадрат — это прямоугольник».', q:'Это верно…', opts:AL, fixed:true, a:0, ex:'У квадрата все углы прямые, значит, он прямоугольник.'},
+  {ctx:'«Прямоугольник — это квадрат».', q:'Это верно…', opts:AL, fixed:true, a:1, ex:'Только если все его стороны равны.'},
+  {ctx:'«Летом жарко».', q:'Это верно…', opts:AL, fixed:true, a:1, ex:'Обычно да, но не в Антарктиде и не в холодное дождливое лето.'},
+  {ctx:'«Ночью темно».', q:'Это верно…', opts:AL, fixed:true, a:1, ex:'За Полярным кругом летом бывает полярный день: солнце не заходит круглые сутки.'},
+  {ctx:'«Металлический предмет тонет в воде».', q:'Это верно…', opts:AL, fixed:true, a:1, ex:'Гвоздь тонет, а огромный стальной корабль плавает благодаря своей форме.'},
+  {ctx:'«Если сложить два числа, получится больше каждого из них».', q:'При каком условии это верно?', opts:['Если оба числа больше нуля','Всегда','Если числа одинаковые'], a:0, ex:'5 + 0 = 5, а 5 + (−2) = 3 — это меньше пяти.'},
+  {ctx:'«Если умножить число на 2, оно увеличится».', q:'При каком условии?', opts:['Если число больше нуля','Всегда','Если число чётное'], a:0, ex:'0 × 2 = 0, а −3 × 2 = −6, и это меньше, чем −3.'},
+  {ctx:'«Звук слышен».', q:'Что нужно, чтобы звук дошёл до уха?', opts:['Среда: воздух, вода или твёрдое тело','Яркий свет','Ничего не нужно'], a:0, ex:'В безвоздушном космосе звук не распространяется.'},
+  {ctx:'«Магнит притягивает предмет».', q:'При каком условии?', opts:['Если предмет из железа, никеля или кобальта','Если предмет деревянный','Всегда, из чего бы он ни был'], a:0, ex:'Алюминиевую банку или деревянную ложку магнит не притянет.'},
+  {ctx:'«Свеча горит».', q:'Что для этого нужно?', opts:['Кислород из воздуха','Темнота','Вода'], a:0, ex:'Если накрыть свечу банкой, она погаснет, когда закончится кислород.'},
+  {ctx:'«Покупать со скидкой — выгодно».', q:'При каком условии?', opts:['Если вещь действительно нужна и цену не завысили перед скидкой','Всегда','Если ценник красного цвета'], a:0, ex:'Купить ненужное со скидкой — не экономия, а лишняя трата.'},
+  {ctx:'«Совету из интернета можно следовать».', q:'При каком условии?', opts:['Если источник надёжный и совет подтверждают другие','Если у видео много лайков','Если совет написан капсом'], a:0, ex:'Лайки показывают популярность, а не правдивость.'},
+  {ctx:'«Сообщению "Срочно перешли всем!" можно поверить».', q:'При каком условии?', opts:['Если то же самое подтверждает официальный источник','Если его прислал друг','Если в нём много восклицательных знаков'], a:0, ex:'Друг мог и сам поверить слуху.'},
+  {ctx:'«Кошка приземляется на лапы».', q:'Это верно…', opts:AL, fixed:true, a:1, ex:'Часто, но не всегда: многое зависит от высоты и положения тела.'},
+  {ctx:'«Самолёт взлетает».', q:'Что для этого нужно?', opts:['Скорость, при которой крылья создают подъёмную силу','Только хорошая погода','Только пилот в форме'], a:0, ex:'Набегающий поток воздуха создаёт подъёмную силу на крыльях.'},
+  {ctx:'«У треугольника есть прямой угол».', q:'Это верно…', opts:AL, fixed:true, a:1, ex:'Только у прямоугольного треугольника.'}
+]},
+{ id:'attention', title:'Внимательность и наблюдательность', kind:'choice',
+  short:'Считаем, сравниваем, замечаем отличия и закономерности.',
+  intro:'Детектив замечает то, что другие пропускают. Здесь нужно считать, сравнивать, находить отличия, лишнее и закономерности.',
+  tip:'Не торопись. Читай медленно и проверяй по одному символу.',
+  items:[
+  {q:'Сколько раз встречается буква «о» в слове «обороноспособность»?', opts:['7','6','5','8'], a:0, ex:'о-б-о-р-о-н-о-с-п-о-с-о-б-н-о-с-т-ь: семь букв «о».'},
+  {ctx:'7 3 9 1 5 8 2   →   7 3 9 7 5 8 2', q:'Какая по счёту цифра отличается?', opts:['4-я','2-я','6-я','Все одинаковые'], a:0, ex:'В первой строке на 4-м месте 1, во второй — 7.'},
+  {q:'Сколько букв «а» в предложении «Карандаш упал на пол»?', opts:['5','4','3','6'], a:0, ex:'Кар-а-нд-а-ш — три, уп-а-л — одна, н-а — одна.'},
+  {ctx:'«Париж весной весной прекрасен»', q:'Что не так в этой фразе?', opts:['Слово «весной» написано дважды','Неправильно написано «Париж»','Всё в порядке'], a:0, ex:'Мозг часто «проглатывает» повторы. Читай медленно!'},
+  {q:'Сколько всего квадратов на доске 2 × 2 клетки?', opts:['5','4','2','6'], a:0, ex:'4 маленьких и 1 большой.'},
+  {q:'Сколько раз встречается цифра 1 в числах от 1 до 20?', opts:['12','11','10','13'], a:0, ex:'1, 10, 11 (две единицы), 12, 13, 14, 15, 16, 17, 18, 19 — всего 12.'},
+  {ctx:'понедельник, вторник, четверг, среда, пятница', q:'Что не так?', opts:['Среда и четверг поменялись местами','Пропущено воскресенье','Всё правильно'], a:0, ex:'Правильный порядок: понедельник, вторник, среда, четверг, пятница.'},
+  {ctx:'ДЕТЕКТИВ   →   ДЕТЕКИТВ', q:'Чем отличается второе слово?', opts:['Переставлены буквы Т и И','Пропущена буква Е','Ничем'], a:0, ex:'ДЕТЕК-ТИ-В и ДЕТЕК-ИТ-В.'},
+  {q:'Сколько ног у трёх кошек и двух кур вместе?', opts:['16','20','10','14'], a:0, ex:'3 × 4 = 12, 2 × 2 = 4, всего 16.'},
+  {q:'Какая буква в слове «НАБЛЮДАТЕЛЬНОСТЬ» стоит пятой?', opts:['Ю','Л','Д','Б'], a:0, ex:'Н-А-Б-Л-Ю.'},
+  {q:'Сколько слогов в слове «внимательность»?', opts:['4','3','5','6'], a:0, ex:'Сколько гласных — столько слогов: вни-ма-тель-ность.'},
+  {ctx:'А А Б А А Б А А Б …', q:'Какая буква будет 10-й?', opts:['А','Б','В'], a:0, ex:'Узор повторяется каждые 3 буквы. 10-я — первая в новой тройке, то есть А.'},
+  {q:'Сегодня понедельник. Какой день недели будет через 10 дней?', opts:['Четверг','Среда','Пятница','Понедельник'], a:0, ex:'Через 7 дней снова понедельник, ещё через 3 — четверг.'},
+  {ctx:'Образец: 3Б7Г9Д', q:'Какая строка точно совпадает с образцом?', opts:['3Б7Г9Д','3Б7Г6Д','3В7Г9Д','3Б1Г9Д'], a:0, ex:'Сверяй по одному символу слева направо.'},
+  {q:'Сколько раз встречается буква «к» в скороговорке «Карл у Клары украл кораллы»?', opts:['4','3','5','2'], a:0, ex:'Карл, Клары, украл, кораллы — по одной «к» в каждом слове.'},
+  {q:'Какой сигнал светофора находится сверху?', opts:['Красный','Зелёный','Жёлтый'], a:0, ex:'Сверху — красный, самый важный сигнал.'},
+  {q:'Сколько гласных букв в слове «детектив»?', opts:['3','2','4'], a:0, ex:'д-Е-т-Е-к-т-И-в.'},
+  {ctx:'2, 4, 8, 16, …', q:'Какое число следующее?', opts:['32','24','18','20'], a:0, ex:'Каждое число в 2 раза больше предыдущего.'},
+  {ctx:'1, 4, 9, 16, 25, …', q:'Какое число следующее?', opts:['36','30','35','49'], a:0, ex:'Это квадраты чисел: 1, 2², 3², 4², 5², а дальше 6² = 36.'},
+  {ctx:'яблоко, груша, морковь, слива', q:'Что здесь лишнее?', opts:['морковь','груша','слива'], a:0, ex:'Морковь — овощ, остальное — фрукты.'},
+  {ctx:'3, 5, 7, 9, 11', q:'Какое число лишнее?', opts:['9','3','11','7'], a:0, ex:'Все, кроме 9, — простые числа. А 9 делится на 3.'},
+  {q:'Сколько букв в слове «алфавит»?', opts:['7','6','8'], a:0, ex:'а-л-ф-а-в-и-т.'},
+  {ctx:'КОТ, ТОК, КТО, ОКТ', q:'Какое сочетание не является словом?', opts:['ОКТ','ТОК','КТО','КОТ'], a:0, ex:'Все четыре составлены из одних и тех же букв, но слово есть только у трёх.'}
+]},
+{ id:'wit', title:'Задачи на смекалку', kind:'choice',
+  short:'Задачи-ловушки: ответ простой, но мозг спешит ошибиться.',
+  intro:'В этих задачах ответ простой, но мозг спешит и выдаёт неправильный. Тренируем привычку перечитывать условие.',
+  tip:'Перечитай условие. Ловушка обычно спрятана в одном слове.',
+  items:[
+  {q:'Сколько месяцев в году имеют 28 дней?', opts:['12','1','6'], a:0, ex:'28 дней есть в каждом месяце, просто в большинстве их больше.'},
+  {q:'Что тяжелее: килограмм ваты или килограмм железа?', opts:['Одинаково','Железо','Вата'], a:0, ex:'Килограмм — он и есть килограмм.'},
+  {q:'У пастуха было 17 овец. Все, кроме 9, убежали. Сколько осталось?', opts:['9','8','17','0'], a:0, ex:'«Все, кроме 9» — значит, 9 остались.'},
+  {q:'Ты бежишь в забеге и обогнал того, кто был вторым. Каким ты стал?', opts:['Вторым','Первым','Третьим'], a:0, ex:'Ты занял его место — второе.'},
+  {q:'Сколько концов у двух с половиной палок?', opts:['6','5','4'], a:0, ex:'Половина палки — тоже палка с двумя концами. 3 палки × 2 = 6.'},
+  {q:'Батон разрезали на 3 части. Сколько сделали разрезов?', opts:['2','3','4'], a:0, ex:'Каждый разрез добавляет один кусок.'},
+  {q:'Петух снёс яйцо на крыше. В какую сторону оно скатится?', opts:['Петухи не несут яиц','Влево','Вправо'], a:0, ex:'Яйца несут курицы.'},
+  {q:'Сколько земли в яме размером 1 × 1 × 1 метр?', opts:['Нисколько — яма пустая','1 кубометр','1 тонна'], a:0, ex:'Яма — это место, где земли нет.'},
+  {q:'У отца Маши пять дочерей: Чача, Чече, Чичи, Чочо. Как зовут пятую?', opts:['Маша','Чучу','Чаче'], a:0, ex:'Ответ спрятан в самом начале условия.'},
+  {q:'Тройка лошадей проскакала 30 км. Сколько проскакала каждая лошадь?', opts:['30 км','10 км','90 км'], a:0, ex:'Они скакали вместе, рядом друг с другом.'},
+  {q:'Что можно приготовить, но нельзя съесть?', opts:['Уроки','Суп','Кашу'], a:0, ex:'Уроки готовят, но не едят.'},
+  {q:'Самолёт упал точно на границе двух стран. Где похоронят выживших?', opts:['Выживших не хоронят','В первой стране','Во второй стране'], a:0, ex:'Ловушка внимания: выжившие живы.'},
+  {q:'Гусь стоит на одной ноге и весит 2 кг. Сколько он будет весить, стоя на двух ногах?', opts:['2 кг','4 кг','1 кг'], a:0, ex:'Вес не зависит от того, на скольких ногах стоишь.'},
+  {q:'Две матери и две дочери съели три апельсина, и каждой достался целый. Как так?', opts:['Это бабушка, мама и дочка','Один апельсин разрезали','Одна из них не ела'], a:0, ex:'Мама — одновременно и мать, и дочь.'},
+  {q:'В каждом углу комнаты сидит кошка. Напротив каждой кошки сидят три кошки. Сколько кошек в комнате?', opts:['4','12','16'], a:0, ex:'Каждая кошка видит трёх остальных.'},
+  {q:'Одно яйцо варится 4 минуты. Сколько минут варить три яйца?', opts:['4','12','8'], a:0, ex:'Их можно варить вместе в одной кастрюле.'},
+  {q:'Сколько будет: половина от двух плюс два?', opts:['3','2','4'], a:0, ex:'Половина от двух — 1. 1 + 2 = 3.'},
+  {q:'Улитка ползёт на столб высотой 3 м: днём поднимается на 2 м, ночью сползает на 1 м. За сколько дней она доберётся до верха?', opts:['За 2 дня','За 3 дня','За 1 день'], a:0, ex:'После первых суток она на высоте 1 м. На второй день поднимается ещё на 2 м — и она наверху.'},
+  {q:'В каком месяце люди меньше всего разговаривают?', opts:['В феврале','В декабре','В июле'], a:0, ex:'В феврале меньше всего дней.'},
+  {q:'Какое слово всегда пишется «неправильно»?', opts:['Слово «неправильно»','Слово «правильно»','Никакое'], a:0, ex:'Слово «неправильно» именно так и пишется.'},
+  {q:'Мальчик упал с 10-метровой лестницы и не ушибся. Как?', opts:['Он упал с нижней ступеньки','Ему просто повезло','Лестница была мягкой'], a:0, ex:'В условии не сказано, что он упал с самого верха.'},
+  {q:'Сейчас полночь, идёт дождь. Можно ли ожидать, что через 72 часа будет солнечно?', opts:['Нет: через 72 часа снова будет полночь','Да','Только летом'], a:0, ex:'72 часа — ровно трое суток.'},
+  {q:'Какая цифра становится больше, если её перевернуть вверх ногами?', opts:['6','8','1'], a:0, ex:'6 превращается в 9.'}
+]},
+{ id:'fillword', title:'Филворды', kind:'words',
+  short:'Ищем спрятанные слова в сетке букв. Слова — про мышление и проверку фактов.',
+  intro:'Найди спрятанные слова в сетке букв. Все слова идут слева направо или сверху вниз и связаны с темой курса.',
+  tip:'Нажми на первую букву слова, потом на последнюю. Ошибся — просто начни заново.',
+  items:[
+  {theme:'Детектив', words:['ФАКТ','ЛУПА','СЛЕД','УЛИКА','ВЕРСИЯ','ВОПРОС']},
+  {theme:'Логика', words:['ВЫВОД','ДОВОД','СПОР','ИСТИНА','ЛОЖЬ','ПРИЧИНА']},
+  {theme:'Осторожно, мошенники', words:['ОБМАН','ПАРОЛЬ','КОД','ССЫЛКА','ФЕЙК','КАРТА']},
+  {theme:'Источники', words:['АВТОР','ДАТА','САЙТ','ГАЗЕТА','КНИГА','УЧЕНЫЙ']},
+  {theme:'Мышление', words:['МЫСЛЬ','ИДЕЯ','МОЗГ','ПАМЯТЬ','ЛОГИКА','ВНИМАНИЕ']},
+  {theme:'Наука', words:['ОПЫТ','ГИПОТЕЗА','ДАННЫЕ','ТЕОРИЯ','ЗАКОН','ФАКТ']},
+  {theme:'Медиа', words:['НОВОСТЬ','ЗАГОЛОВОК','ВИДЕО','ФОТО','БЛОГ','ЧАТ']},
+  {theme:'Погода', words:['ДОЖДЬ','ТУЧА','ВЕТЕР','СНЕГ','ГРОЗА','РАДУГА']},
+  {theme:'Животные из мифов', words:['СТРАУС','КОАЛА','АКУЛА','ПИНГВИН','ЕНОТ','СОВА']},
+  {theme:'Космос', words:['ЛУНА','ЗВЕЗДА','ОРБИТА','МАРС','КОМЕТА','ВЕНЕРА']},
+  {theme:'Эмоции', words:['СТРАХ','РАДОСТЬ','ГНЕВ','ОБИДА','ИНТЕРЕС','ПОКОЙ']},
+  {theme:'Школа', words:['УРОК','ОЦЕНКА','ДНЕВНИК','ПЕНАЛ','ДОСКА','ЗВОНОК']},
+  {theme:'Безопасность', words:['ЗАМОК','ПАУЗА','ЗАЩИТА','СЕЙФ','ЩИТ','ОХРАНА']},
+  {theme:'Спор', words:['ТЕЗИС','АРГУМЕНТ','ПРИМЕР','ОТВЕТ','МНЕНИЕ','ДИАЛОГ']},
+  {theme:'Математика', words:['ЧИСЛО','СУММА','УГОЛ','ЗАДАЧА','ОТВЕТ','ДРОБЬ']},
+  {theme:'Органы чувств', words:['ГЛАЗ','УХО','НОС','ЗРЕНИЕ','СЛУХ','ВКУС']},
+  {theme:'Время', words:['ЧАС','МИНУТА','НЕДЕЛЯ','МЕСЯЦ','ГОД','СЕКУНДА']},
+  {theme:'Природа', words:['ЛЕС','РЕКА','ПОЛЕ','ГОРА','ОЗЕРО','ОКЕАН']},
+  {theme:'Интернет', words:['СЕТЬ','БРАУЗЕР','ПОИСК','ВКЛАДКА','ЛАЙК','РЕПОСТ']},
+  {theme:'Правила Чека', words:['СТОП','ПРОВЕРЬ','ДУМАЙ','СПРОСИ','СОМНЕНИЕ','ЧЕК']},
+  {theme:'Эксперты', words:['ВРАЧ','УЧИТЕЛЬ','ПИЛОТ','ПОВАР','СУДЬЯ','ИНЖЕНЕР']}
+]},
+{ id:'believe', title:'Верю — не верю', kind:'choice', fixed:true, tf:true,
+  opts:['Верю','Не верю'], q:'Верю или не верю?',
+  short:'Знаменитые «факты»: что правда, а что миф?',
+  intro:'Многие «факты» все повторяют, но не все они правда. Реши, где правда, а где миф, — и прочитай объяснение.',
+  tip:'Помни: «слышал сто раз» не значит «доказано».',
+  items:[
+  {ctx:'Страусы прячут голову в песок, когда боятся.', a:1, ex:'Миф. Страусы опускают голову к земле, чтобы переворачивать яйца в гнезде, а при опасности убегают или ложатся.'},
+  {ctx:'У осьминога три сердца.', a:0, ex:'Правда: два сердца качают кровь через жабры, третье — по всему телу.'},
+  {ctx:'Великую Китайскую стену видно с Луны невооружённым глазом.', a:1, ex:'Миф. Даже с околоземной орбиты её очень трудно разглядеть, а с Луны — невозможно.'},
+  {ctx:'Молния никогда не бьёт дважды в одно место.', a:1, ex:'Миф. Высокие здания и башни получают удары молний много раз в год.'},
+  {ctx:'Мёд может храниться тысячи лет и не испортиться.', a:0, ex:'Правда. Археологи находили мёд в древнеегипетских гробницах.'},
+  {ctx:'Летучие мыши слепые.', a:1, ex:'Миф. Летучие мыши видят, а в темноте ещё и ориентируются с помощью эхолокации.'},
+  {ctx:'Золотая рыбка помнит только последние 3 секунды.', a:1, ex:'Миф. Опыты показывают, что золотые рыбки помнят многое месяцами.'},
+  {ctx:'Вода в раковине закручивается в разные стороны в Северном и Южном полушариях из-за вращения Земли.', a:1, ex:'Миф. Направление зависит от формы раковины и того, как налита вода. На такую маленькую массу воды вращение Земли почти не влияет.'},
+  {ctx:'Бананы растут не на деревьях, а на огромной траве.', a:0, ex:'Правда. У банана нет древесного ствола — это гигантское травянистое растение.'},
+  {ctx:'Человек использует только 10% своего мозга.', a:1, ex:'Миф. Исследования показывают, что работают все отделы мозга, просто в разное время.'},
+  {ctx:'Венера вращается вокруг своей оси в обратную сторону по сравнению с Землёй.', a:0, ex:'Правда. На Венере солнце встаёт на западе.'},
+  {ctx:'Хамелеоны меняют цвет только для того, чтобы слиться с фоном.', a:1, ex:'Миф. Чаще всего они меняют цвет, чтобы «общаться» с другими хамелеонами и регулировать температуру тела.'},
+  {ctx:'Акулы появились на Земле раньше деревьев.', a:0, ex:'Правда. Акулы появились более 400 млн лет назад, а первые деревья — около 385 млн лет назад.'},
+  {ctx:'Быки злятся именно из-за красного цвета.', a:1, ex:'Миф. Быки плохо различают красный цвет. Их раздражает движение плаща.'},
+  {ctx:'Если считать от подножия на дне океана, гора Мауна-Кеа на Гавайях выше Эвереста.', a:0, ex:'Правда. От подножия Мауна-Кеа выше 10 км, а Эверест — около 8,8 км. Но над уровнем моря выше Эверест.'},
+  {ctx:'После смерти у человека продолжают расти волосы и ногти.', a:1, ex:'Миф. Просто кожа подсыхает и стягивается, и кажется, что ногти стали длиннее.'},
+  {ctx:'У улитки есть зубы.', a:0, ex:'Правда. На её языке-тёрке тысячи крошечных зубчиков.'},
+  {ctx:'Проглоченная жвачка остаётся в желудке на 7 лет.', a:1, ex:'Миф. Жвачка не переваривается, но выходит из организма за несколько дней.'},
+  {ctx:'На Марсе есть вулкан выше Эвереста.', a:0, ex:'Правда. Гора Олимп на Марсе примерно в 2,5 раза выше Эвереста.'},
+  {ctx:'Собаки видят мир только чёрно-белым.', a:1, ex:'Миф. Собаки различают цвета, хотя и хуже людей: например, синий и жёлтый.'},
+  {ctx:'В открытом космосе человек ничего бы не услышал: звук там не распространяется.', a:0, ex:'Правда. Звуку нужна среда — воздух, вода или твёрдое тело. В вакууме её нет.'},
+  {ctx:'Летом в Северном полушарии тепло, потому что Земля ближе всего к Солнцу.', a:1, ex:'Миф. Ближе всего к Солнцу Земля в начале января. Времена года зависят от наклона земной оси.'},
+  {ctx:'Коала — это медведь.', a:1, ex:'Миф. Коала — сумчатое животное, родственник кенгуру и вомбата.'}
+]},
+{ id:'fake', title:'Правда или фейк', kind:'choice', fixed:true, tf:true,
+  opts:['Похоже на правду','Похоже на фейк'], q:'Как ты думаешь?',
+  short:'Сообщения, новости и звонки: можно ли им доверять?',
+  intro:'Перед тобой сообщения, новости, звонки и объявления. Реши, похоже это на правду или на фейк, и найди признаки, которые тебе подсказали.',
+  tip:'Срочно + страшно (или очень выгодно) + «никому не говори» = почти наверняка фейк.',
+  items:[
+  {ctx:'«СРОЧНО! В нашем городе раздают бесплатные айфоны — переходи по ссылке и введи данные карты!»', a:1, ex:'Фейк. Бесплатный подарок, срочность и просьба ввести данные карты — классическая ловушка.'},
+  {ctx:'На официальном сайте школы опубликовано расписание каникул, есть дата и подпись директора.', a:0, ex:'Правда: официальный источник, понятно кто и когда опубликовал.'},
+  {ctx:'Блог «Супер-факты»: «Учёные доказали: мороженое на ночь помогает вырасти на 10 см!»', a:1, ex:'Фейк. Неизвестный блог, нет ссылки на исследование и обещание чуда.'},
+  {ctx:'СМС: «Госуслуги. Назовите код из СМС нашему оператору, иначе аккаунт заблокируют».', a:1, ex:'Фейк. Ни Госуслуги, ни банки не просят называть коды. Код из СМС — никому.'},
+  {ctx:'Метеослужба предупреждает о сильном ветре завтра; то же сообщают несколько новостных сайтов.', a:0, ex:'Правда: официальная служба и несколько независимых подтверждений.'},
+  {ctx:'Видео: «Положили гвоздь в стакан колы — за ночь он полностью растворился!»', a:1, ex:'Фейк. Кислоты в коле слишком мало, чтобы растворить гвоздь за ночь.'},
+  {ctx:'Аккаунт друга пишет: «Займи 3000 до вечера, скинь на эту карту, родителям не говори».', a:1, ex:'Фейк. Аккаунт могли взломать. Позвони другу по телефону и спроси сам.'},
+  {ctx:'Классный руководитель написал в электронном дневнике, что родительское собрание переносится на четверг.', a:0, ex:'Правда: знакомый человек и официальный канал школы.'},
+  {ctx:'Скриншот без ссылки: «С 1 сентября в России отменяют все домашние задания!»', a:1, ex:'Фейк: нет первоисточника. Такие новости проверяют на официальных сайтах.'},
+  {ctx:'Звонок: «Это служба безопасности банка. С вашей карты крадут деньги — срочно переведите их на безопасный счёт».', a:1, ex:'Фейк. «Безопасных счетов» не бывает, это любимая схема мошенников. Положи трубку и позвони в банк сам.'},
+  {ctx:'На сайте музея и в городской газете написано, что открылась выставка динозавров.', a:0, ex:'Правда: официальный сайт и независимое подтверждение.'},
+  {ctx:'Фото: «Акула плывёт по затопленной улице после урагана!»', a:1, ex:'Похоже на фейк. Такие фото не раз оказывались монтажом. Проверь их поиском по картинке.'},
+  {ctx:'«Розыгрыш! Подпишись, сделай репост и отправь 100 ₽ за доставку приза».', a:1, ex:'Фейк. Настоящий розыгрыш не требует платить за приз.'},
+  {ctx:'В учебнике физики написано, что свет распространяется быстрее звука.', a:0, ex:'Правда. Поэтому мы видим молнию раньше, чем слышим гром.'},
+  {ctx:'«Перешли это 10 друзьям — и тебе повезёт. Не перешлёшь — случится беда!»', a:1, ex:'Фейк: «письмо счастья» держится только на страхе.'},
+  {ctx:'Новость крупного информагентства со ссылкой на заявление МЧС; есть дата и имя автора.', a:0, ex:'Скорее правда: есть первоисточник, автор и дата.'},
+  {ctx:'Сайт g0suslugi-bonus.ru обещает выплату всем школьникам.', a:1, ex:'Фейк. В адресе цифра 0 вместо буквы «о» — поддельный сайт.'},
+  {ctx:'Видео: «100% доказательство, что Земля плоская!»', a:1, ex:'Фейк. Форму Земли подтверждают фотографии из космоса, кругосветные путешествия и множество измерений.'},
+  {ctx:'«Администрация игры: раздаём бесплатную валюту! Пришлите свой логин и пароль».', a:1, ex:'Фейк. Настоящая администрация никогда не просит пароль.'},
+  {ctx:'В энциклопедии написано, что Байкал — самое глубокое озеро в мире.', a:0, ex:'Правда: глубина Байкала больше 1600 м.'},
+  {ctx:'Голосовое с незнакомого номера: «Это мама, я потеряла телефон, срочно переведи деньги».', a:1, ex:'Фейк. Голос можно подделать. Перезвони маме на её номер.'},
+  {ctx:'Друг прислал фото новой шоколадки с ценником из магазина у дома.', a:0, ex:'Скорее правда: знакомый человек, есть фото, и ему незачем обманывать.'},
+  {ctx:'«Учёные подтвердили: через неделю Земля на 6 дней погрузится во тьму!»', a:1, ex:'Фейк. Нет названия организации и ссылки на источник, а громкие сенсации — повод проверить.'}
+]},
+{ id:'consequences', title:'Возможные следствия', kind:'choice',
+  short:'Что может случиться после? Думаем на шаг вперёд.',
+  intro:'Каждое действие к чему-то приводит. Учимся думать на шаг вперёд и отличать настоящие следствия от случайных совпадений.',
+  tip:'Ищи следствие, которое действительно вытекает из события, а не просто случилось рядом.',
+  items:[
+  {ctx:'Ты переслал непроверенный слух в чат класса.', q:'Что может произойти?', opts:['Слух разойдётся, и кто-то зря испугается','Слух сам собой станет правдой','Ничего и никогда не изменится'], a:0, ex:'Каждая пересылка делает слух заметнее и «убедительнее».'},
+  {ctx:'Человек сообщил незнакомцу код из СМС.', q:'Что может произойти?', opts:['Мошенники войдут в его аккаунт или банк','Телефон станет работать быстрее','Ему придёт подарок'], a:0, ex:'Код из СМС — ключ от аккаунта.'},
+  {ctx:'Ученик не спал всю ночь перед контрольной.', q:'Что может произойти?', opts:['Ему будет труднее сосредоточиться','Он точно напишет на пять','Контрольную отменят'], a:0, ex:'Сон нужен мозгу, чтобы запомнить выученное.'},
+  {ctx:'В городе закрыли единственный мост на ремонт.', q:'Что может произойти?', opts:['На объездной дороге будут пробки','Река станет шире','Ремонт сделают за одну минуту'], a:0, ex:'Машинам придётся ехать в объезд.'},
+  {ctx:'Ученики посадили деревья во дворе школы.', q:'Что может произойти через несколько лет?', opts:['Во дворе станет больше тени','Деревья сразу дадут урожай','Двор исчезнет'], a:0, ex:'Деревья растут годами, а потом дают тень и прохладу.'},
+  {ctx:'Магазин сильно поднял цены.', q:'Что может произойти?', opts:['Часть покупателей уйдёт в другие магазины','Все будут покупать ещё больше','Цены сами упадут на следующий день'], a:0, ex:'Люди сравнивают цены и ищут, где выгоднее.'},
+  {ctx:'Ты выложил фото, на котором видны номер школы и твой домашний адрес.', q:'Что может произойти?', opts:['Незнакомцы узнают, где тебя найти','Фото станет некрасивым','Ничего: интернет всё забывает'], a:0, ex:'Интернет как раз ничего не забывает. Личные данные лучше не показывать.'},
+  {ctx:'Пошёл сильный снег.', q:'Что НЕ является следствием снегопада?', opts:['На деревьях созреют яблоки','Дороги станут скользкими','Дети слепят снеговика'], a:0, ex:'Яблоки созревают летом и осенью, снег тут ни при чём.'},
+  {ctx:'Ты пообещал помочь другу и не пришёл, не предупредив.', q:'Что может произойти?', opts:['Друг станет меньше тебе доверять','Друг обрадуется','Обещание выполнится само'], a:0, ex:'Доверие строится на выполненных обещаниях.'},
+  {ctx:'В реку сбросили много мусора.', q:'Что может произойти?', opts:['Рыбы в реке станет меньше','Вода станет чище','Река потечёт вспять'], a:0, ex:'Загрязнение вредит всем, кто живёт в реке.'},
+  {ctx:'Человек каждый день читает книги по 20 минут.', q:'Что может произойти со временем?', opts:['Вырастет словарный запас','Испортится память','Он разучится говорить'], a:0, ex:'Регулярное чтение развивает речь и воображение.'},
+  {ctx:'Ты нашёл чужой телефон и отнёс его в бюро находок.', q:'Что может произойти?', opts:['Владелец сможет его вернуть','Телефон исчезнет навсегда','Тебя накажут'], a:0, ex:'Честный поступок помогает другому человеку.'},
+  {ctx:'В школе отключили интернет.', q:'Что НЕ является следствием?', opts:['Учебники станут толще','Не откроется электронный дневник','Нельзя будет посмотреть видео онлайн'], a:0, ex:'Толщина учебников от интернета не зависит.'},
+  {ctx:'Подросток согласился «принять перевод на свою карту и отправить дальше».', q:'Что может произойти?', opts:['Его могут обвинить в помощи мошенникам','Он станет миллионером','Банк его наградит'], a:0, ex:'Это схема дропперов: через карту выводят украденные деньги.'},
+  {ctx:'Все пересылают сообщения, не читая и не проверяя.', q:'Что может произойти?', opts:['Фейки будут распространяться быстрее','Фейки исчезнут','Интернет станет медленнее'], a:0, ex:'Каждая непроверенная пересылка помогает фейку.'},
+  {ctx:'Вечером отключили электричество.', q:'Что НЕ является следствием?', opts:['Утром солнце встанет раньше','В доме станет темно','Перестанет работать холодильник'], a:0, ex:'Восход солнца от электричества не зависит.'},
+  {ctx:'В классе ввели правило: на уроке телефоны лежат в коробке.', q:'Что может произойти?', opts:['Ученики будут меньше отвлекаться','Все сразу станут отличниками','Уроки станут длиннее'], a:0, ex:'Правило может помочь, но чудес не обещает.'},
+  {ctx:'Человек в любом споре переходит на личности.', q:'Что может произойти?', opts:['С ним перестанут хотеть спорить и обсуждать что-то','Его будут больше уважать','Все согласятся с его доводами'], a:0, ex:'Переход на личности обижает и не доказывает правоту.'},
+  {ctx:'Компания выпустила рекламу с ложными обещаниями.', q:'Что может произойти?', opts:['Покупатели разочаруются и перестанут ей доверять','Обещания сами станут правдой','Продажи вырастут навсегда'], a:0, ex:'Обман в рекламе бьёт по доверию к компании.'},
+  {ctx:'Всё лето стояла сильная засуха.', q:'Что может произойти?', opts:['Урожай будет меньше','Река разольётся','Пойдёт снег'], a:0, ex:'Растениям без воды не хватает сил расти.'},
+  {ctx:'Ты используешь один пароль на всех сайтах, и один из них взломали.', q:'Что может произойти?', opts:['Злоумышленники смогут войти и в другие аккаунты','Пароль сам поменяется','Ничего, другие сайты защищены'], a:0, ex:'Мошенники пробуют украденный пароль на разных сайтах.'},
+  {ctx:'Ты начал проверять новости по алгоритму С-Т-О-П.', q:'Что может произойти?', opts:['Тебя станет сложнее обмануть','Новостей станет меньше','Ты перестанешь понимать новости'], a:0, ex:'Привычка проверять защищает от фейков.'}
+]},
+{ id:'chains', title:'Цепочка событий', kind:'order', q:'Расставь события по порядку',
+  short:'Расставляем события от причины к следствию.',
+  intro:'Расставь события в правильном порядке: что было сначала, что потом и чем всё закончилось.',
+  tip:'Найди самое первое событие — то, без которого не было бы остальных.',
+  items:[
+  {t:'Как растёт растение', steps:['Посадили семечко','Появился росток','Выросли листья и цветки','Созрели плоды']},
+  {t:'Ловушка «лёгкой подработки»', steps:['Незнакомец пишет про «лёгкий заработок»','Подросток соглашается','На его карту приходят чужие деньги','Полиция ищет владельца карты']},
+  {t:'Дождливый день', steps:['Тучи закрыли небо','Пошёл дождь','Появились лужи','Лужи высохли на солнце']},
+  {t:'Жизнь слуха', steps:['Кто-то придумал слух','Слух переслали в чат','Многие поверили','Правду опубликовали на сайте школы']},
+  {t:'Утро школьника', steps:['Прозвенел будильник','Проснулся и встал с кровати','Собрался и вышел из дома','Пришёл в школу']},
+  {t:'Вода и пар', steps:['Воду поставили на огонь','Вода закипела','Вода превратилась в пар','Пар осел каплями на крышке']},
+  {t:'Жизнь бабочки', steps:['Бабочка отложила яйца','Из яйца вылупилась гусеница','Гусеница превратилась в куколку','Из куколки вылетела бабочка']},
+  {t:'Проверка новости', steps:['Увидел громкий заголовок','Остановился и не стал пересылать','Проверил автора и другие источники','Сделал вывод']},
+  {t:'Подготовка к контрольной', steps:['Выучил правило','Сделал упражнения','Написал контрольную','Получил оценку']},
+  {t:'Как работает мошенник', steps:['Пришло СМС «Вы выиграли приз!»','Человек перешёл по ссылке','Ввёл данные карты','С карты пропали деньги']},
+  {t:'Весна на реке', steps:['Начал таять снег','Побежали ручьи','Река разлилась','Вода спала']},
+  {t:'Поход в магазин', steps:['Пришли в магазин','Выбрали продукты','Оплатили на кассе','Принесли покупки домой']},
+  {t:'Хлеб', steps:['Замесили тесто','Тесто поднялось','Поставили в духовку','Достали готовый хлеб']},
+  {t:'Письмо', steps:['Написали письмо','Отправили по почте','Почтальон доставил','Адресат прочитал']},
+  {t:'Как работают учёные', steps:['Задали вопрос','Выдвинули гипотезу (предположение)','Провели эксперимент','Сделали вывод']},
+  {t:'Жизнь человека', steps:['Родился','Научился ходить','Пошёл в школу','Окончил школу']},
+  {t:'Фазы Луны', steps:['Новолуние','Растущая Луна','Полнолуние','Убывающая Луна']},
+  {t:'Откуда берётся стол', steps:['Срубили дерево','Распилили его на доски','Сделали стол','Поставили стол на кухню']},
+  {t:'Ссора и примирение', steps:['Друг обиделся','Ты заметил, что он молчит','Спросил, что случилось','Вы помирились']},
+  {t:'Авария на линии', steps:['Ураган повредил провода','Отключился свет','Приехали ремонтники','Свет снова появился']},
+  {t:'Опасный «челлендж»', steps:['Увидел видео с «челленджем»','Задумался: «А это безопасно?»','Нашёл, что пишут врачи','Отказался участвовать']},
+  {t:'Костёр', steps:['Собрали дрова','Зажгли огонь','Дрова прогорели','Костёр погас']}
+]},
+{ id:'sources', title:'Оценка источника', kind:'choice',
+  short:'Кому верить? Выбираем надёжные источники информации.',
+  intro:'Информация бывает из разных источников, и они не одинаково надёжны. Учимся выбирать, кому доверять, и замечать признаки ненадёжного источника.',
+  tip:'Спроси: кто автор, разбирается ли он в теме, кому это выгодно и подтверждают ли другие.',
+  items:[
+  {q:'Где надёжнее всего узнать, будут ли завтра уроки?', opts:['На сайте школы или у классного руководителя','В слухах в общем чате','У блогера из другого города'], a:0, ex:'Официальный источник знает точно.'},
+  {q:'Где лучше узнать, какое расстояние от Земли до Луны?', opts:['В энциклопедии или на научно-популярном сайте','В комментариях под видео','У одноклассника, который «где-то слышал»'], a:0, ex:'Энциклопедии проверяют факты и указывают источники.'},
+  {q:'У тебя болит горло. Кто даст самый надёжный совет?', opts:['Врач','Видео «народного целителя»','Реклама леденцов'], a:0, ex:'О здоровье — к специалисту.'},
+  {q:'Где лучше узнать прогноз погоды?', opts:['У официальной метеослужбы','У соседа по ощущениям','В старой новости'], a:0, ex:'Метеорологи используют данные приборов и спутников.'},
+  {q:'Как узнать правила дорожного движения точно?', opts:['Прочитать официальный текст ПДД','Спросить у друга','Посмотреть смешное видео'], a:0, ex:'Первоисточник надёжнее пересказа.'},
+  {q:'Ты выбираешь телефон. Какой источник самый объективный?', opts:['Независимые обзоры в нескольких изданиях','Реклама производителя','Один отзыв на сайте магазина'], a:0, ex:'Производитель заинтересован, а один отзыв — это мало.'},
+  {q:'Какой признак говорит, что сайту можно доверять?', opts:['Указаны автор, дата и ссылки на источники','Много мигающей рекламы','Заголовки написаны капсом'], a:0, ex:'Прозрачность — признак надёжности.'},
+  {q:'Какой признак говорит, что источник может быть ненадёжным?', opts:['Нет автора и даты, кричащий заголовок','Есть ссылки на исследования','Указана редакция и контакты'], a:0, ex:'Аноним и громкие слова — повод насторожиться.'},
+  {q:'Где лучше узнать о землетрясении в другом регионе?', opts:['В сообщениях МЧС и крупных информагентств','В анонимном канале «Срочно!!!»','В голосовом сообщении от незнакомца'], a:0, ex:'Официальные службы отвечают за свои слова.'},
+  {q:'Где узнать правила школьной олимпиады?', opts:['На сайте организатора олимпиады','В чате у знакомых','В случайной группе в соцсети'], a:0, ex:'Правила устанавливает организатор.'},
+  {q:'Известный физик рассказывает в видео, как правильно питаться. Насколько это надёжно?', opts:['Он эксперт в физике, а не в питании — лучше спросить специалиста по питанию','Полностью надёжно: он же учёный','Ненадёжно, потому что физики всегда ошибаются'], a:0, ex:'Эксперт надёжен в своей области, а не во всех сразу.'},
+  {q:'Блогер хвалит крем, а в описании написано «реклама». Что это значит?', opts:['Ему заплатили, он заинтересован в похвале','Это независимый отзыв','Крем точно лучший'], a:0, ex:'Реклама — это не мнение покупателя.'},
+  {q:'Как правильно пользоваться Википедией?', opts:['Как стартовой точкой: проверять источники в сносках','Как абсолютной истиной','Никогда не открывать'], a:0, ex:'Википедию может править любой. Ценность в её ссылках на источники.'},
+  {q:'В соцсети фото: «Вчера в нашем парке видели крокодила!» Что сделать?', opts:['Проверить фото поиском по картинке','Сразу переслать всем','Поверить, раз есть фото'], a:0, ex:'Фото может быть старым или из другого места.'},
+  {q:'Где лучше изучать историю Великой Отечественной войны?', opts:['В учебниках, музеях и архивных документах','В мемах','В комментариях к видео'], a:0, ex:'Историки опираются на документы и свидетельства.'},
+  {q:'Где искать подработку на лето?', opts:['В центре занятости или через знакомых взрослых','В анонимном канале с «лёгкими деньгами»','В сообщении от незнакомца'], a:0, ex:'Анонимные «лёгкие деньги» — частая ловушка мошенников.'},
+  {q:'Где узнать точное время прибытия автобуса?', opts:['В приложении перевозчика или на табло остановки','У прохожего','В прошлогоднем расписании'], a:0, ex:'Актуальные данные — у того, кто управляет автобусами.'},
+  {q:'Сайт sberbank-bonus-vyplata.xyz обещает деньги. Что это?', opts:['Скорее всего, поддельный сайт','Официальный сайт банка','Сайт государственной службы'], a:0, ex:'Странный адрес и обещание денег — признаки подделки.'},
+  {q:'«90% людей выбирают наш сок», — говорит опрос, который провела сама компания. Можно ли верить?', opts:['Осторожно: компания заинтересована в хорошем результате','Да, цифры не врут','Да, раз опрос был'], a:0, ex:'Спроси: кто проводил опрос и кому выгоден результат.'},
+  {q:'Новость: «Учёные выяснили, что…» Что здесь первоисточник?', opts:['Само научное исследование или статья учёных','Заголовок новости','Пересказ в соцсети'], a:0, ex:'Пересказ может исказить смысл исследования.'},
+  {q:'Тебе переслали «свежую» новость. Что проверить в первую очередь?', opts:['Дату публикации: новость может быть старой','Количество смайликов','Цвет шрифта'], a:0, ex:'Старые новости часто выдают за новые.'},
+  {q:'Два сайта пишут противоположное. Что делать?', opts:['Найти первоисточник или третий надёжный независимый источник','Поверить тому, что понравилось','Поверить тому, у кого ярче дизайн'], a:0, ex:'Спор разрешает проверка, а не симпатия.'}
+]},
+{ id:'fallacies', title:'Ловушки в рассуждениях', kind:'choice', fixed:true,
+  opts:TRAPS, q:'Какая это ловушка?',
+  exA:['Популярность — не доказательство: многие тоже могут ошибаться.','Спорят с человеком, а не с его доводом.','Вариантов почти всегда больше двух.','Одно случилось после другого — это ещё не причина.','Каждый шаг этой страшной цепочки ничем не доказан.','Чужие слова исказили и спорят с искажённой версией.'],
+  short:'Узнаём шесть хитрых приёмов в спорах и рекламе.',
+  intro:'Шесть ловушек: «Все так делают», «Переход на личности», «Или — или», «После — значит из-за», «Снежный ком», «Соломенное чучело». Узнай каждую по фразе.',
+  tip:'Спроси себя: это довод по делу — или приём, чтобы меня запутать?',
+  items:[
+  {ctx:'«Все мои друзья уже скачали эту игру — значит, она лучшая!»', a:0},
+  {ctx:'«Да что ты понимаешь в музыке, ты даже на гитаре играть не умеешь!»', a:1},
+  {ctx:'«Либо ты отличник, либо неудачник».', a:2},
+  {ctx:'«Я надел новую кепку, и наша команда выиграла. Кепка счастливая!»', a:3},
+  {ctx:'«Если разрешить одно опоздание, все начнут опаздывать, а потом вообще перестанут ходить в школу!»', a:4},
+  {ctx:'— Давайте меньше сидеть в телефонах.\n— То есть ты предлагаешь отказаться от техники и жить в пещере?', a:5},
+  {ctx:'«У этого блогера миллион подписчиков — значит, он прав».', a:0},
+  {ctx:'«Не слушай его рассказ про экологию — он же носит старомодный пиджак».', a:1},
+  {ctx:'«Ты либо с нами, либо против нас».', a:2},
+  {ctx:'«После того как в школе поставили новые парты, оценки выросли. Это парты сделали нас умнее!»', a:3},
+  {ctx:'«Если не покормить кота прямо сейчас, он обидится, уйдёт из дома, и мы его больше никогда не увидим!»', a:4},
+  {ctx:'— Можно мне погулять ещё полчаса?\n— Значит, ты хочешь гулять всю ночь?!', a:5},
+  {ctx:'«Все в классе носят такие рюкзаки, а ты что, хуже?»', a:0},
+  {ctx:'«Почему мы должны слушать Машу? Она же новенькая».', a:1},
+  {ctx:'«Либо покупаешь самый дорогой телефон, либо ходишь вообще без телефона».', a:2},
+  {ctx:'«Я съел конфету перед игрой и забил гол. Буду есть конфеты перед каждой игрой!»', a:3},
+  {ctx:'«Если сегодня пропущу тренировку, стану лентяем и никогда ничего не добьюсь!»', a:4},
+  {ctx:'— Можно задавать поменьше домашки на выходные?\n— Ты что, хочешь, чтобы все разучились учиться?', a:5},
+  {ctx:'«Миллионы людей читают гороскопы — значит, гороскопы работают».', a:0},
+  {ctx:'«Ты не можешь критиковать мой рисунок — ты сам рисуешь хуже!»', a:1},
+  {ctx:'«Или мы едем на море, или лето пропало».', a:2},
+  {ctx:'«Мама купила новый чайник, и на следующий день сломался телевизор. Это всё из-за чайника!»', a:3},
+  {ctx:'«Разрешишь младшему брату один мультик — он будет смотреть их целыми днями и забросит учёбу».', a:4},
+  {ctx:'— Давай поставим в классе цветы.\n— Ты хочешь превратить класс в джунгли?', a:5}
+]},
+{ id:'cause', title:'Причина или совпадение', kind:'choice',
+  short:'«Вместе» — не значит «из-за». Ищем настоящую причину.',
+  intro:'Если два явления происходят вместе, это ещё не значит, что одно вызывает другое. Часто у них есть общая причина — или это просто совпадение.',
+  tip:'Ищи общую причину, которая влияет на оба явления.',
+  items:[
+  {ctx:'Летом продают больше мороженого, и больше людей обгорает на солнце.', q:'Какая здесь общая причина?', opts:['Жаркое солнечное лето','Мороженое','Солнцезащитный крем'], a:0, ex:'Жара заставляет покупать мороженое, а солнце обжигает кожу.'},
+  {ctx:'Дети с бóльшим размером обуви обычно лучше читают.', q:'Что на самом деле влияет на оба явления?', opts:['Возраст: старшие дети и выросли, и дольше учились читать','Обувь помогает читать','Чтение увеличивает размер ноги'], a:0, ex:'Общая причина — возраст.'},
+  {ctx:'Чем больше пожарных машин на пожаре, тем больше ущерб.', q:'Какая общая причина?', opts:['Размер пожара','Пожарные машины','Цвет машин'], a:0, ex:'На большой пожар отправляют больше машин, и ущерб от него больше.'},
+  {ctx:'В дни, когда я беру зонт, часто идёт дождь.', q:'Зонт вызывает дождь?', opts:['Нет: я беру зонт, когда обещают дождь','Да','Иногда'], a:0, ex:'Причина обоих — прогноз и погода.'},
+  {ctx:'«Каждый раз, когда я мою машину, идёт дождь!»', q:'Почему так кажется?', opts:['Мы лучше запоминаем совпадения и забываем остальные случаи','Мытьё машины вызывает дождь','Дождь любит чистые машины'], a:0, ex:'Это «вижу то, что хочу»: обидные совпадения запоминаются лучше.'},
+  {ctx:'«Я пил чай с мёдом, и через неделю простуда прошла».', q:'Доказывает ли это, что вылечил мёд?', opts:['Нет: обычная простуда часто проходит сама примерно за неделю','Да, точно'], fixed:true, a:0, ex:'Чтобы проверить, нужно сравнить с теми, кто мёд не пил.'},
+  {ctx:'В городах, где больше больниц, больше больных людей.', q:'Как это объяснить?', opts:['В больших городах больше и людей, и больниц','Больницы делают людей больными','Больные люди сами строят больницы'], a:0, ex:'Общая причина — размер города.'},
+  {ctx:'Ученики, у которых дома много книг, в среднем лучше учатся.', q:'Что ещё может влиять?', opts:['Семья, где любят книги, чаще помогает с учёбой','Книги повышают оценки, даже если их не читать','Ничего больше не влияет'], a:0, ex:'Книги на полке — признак, а не волшебная причина.'},
+  {ctx:'Петух кричит перед восходом солнца.', q:'Петух вызывает восход?', opts:['Нет: петух реагирует на приближение утра','Да'], fixed:true, a:0, ex:'Порядок событий ещё не говорит, что из них причина.'},
+  {ctx:'Зимой люди чаще простужаются и чаще носят шапки.', q:'Шапки вызывают простуду?', opts:['Нет: общая причина — холодное время года, когда люди больше сидят вместе в помещениях','Да','Шапки защищают от всех болезней'], a:0, ex:'Холодный сезон влияет на оба явления.'},
+  {ctx:'Чем больше продают тёплых курток, тем больше на улице снега.', q:'Какая общая причина?', opts:['Зима','Куртки вызывают снег','Снег продаёт куртки'], a:0, ex:'Зимой и холодно, и снежно.'},
+  {ctx:'Я нажал на выключатель — и свет зажёгся.', q:'Это причина или совпадение?', opts:CZ, fixed:true, a:0, ex:'Выключатель замыкает электрическую цепь — это настоящая причина.'},
+  {ctx:'Я чихнул — и в соседней комнате упала книга.', q:'Это причина или совпадение?', opts:CZ, fixed:true, a:1, ex:'Чих не может уронить книгу в другой комнате.'},
+  {ctx:'Полил цветок — и он перестал вянуть.', q:'Это причина или совпадение?', opts:CZ, fixed:true, a:0, ex:'Растению нужна вода — связь понятна и проверяема.'},
+  {ctx:'Надел красную футболку — и получил пятёрку.', q:'Это причина или совпадение?', opts:CZ, fixed:true, a:1, ex:'Пятёрку приносит подготовка, а не цвет футболки.'},
+  {ctx:'Положил лёд на солнце — и он растаял.', q:'Это причина или совпадение?', opts:CZ, fixed:true, a:0, ex:'Тепло солнца растапливает лёд.'},
+  {ctx:'Кошка перебежала дорогу — и я споткнулся.', q:'Это причина или совпадение?', opts:CZ, fixed:true, a:1, ex:'Это суеверие. Споткнуться можно и без кошки.'},
+  {q:'Как учёные проверяют, что одно вызывает другое?', opts:['Проводят эксперимент: сравнивают группы, которые отличаются только одним','Спрашивают мнение блогера','Находят одно совпадение'], a:0, ex:'Например, одной группе дают лекарство, а другой — «пустышку».'},
+  {ctx:'Ученики за первыми партами получают оценки выше.', q:'Что может быть настоящей причиной?', opts:['Тем, кому интереснее урок, чаще сами садятся вперёд','Первые парты сделаны из «умного» дерева','Это закон природы'], a:0, ex:'Интерес к учёбе влияет и на выбор парты, и на оценки.'},
+  {ctx:'После того как в городе открыли новый каток, стало больше переломов.', q:'Как проверить, связано ли это?', opts:['Узнать, сколько переломов получено именно на катке','Сразу закрыть каток','Поверить без проверки'], a:0, ex:'Переломов могло стать больше и из-за гололёда на улицах.'},
+  {ctx:'В дни, когда в бассейнах много людей, лучше продаётся мороженое.', q:'Какая общая причина?', opts:['Жара','Бассейны продают мороженое','Мороженое тянет людей в бассейн'], a:0, ex:'В жару хочется и купаться, и мороженого.'},
+  {ctx:'Чем больше человек спит, тем меньше у него ошибок в контрольной.', q:'Что нужно, чтобы утверждать «сон помогает»?', opts:['Проверить на многих людях и учесть другие причины, например подготовку','Ничего, и так всё ясно','Спросить одного друга'], a:0, ex:'Сон действительно важен, но вывод о причине требует проверки.'}
+]},
+{ id:'proscons', title:'Плюсы и минусы', kind:'sort', q:'Это плюс или минус?',
+  short:'Раскладываем аргументы «за» и «против» любого решения.',
+  intro:'У любого решения есть плюсы и минусы. Разложи аргументы по полочкам — это первый шаг к взвешенному решению.',
+  tip:'Важно не только количество плюсов и минусов, но и их вес. Подумай, что важнее именно для тебя.',
+  items:[
+  {t:'Завести собаку', items:[['Будет верный друг',0],['Гулять с ней нужно каждый день в любую погоду',1],['Больше движения на свежем воздухе',0],['Расходы на корм и ветеринара',1]]},
+  {t:'Учиться онлайн', items:[['Можно учиться из дома',0],['Легко отвлечься',1],['Можно пересмотреть урок',0],['Меньше живого общения',1]]},
+  {t:'Брать телефон в школу', items:[['Можно связаться с родителями',0],['Отвлекает на уроке',1],['Можно быстро найти нужную информацию',0],['Можно потерять или разбить',1]]},
+  {t:'Поехать в летний лагерь', items:[['Новые друзья',0],['Скучаешь по дому',1],['Новые навыки',0],['Строгий распорядок дня',1]]},
+  {t:'Купить очень дорогие модные кроссовки', items:[['Красивые и удобные',0],['Уходят все накопления',1],['Могут долго прослужить',0],['Быстро выйдут из моды',1]]},
+  {t:'Ездить на электросамокате', items:[['Быстро добираться',0],['Можно упасть и травмироваться',1],['Не нужен бензин',0],['Нужно регулярно заряжать',1]]},
+  {t:'Ложиться спать поздно', items:[['Больше времени вечером на свои дела',0],['Утром трудно встать',1],['Хуже внимание на уроках',1],['Вечером тихо, никто не мешает',0]]},
+  {t:'Вести свой блог', items:[['Учишься писать и снимать',0],['Могут писать злые комментарии',1],['Можно найти единомышленников',0],['Можно случайно выдать личные данные',1]]},
+  {t:'Читать новости только в одном канале', items:[['Быстро и удобно',0],['Видишь только одну точку зрения',1],['Не нужно ничего искать',0],['Если канал ошибся, ты не узнаешь',1]]},
+  {t:'Делать домашку сразу после школы', items:[['Вечер остаётся свободным',0],['Нет времени отдохнуть',1],['Материал ещё свеж в памяти',0],['Можешь быть уставшим',1]]},
+  {t:'Записаться в спортивную секцию', items:[['Здоровье и сила',0],['Меньше свободного времени',1],['Новые друзья',0],['Можно получить травму',1]]},
+  {t:'Играть в компьютерные игры', items:[['Тренируют реакцию и стратегию',0],['Можно засидеться и не выспаться',1],['Можно играть вместе с друзьями',0],['Устают глаза',1]]},
+  {t:'Жить в большом городе', items:[['Много кружков и музеев',0],['Шумно и пробки',1],['Много вариантов учёбы и работы',0],['Воздух грязнее, чем за городом',1]]},
+  {t:'Покупать вещи в интернете', items:[['Большой выбор',0],['Нельзя примерить заранее',1],['Доставка до дома',0],['Можно нарваться на мошенников',1]]},
+  {t:'Делать проект в группе', items:[['Можно разделить задачи',0],['Трудно договориться',1],['Больше идей',0],['Кто-то может не сделать свою часть',1]]},
+  {t:'Один пароль для всех сайтов', items:[['Легко запомнить',0],['Взломают один сайт — доберутся до всех',1],['Не нужно записывать',0],['Мошенники часто пробуют украденные пароли на других сайтах',1]]},
+  {t:'Ходить в школу пешком', items:[['Полезно для здоровья',0],['Дольше, чем на автобусе',1],['Бесплатно',0],['Можно промокнуть под дождём',1]]},
+  {t:'Читать электронные книги', items:[['Много книг в одном устройстве',0],['Нужна зарядка',1],['Можно увеличить шрифт',0],['От экрана устают глаза',1]]},
+  {t:'Выступить на конкурсе', items:[['Опыт и уверенность в себе',0],['Сильное волнение',1],['Можно победить',0],['Нужно долго готовиться',1]]},
+  {t:'Согласиться на «лёгкую подработку» от незнакомца в интернете', items:[['Обещают быстрые деньги',0],['Можно стать соучастником мошенников',1],['Не нужно никуда ходить',0],['Могут украсть твои данные',1]], ex:'Плюсы здесь только обещанные, а минусы — настоящие и серьёзные. Взвешивай не количество, а вес!'},
+  {t:'Носить школьную форму', items:[['Не нужно думать, что надеть',0],['Меньше возможностей показать свой стиль',1],['Все выглядят аккуратно',0],['Форма бывает неудобной',1]]},
+  {t:'Ездить в школу на велосипеде', items:[['Быстрее, чем пешком',0],['Нужно место, где оставить велосипед',1],['Это тренировка',0],['На дороге может быть опасно',1]]}
+]}
+];
+const CAT = Object.fromEntries(CATS.map(c => [c.id, c]));
+const SCAM = {fake:[0,3,6,9,12,16,18,20], consequences:[1,13,20], chains:[1,9], proscons:[15,19]};
+Object.entries(SCAM).forEach(([id, idx]) => idx.forEach(i => { CAT[id].items[i].tag = 'scam'; }));
+
+const LESSONS = [
+  {id:'lesson1', n:1, title:'Знакомство и азбука логики', spec:[['logic', 7, 'st'], ['fake', 2, 'scam'], ['ambiguity', 1]]},
+  {id:'lesson2', n:2, title:'Азбука логики: часть 2', spec:[['logic', 8, 'arg|val|ind|if'], ['conditions', 2]]},
+  {id:'lesson3', n:3, title:'Факт или мнение', spec:[['factopinion', 8], ['believe', 2]]},
+  {id:'lesson4', n:4, title:'Суперсила вопросов', spec:[['sources', 6], ['fake', 4, '!scam']]},
+  {id:'lesson5', n:5, title:'Осторожно, мошенники', spec:[['fake', 5, 'scam'], ['consequences', 2, 'scam'], ['chains', 1, 'scam'], ['proscons', 2, 'scam']]},
+  {id:'lesson6', n:6, title:'Ловушки в рассуждениях', spec:[['fallacies', 10]]},
+  {id:'lesson7', n:7, title:'Как мозг нас обманывает', spec:[['cause', 8], ['chains', 2, '!scam']]},
+  {id:'lesson8', n:8, title:'Проверка новостей', spec:[['sources', 4], ['fake', 4], ['ambiguity', 2]]},
+  {id:'lesson9', n:9, title:'Итоговый тест', final:true}
+];
+const LES = Object.fromEntries(LESSONS.map(l => [l.id, l]));
+function pick(id, n, tag){
+  let pool = CAT[id].items;
+  if (tag) {
+    if (tag[0] === '!') { const t = tag.slice(1); pool = pool.filter(i => i.tag !== t); }
+    else { const ts = tag.split('|'); pool = pool.filter(i => ts.includes(i.tag)); }
+  }
+  return shuffle(pool).slice(0, n).map(item => ({cat: CAT[id], item}));
+}
+function exOf(e){ return e.item.ex || (e.cat.exA ? e.cat.exA[e.item.a] : '') || (e.cat.kind === 'order' ? 'Каждое событие — причина следующего.' : ''); }
+
+const $ = s => document.querySelector(s);
+const app = $('#app');
+$('#logo').innerHTML = RACCOON;
+$('#home-btn').onclick = () => { try { history.replaceState(null, '', location.pathname + location.search); } catch (_) {} renderHome(); };
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function shuffle(a){ a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function range(n){ return [...Array(n).keys()]; }
+function plural(n, one, few, many){ const m10 = n % 10, m100 = n % 100; if (m10 === 1 && m100 !== 11) return one; if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few; return many; }
+
+/* ---------- progress: paws, ranks, achievements ---------- */
+const PROF_KEY = 'chek-profiles';
+function loadProfiles(){ try { const v = JSON.parse(localStorage.getItem(PROF_KEY) || 'null'); return v && Array.isArray(v.list) ? v : {list:[], cur:null}; } catch (_) { return {list:[], cur:null}; } }
+let PR = loadProfiles();
+function saveProfiles(){ try { localStorage.setItem(PROF_KEY, JSON.stringify(PR)); } catch (_) {} }
+(function migrate(){ try { if (!PR.list.length) { const old = localStorage.getItem('chek-progress'); if (old) { const id = 'p' + Date.now().toString(36); PR.list.push({id, name:'Ученик'}); PR.cur = id; localStorage.setItem('chek-progress:' + id, old); saveProfiles(); } } } catch (_) {} })();
+let CUR = null;
+try { CUR = sessionStorage.getItem('chek-session') || null; } catch (_) {}
+if (!CUR && PR.cur) CUR = PR.cur;
+if (CUR && !PR.list.some(p => p.id === CUR)) CUR = null;
+function setCur(id, remember){ CUR = id || null; PR.cur = id && remember ? id : null; saveProfiles(); try { if (id) sessionStorage.setItem('chek-session', id); else sessionStorage.removeItem('chek-session'); } catch (_) {} }
+function curProf(){ return PR.list.find(x => x.id === CUR) || null; }
+function pkey(){ return CUR ? 'chek-progress:' + CUR : 'chek-progress'; }
+function curName(){ const p = curProf(); return p ? p.name : ''; }
+function pinHash(login, pin){ let h = 2166136261; for (const ch of String(login).toLowerCase() + ':' + pin + ':chek') { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
+function freshP(){ return {paws:0, streak:0, bestStreak:0, words:0, cat:{}, tried:{}, tests:{}, badges:{}, retried:0, course:{done:{}, cur:null, all:false, ch:[], name:''}}; }
+function loadP(){ try { return Object.assign(freshP(), JSON.parse(localStorage.getItem(pkey()) || '{}') || {}); } catch (_) { return freshP(); } }
+let P = loadP();
+function saveP(){ try { localStorage.setItem(pkey(), JSON.stringify(P)); } catch (_) {} }
+function loadBest(){ return P.tests; }
+function saveBest(k, p){ if (P.tests[k] == null || p > P.tests[k]) { P.tests[k] = p; saveP(); } checkBadges(); }
+
+const PAW = '<svg class="paw" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="16" rx="5.5" ry="4.6"/><ellipse cx="5.2" cy="10.2" rx="2.3" ry="2.9" transform="rotate(-20 5.2 10.2)"/><ellipse cx="9.6" cy="5.8" rx="2.3" ry="3"/><ellipse cx="14.4" cy="5.8" rx="2.3" ry="3"/><ellipse cx="18.8" cy="10.2" rx="2.3" ry="2.9" transform="rotate(20 18.8 10.2)"/></svg>';
+const RANKS = [[0,'Новичок'],[10,'Стажёр'],[30,'Младший детектив'],[60,'Детектив'],[100,'Старший детектив'],[160,'Главный детектив'],[250,'Легенда сыска']];
+function rankOf(p){ let i = 0; RANKS.forEach((r, k) => { if (p >= r[0]) i = k; }); return {i, name: RANKS[i][1], next: RANKS[i + 1] || null, from: RANKS[i][0]}; }
+const BADGES = [
+  {id:'first', t:'Первая лапка', d:'Дать первый правильный ответ', test:p => p.paws >= 1},
+  {id:'u1', t:'Первое дело', d:'Пройти первый урок курса', test:() => lessonsDone() >= 1},
+  {id:'u5', t:'Половина пути', d:'Пройти 5 уроков курса', test:() => lessonsDone() >= 5},
+  {id:'grad', t:'Выпускник Академии', d:'Пройти все 9 уроков курса', test:() => lessonsDone() >= 9},
+  {id:'paw50', t:'Полсотни лапок', d:'Собрать 50 лапок', test:p => p.paws >= 50},
+  {id:'paw200', t:'Лапа-рекордсмен', d:'Собрать 200 лапок', test:p => p.paws >= 200},
+  {id:'streak5', t:'Серия из 5', d:'5 правильных ответов подряд', test:p => p.bestStreak >= 5},
+  {id:'streak15', t:'Неудержимый', d:'15 правильных ответов подряд', test:p => p.bestStreak >= 15},
+  {id:'perfect', t:'Без единой ошибки', d:'Пройти любой тест на 100%', test:p => Object.values(p.tests).some(v => v >= 100)},
+  {id:'lesson', t:'Отличник урока', d:'Пройти закрепление любого урока на 80% и выше', test:p => LESSONS.some(l => !l.final && (p.tests[l.id] || 0) >= 80)},
+  {id:'alllessons', t:'Все дела раскрыты', d:'Пройти закрепление всех 8 уроков на 80% и выше', test:p => LESSONS.filter(l => !l.final).every(l => (p.tests[l.id] || 0) >= 80)},
+  {id:'final', t:'Экзамен сдан', d:'Пройти итоговый тест на 75% и выше', test:p => (p.tests.final || 0) >= 75},
+  {id:'logic', t:'Логик', d:'15 правильных ответов в «Азбуке логики»', test:p => (p.cat.logic || 0) >= 15},
+  {id:'antifake', t:'Антифейк', d:'15 правильных ответов в «Правда или фейк»', test:p => (p.cat.fake || 0) >= 15},
+  {id:'traps', t:'Охотник за ловушками', d:'15 правильных ответов в «Ловушках в рассуждениях»', test:p => (p.cat.fallacies || 0) >= 15},
+  {id:'words', t:'Мастер филвордов', d:'Разгадать 5 филвордов', test:p => p.words >= 5},
+  {id:'explorer', t:'Исследователь', d:'Попробовать все разделы тренажёра', test:p => CATS.every(c => p.tried[c.id])},
+  {id:'retry', t:'Работа над ошибками', d:'Повторить свои ошибки после теста', test:p => p.retried >= 1}
+];
+function toast(html){
+  let t = document.getElementById('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+  const item = document.createElement('div'); item.className = 'toast-item'; item.innerHTML = html;
+  t.appendChild(item); setTimeout(() => item.remove(), 3600);
+}
+function checkBadges(){
+  BADGES.filter(b => !P.badges[b.id] && b.test(P)).forEach(b => { P.badges[b.id] = Date.now(); toast(`${PAW}<span><b>Новое достижение!</b><br>${esc(b.t)}</span>`); });
+  saveP(); updateHud();
+}
+function award(e, g){
+  const before = rankOf(P.paws).i;
+  P.tried[e.cat.id] = true;
+  if (g.ok) { P.paws++; P.streak++; P.bestStreak = Math.max(P.bestStreak, P.streak); P.cat[e.cat.id] = (P.cat[e.cat.id] || 0) + 1; if (e.cat.kind === 'words') P.words++; }
+  else P.streak = 0;
+  const r = rankOf(P.paws);
+  if (r.i > before) toast(`${PAW}<span><b>Новое звание!</b><br>${esc(r.name)}</span>`);
+  checkBadges();
+}
+function updateHud(){ const h = document.getElementById('hud'); if (h) h.innerHTML = `${PAW}<span>${P.paws}</span><span class="hud-rank">${esc(curName() ? curName() + ' · ' : '')}${esc(rankOf(P.paws).name)}</span>`; }
+function renderAch(){
+  document.body.classList.remove('wide');
+  S = null;
+  const r = rankOf(P.paws), pct = r.next ? Math.round((P.paws - r.from) * 100 / (r.next[0] - r.from)) : 100;
+  const got = BADGES.filter(b => P.badges[b.id]).length;
+  app.innerHTML = `
+  <button class="back" id="b-home" type="button">← Все тренажёры</button>
+  <section style="display:flex;flex-direction:column;gap:10px">
+    <p class="eyebrow">Мой кабинет</p>
+    <h1>${esc(curName() || 'Ученик')}</h1>
+    <p class="lead">${curProf() && curProf().login ? `Логин: <b>${esc(curProf().login)}</b> · ` : ''}Звание: <b>${esc(r.name)}</b> · курс пройден на ${coursePct()}% · уроков: ${lessonsDone()} из ${COURSE.length}</p>
+    <div><button class="link" id="switch-u" type="button">Выйти из кабинета</button></div>
+  </section>
+  <section class="card" style="display:flex;flex-direction:column;gap:12px">
+    <h2>Отправить результат учителю</h2>
+    <p class="note">${curProf() && curProf().botName ? `Скопируй код и отправь его боту @${esc(curProf().botName)}. Бот сохранит твой прогресс и передаст результат учителю.` : 'Скопируй код и отправь учителю (или Telegram-боту курса). Код хранит весь твой прогресс: по нему можно продолжить на другом устройстве.'}</p>
+    <textarea id="sendcode" class="codebox" rows="4" readonly>Готовлю код…</textarea>
+    <div class="actions"><button class="btn" id="copycode" type="button">Скопировать</button>${curProf() && curProf().botName ? `<a class="btn ghost" href="https://t.me/${esc(curProf().botName)}" target="_blank" rel="noopener">Открыть бота</a>` : ''}</div>
+  </section>
+  <section class="card" style="display:flex;flex-direction:column;gap:10px">
+    <h2>Мои тесты</h2>
+    <div class="tablewrap"><table><tr><th>Тест</th><th style="text-align:right">Лучший результат</th></tr>${LESSONS.map(l => { const v = l.final ? P.tests.final : P.tests[l.id]; return `<tr><td>${l.final ? 'Итоговый тест' : `Урок ${l.n}: ${esc(l.title)}`}</td><td class="num ${pcClass(v)}">${v == null ? 'ещё не пройден' : v + '%'}</td></tr>`; }).join('')}</table></div>
+  </section>
+  <section class="card" style="display:flex;flex-direction:column;gap:12px">
+    <div class="score"><p class="big pawbig">${PAW}${P.paws}</p><div class="stats"><span>лапок собрано</span><span>Лучшая серия: ${P.bestStreak}</span><span>Филвордов разгадано: ${P.words}</span></div></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><span style="width:${pct}%"></span></div>
+    <p class="note">${r.next ? `До звания «${esc(r.next[1])}» осталось ${r.next[0] - P.paws} ${plural(r.next[0] - P.paws, 'лапка', 'лапки', 'лапок')}.` : 'Это высшее звание. Ты — легенда сыска!'}</p>
+    <p class="note">Звания: ${RANKS.map(x => `${esc(x[1])} (${x[0]})`).join(' → ')}</p>
+  </section>
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2>Ачивки: ${got} из ${BADGES.length}</h2>
+    <div class="badges">${BADGES.map(b => `<div class="badge ${P.badges[b.id] ? 'on' : ''}"><span class="medal">${PAW}</span><div style="min-width:0"><h3>${esc(b.t)}</h3><p>${esc(b.d)}</p><p class="bstate">${P.badges[b.id] ? 'Получено' : 'Пока закрыто'}</p></div></div>`).join('')}</div>
+  </section>
+  <div class="actions"><button class="btn ghost" id="reset-p" type="button">Сбросить мой прогресс</button></div>
+  <p class="note">Прогресс хранится в твоём кабинете на этом устройстве. Чтобы продолжить на другом устройстве, отправь код боту или учителю, а потом выбери «Перенести прогресс» при входе.</p>`;
+  $('#b-home').onclick = renderHome;
+  $('#switch-u').onclick = logout;
+  shareText().then(t => { const ta = $('#sendcode'); if (ta) ta.value = t; });
+  $('#copycode').onclick = () => { const ta = $('#sendcode'); const done = () => toast('<span>Скопировано — отправь учителю</span>'); try { navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); toast('<span>Текст выделен — нажми «Копировать»</span>'); }); } catch (_) { ta.select(); } };
+  const rb = $('#reset-p');
+  rb.onclick = () => {
+    if (rb.dataset.armed) { P = freshP(); saveP(); updateHud(); renderAch(); toast('<span>Прогресс сброшен</span>'); return; }
+    rb.dataset.armed = '1'; rb.textContent = 'Точно сбросить? Нажми ещё раз';
+  };
+  window.scrollTo(0, 0);
+}
+
+/* ---------- filword grid ---------- */
+function strHash(s){ let h = 2166136261; for (const ch of s) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0) || 1; }
+function rng(seed){ let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+function buildGrid(words, seed){
+  const N = 10, L = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЭЮЯ';
+  for (let attempt = 0; attempt < 400; attempt++) {
+    const r = rng(seed + attempt * 7919);
+    const g = Array.from({length:N}, () => Array(N).fill(''));
+    let ok = true;
+    for (const w of [...words].sort((a, b) => b.length - a.length)) {
+      let done = false;
+      for (let t = 0; t < 300 && !done; t++) {
+        const down = r() < 0.5, dr = down ? 1 : 0, dc = down ? 0 : 1;
+        const r0 = Math.floor(r() * (down ? N - w.length + 1 : N));
+        const c0 = Math.floor(r() * (down ? N : N - w.length + 1));
+        let fits = true;
+        for (let k = 0; k < w.length; k++) { const ch = g[r0 + dr * k][c0 + dc * k]; if (ch && ch !== w[k]) { fits = false; break; } }
+        if (fits) { for (let k = 0; k < w.length; k++) g[r0 + dr * k][c0 + dc * k] = w[k]; done = true; }
+      }
+      if (!done) { ok = false; break; }
+    }
+    if (ok) {
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) if (!g[i][j]) g[i][j] = L[Math.floor(r() * L.length)];
+      return {N, letters: g.flat()};
+    }
+  }
+  return null;
+}
+function locate(grid, w){
+  const {N, letters} = grid;
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+    for (const [dr, dc] of [[0,1],[1,0]]) {
+      if (i + dr * (w.length - 1) >= N || j + dc * (w.length - 1) >= N) continue;
+      const cells = range(w.length).map(k => (i + dr * k) * N + (j + dc * k));
+      if (cells.every((c, k) => letters[c] === w[k])) return cells;
+    }
+  }
+  return [];
+}
+
+/* ---------- sessions ---------- */
+let S = null;
+
+function prep({cat, item}){
+  const e = {cat, item, graded:false};
+  if (cat.kind === 'choice') { const n = (item.opts || cat.opts).length; e.perm = (cat.fixed || item.fixed) ? range(n) : shuffle(range(n)); e.sel = null; }
+  if (cat.kind === 'order') { let p = shuffle(range(item.steps.length)); while (p.every((v, i) => v === i)) p = shuffle(p); e.perm = p; e.sel = []; }
+  if (cat.kind === 'sort') { e.perm = shuffle(range(item.items.length)); e.sel = {}; }
+  if (cat.kind === 'words') { e.grid = buildGrid(item.words, strHash(item.theme)); e.found = new Set(); e.foundCells = new Set(); e.start = null; e.revealed = false; }
+  return e;
+}
+function build(mode, key){
+  if (key === 'final') {
+    const cats = CATS.filter(c => c.kind !== 'words');
+    const list = cats.map(c => ({cat:c, item: shuffle(c.items)[0]}));
+    const used = new Set(list.map(x => x.item));
+    const rest = shuffle(cats.flatMap(c => c.items.filter(i => !used.has(i)).map(item => ({cat:c, item})))).slice(0, Math.max(0, 20 - list.length));
+    return shuffle(list.concat(rest));
+  }
+  if (LES[key]) return shuffle(LES[key].spec.flatMap(([id, n, tag]) => pick(id, n, tag)));
+  const c = CAT[key];
+  const items = mode === 'practice' ? shuffle(c.items) : shuffle(c.items).slice(0, c.kind === 'words' ? 3 : 10);
+  return items.map(item => ({cat:c, item}));
+}
+function start(mode, key, list, opts){
+  opts = opts || {};
+  const title = opts.title || (key === 'final' ? 'Итоговый тест' : LES[key] ? `Урок ${LES[key].n}: ${LES[key].title}` : CAT[key].title);
+  S = {mode, key, title, ret: opts.ret || null, q: (list || build(mode, key)).map(prep), i:0, res:[]};
+  renderQ(); window.scrollTo(0, 0);
+}
+
+/* ---------- screens ---------- */
+function renderHome(){
+  S = null;
+  document.body.classList.remove('wide');
+  const cur = P.course.cur && COURSE.find(u => u.id === P.course.cur.u), cpct = coursePct();
+  const best = loadBest();
+  app.innerHTML = `
+  <section style="display:flex;flex-direction:column;gap:10px;padding-top:12px">
+    <p class="eyebrow">Курс «Не верь на слово!» · 10–15 лет</p>
+    <h1>Академия Енота Чека</h1>
+    <p class="lead">${CATS.length} разделов заданий по критическому мышлению и логике. В каждом есть тренировка с разбором после каждого ответа и тест с итогом: сколько верно, сколько нет и где ошибки. За каждый правильный ответ — лапка Енота Чека!</p>
+    <p class="note">Занимается: <b>${esc(curName())}</b> · <button class="link" id="switch-u" type="button">Выйти</button></p>
+    <div class="actions"><button class="btn ghost" id="go-ach" type="button">Мой кабинет: лапки, ачивки, результат для учителя</button></div>
+  </section>
+  <button class="final course-card" id="go-course" type="button">
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:0;flex:1">
+      <h2>${cpct === 0 ? 'Начать курс' : cpct === 100 ? 'Курс пройден — повторить' : 'Продолжить курс'}</h2>
+      <p>${cur ? `Урок ${cur.n}: ${esc(cur.title)} · шаг ${P.course.cur.i + 1} из ${cur.steps.length}` : '9 уроков по 20–25 минут: разминки, комиксы, теория, тренировки и тесты'}</p>
+      <div class="bar"><span style="width:${cpct}%"></span></div>
+      <p>${cpct}% курса пройдено · ${lessonsDone()} из ${COURSE.length} уроков</p>
+    </div>
+    <span class="go" aria-hidden="true">→</span>
+  </button>
+  <h2>Тренажёры</h2>
+  <button class="final" id="go-final" type="button">
+    <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+      <h2>Итоговый тест</h2>
+      <p>20 вопросов из всех разделов. Оценка и разбор ошибок в конце.${best.final != null ? ` Твой лучший результат: ${best.final}%.` : ''}</p>
+    </div>
+    <span class="go" aria-hidden="true">→</span>
+  </button>
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2>Закрепление по урокам</h2>
+    <p class="note">После каждого урока — 10 вопросов по его теме.</p>
+    <div class="lessons">${LESSONS.map(l => `<button class="lesson" data-id="${l.id}" type="button"><span class="ln">${l.n}</span><span class="lt">${esc(l.title)}</span>${(l.final ? best.final : best[l.id]) != null ? `<span class="best">${l.final ? best.final : best[l.id]}%</span>` : ''}</button>`).join('')}</div>
+  </section>
+  <h2>Все разделы</h2>
+  <div class="cats">${CATS.map(c => `
+    <button class="cat" data-id="${c.id}" type="button">
+      <span class="meta"><span>${c.items.length} ${plural(c.items.length, 'задание', 'задания', 'заданий')}</span>${best[c.id] != null ? `<span class="best">Тест: ${best[c.id]}%</span>` : ''}</span>
+      <h3>${esc(c.title)}</h3>
+      <p>${esc(c.short)}</p>
+    </button>`).join('')}
+  </div>
+  <p class="note">Прогресс каждого ученика хранится на этом устройстве. Чтобы учитель увидел результат, отправь ему код из «Моего кабинета». <button class="link" id="go-journal" type="button">Журнал учителя</button></p>`;
+  $('#switch-u').onclick = logout;
+  $('#go-journal').onclick = renderJournal;
+  $('#go-final').onclick = () => renderIntro('final');
+  $('#go-ach').onclick = renderAch;
+  $('#go-course').onclick = () => { openCourse(); window.scrollTo(0, 0); };
+  app.querySelectorAll('.lesson').forEach(b => b.onclick = () => renderIntro(b.dataset.id));
+  app.querySelectorAll('.cat').forEach(b => b.onclick = () => renderIntro(b.dataset.id));
+}
+
+function renderIntro(key){
+  document.body.classList.remove('wide');
+  if (LES[key] && LES[key].final) key = 'final';
+  const fin = key === 'final', l = LES[key], c = CAT[key];
+  const title = fin ? 'Итоговый тест' : l ? `Закрепление · урок ${l.n}` : c.title;
+  const intro = fin ? 'По одному вопросу из каждого раздела и ещё несколько случайных — всего 20. Подсказок не будет: ответы и разбор ошибок появятся в конце.'
+    : l ? `Тема урока: «${l.title}». 10 вопросов по материалу урока. В конце — оценка, лапки и разбор ошибок.` : c.intro;
+  const tip = fin ? 'Не спеши. Перед ответом вспомни алгоритм С-Т-О-П и пять вопросов.' : l ? 'Вспомни, что было на уроке, и не торопись с ответом.' : c.tip;
+  const tn = (fin || l) ? (fin ? 20 : 10) : (c.kind === 'words' ? 3 : 10);
+  app.innerHTML = `
+  <button class="back" id="b-home" type="button">← Все тренажёры</button>
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <p class="eyebrow">${fin || l ? 'Проверка знаний' : 'Тренажёр'}</p>
+    <h1>${esc(title)}</h1>
+    <p class="lead">${esc(intro)}</p>
+  </section>
+  <div class="tip">${RACCOON}<p class="hand">Чек советует: ${esc(tip)}</p></div>
+  <div class="modes">
+    ${fin || l ? '' : `<div class="card mode"><h3>Тренировка</h3><p>Все ${c.items.length} ${plural(c.items.length, 'задание', 'задания', 'заданий')} в случайном порядке. После каждого ответа — правильный ответ и объяснение.</p><button class="btn" id="m-practice" type="button">Начать тренировку</button></div>`}
+    <div class="card mode"><h3>Тест</h3><p>${tn} ${plural(tn, 'задание', 'задания', 'заданий')} без подсказок. В конце — сколько верно, оценка и разбор каждой ошибки.</p><button class="btn ${fin || l ? '' : 'ghost'}" id="m-test" type="button">Пройти тест</button></div>
+  </div>`;
+  $('#b-home').onclick = renderHome;
+  if (!fin && !l) $('#m-practice').onclick = () => start('practice', key);
+  $('#m-test').onclick = () => start('test', key);
+  window.scrollTo(0, 0);
+}
+
+function qText(e){ const {cat, item} = e; return [item.t, item.theme ? 'Филворд: ' + item.theme : '', item.ctx, item.q || cat.q].filter(Boolean).join(' — '); }
+
+function body(e){
+  const {cat, item} = e;
+  if (cat.kind === 'choice') {
+    const opts = item.opts || cat.opts;
+    return `${item.ctx ? `<blockquote class="ctx">${esc(item.ctx)}</blockquote>` : ''}
+      <h2>${esc(item.q || cat.q)}</h2>
+      <div class="opts ${cat.tf ? 'tf' : ''}">${e.perm.map(k => `<button class="opt" type="button" data-k="${k}">${esc(opts[k])}</button>`).join('')}</div>`;
+  }
+  if (cat.kind === 'order') {
+    return `<blockquote class="ctx">${esc(item.t)}</blockquote>
+      <h2>${esc(cat.q)}</h2>
+      <p class="hint">Нажимай на события по порядку: от первого к последнему.</p>
+      <ol class="chosen" id="chosen"></ol>
+      <div class="pool">${e.perm.map(k => `<button class="chip" type="button" data-k="${k}">${esc(item.steps[k])}</button>`).join('')}</div>
+      <div><button class="link" id="reset" type="button">Сбросить порядок</button></div>`;
+  }
+  if (cat.kind === 'sort') {
+    return `<blockquote class="ctx">${esc(item.t)}</blockquote>
+      <h2>${esc(cat.q)}</h2>
+      <div class="sort">${e.perm.map(k => `<div class="srow" data-k="${k}"><p>${esc(item.items[k][0])}</p><div class="seg" role="group" aria-label="Плюс или минус"><button type="button" data-v="0">Плюс</button><button type="button" data-v="1">Минус</button></div></div>`).join('')}</div>`;
+  }
+  const g = e.grid;
+  return `<blockquote class="ctx">Тема: ${esc(item.theme)}</blockquote>
+    <h2>Найди ${item.words.length} ${plural(item.words.length, 'слово', 'слова', 'слов')}</h2>
+    <p class="hint">Нажми на первую букву слова, потом на последнюю. Слова идут слева направо или сверху вниз.</p>
+    <div class="grid" style="--n:${g.N}">${g.letters.map((ch, i) => `<button class="cell" type="button" data-i="${i}" aria-label="${ch}">${ch}</button>`).join('')}</div>
+    <ul class="wlist">${item.words.map(w => `<li data-w="${w}">${w}</li>`).join('')}</ul>
+    ${S.mode === 'practice' ? '<div><button class="link" id="giveup" type="button">Показать слова</button></div>' : ''}`;
+}
+
+function renderQ(){
+  document.body.classList.remove('wide');
+  const e = S.q[S.i], n = S.q.length, last = S.i === n - 1;
+  const needsCheck = S.mode === 'practice' && (e.cat.kind === 'order' || e.cat.kind === 'sort');
+  app.innerHTML = `
+  <div class="qtop"><button class="back" id="quit" type="button">← Выйти</button><span class="qcount">${esc(S.title)} · ${S.mode === 'test' ? 'тест' : 'тренировка'} · ${S.i + 1} из ${n}${S.mode === 'practice' && P.streak > 1 ? ` · серия ${P.streak}` : ''}</span></div>
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${S.i}"><span style="width:${S.i / n * 100}%"></span></div>
+  <article class="card qcard">
+    <p class="eyebrow">${esc(e.cat.title)}</p>
+    ${body(e)}
+    <div id="fb" class="fb" hidden></div>
+    <div class="qnav"><button class="btn" id="next" type="button" ${e.cat.kind === 'words' && S.mode === 'test' ? '' : 'disabled'}>${needsCheck ? 'Проверить' : (last ? 'Завершить' : 'Дальше →')}</button></div>
+  </article>`;
+  $('#quit').onclick = () => S.ret ? openStep(S.ret.u, S.ret.i) : renderIntro(S.key);
+  const next = $('#next');
+  next.onclick = () => {
+    if (S.mode === 'test') { finalize(e); go(); return; }
+    if (!e.graded) { finalize(e); next.textContent = last ? 'Завершить' : 'Дальше →'; return; }
+    go();
+  };
+  bind(e, next);
+}
+
+function ready(e){
+  const k = e.cat.kind;
+  if (k === 'choice') return e.sel !== null;
+  if (k === 'order') return e.sel.length === e.item.steps.length;
+  if (k === 'sort') return Object.keys(e.sel).length === e.item.items.length;
+  return true;
+}
+
+function bind(e, next){
+  const {cat, item} = e;
+  if (cat.kind === 'choice') {
+    app.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      if (e.graded) return;
+      e.sel = +b.dataset.k;
+      app.querySelectorAll('.opt').forEach(x => x.classList.toggle('sel', x === b));
+      if (S.mode === 'practice') { finalize(e); }
+      next.disabled = false;
+    });
+  }
+  if (cat.kind === 'order') {
+    const draw = () => {
+      $('#chosen').innerHTML = e.sel.map(k => `<li>${esc(item.steps[k])}</li>`).join('');
+      app.querySelectorAll('.chip').forEach(b => b.disabled = e.graded || e.sel.includes(+b.dataset.k));
+      next.disabled = !(ready(e) || e.graded);
+    };
+    app.querySelectorAll('.chip').forEach(b => b.onclick = () => { if (e.graded) return; e.sel.push(+b.dataset.k); draw(); });
+    $('#reset').onclick = () => { if (e.graded) return; e.sel = []; draw(); };
+    e.redraw = draw;
+  }
+  if (cat.kind === 'sort') {
+    app.querySelectorAll('.srow').forEach(row => {
+      row.querySelectorAll('button').forEach(b => b.onclick = () => {
+        if (e.graded) return;
+        e.sel[row.dataset.k] = +b.dataset.v;
+        row.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+        next.disabled = !ready(e);
+      });
+    });
+  }
+  if (cat.kind === 'words') {
+    const g = e.grid, N = g.N, cells = app.querySelectorAll('.cell');
+    const paint = () => {
+      cells.forEach((c, i) => { c.classList.toggle('pick', e.start === i); c.classList.toggle('found', e.foundCells.has(i)); });
+      app.querySelectorAll('.wlist li').forEach(li => li.classList.toggle('done', e.found.has(li.dataset.w)));
+    };
+    const line = (a, b) => {
+      const ra = Math.floor(a / N), ca = a % N, rb = Math.floor(b / N), cb = b % N, out = [];
+      if (ra === rb) { const s = Math.sign(cb - ca); for (let c = ca; c !== cb + s; c += s) out.push(ra * N + c); return out; }
+      if (ca === cb) { const s = Math.sign(rb - ra); for (let r = ra; r !== rb + s; r += s) out.push(r * N + ca); return out; }
+      return null;
+    };
+    cells.forEach(c => c.onclick = () => {
+      if (e.graded) return;
+      const i = +c.dataset.i;
+      if (e.start === null) { e.start = i; paint(); return; }
+      if (e.start === i) { e.start = null; paint(); return; }
+      const ln = line(e.start, i);
+      e.start = null;
+      if (ln) {
+        const word = ln.map(x => g.letters[x]).join(''), rev = [...word].reverse().join('');
+        const hit = item.words.find(w => !e.found.has(w) && (w === word || w === rev));
+        if (hit) {
+          e.found.add(hit); ln.forEach(x => e.foundCells.add(x)); paint();
+          if (e.found.size === item.words.length && S.mode === 'practice') { finalize(e); next.disabled = false; }
+          return;
+        }
+      }
+      paint();
+      cells[i].classList.add('shake'); setTimeout(() => cells[i].classList.remove('shake'), 300);
+    });
+    const give = $('#giveup');
+    if (give) give.onclick = () => { if (e.graded) return; e.revealed = true; finalize(e); next.disabled = false; };
+    e.repaint = paint;
+  }
+}
+
+function grade(e){
+  const {cat, item} = e;
+  if (cat.kind === 'choice') {
+    const opts = item.opts || cat.opts;
+    return {ok: e.sel === item.a, given: e.sel === null ? 'Нет ответа' : opts[e.sel], right: opts[item.a]};
+  }
+  if (cat.kind === 'order') {
+    const ok = e.sel.length === item.steps.length && e.sel.every((k, i) => k === i);
+    return {ok, given: e.sel.length ? e.sel.map(k => item.steps[k]).join(' → ') : 'Нет ответа', right: item.steps.join(' → ')};
+  }
+  if (cat.kind === 'sort') {
+    const lab = v => v ? 'минус' : 'плюс';
+    const wrong = range(item.items.length).filter(k => e.sel[k] !== item.items[k][1]);
+    return {ok: wrong.length === 0,
+      given: wrong.length ? wrong.map(k => `«${item.items[k][0]}» — ${e.sel[k] == null ? 'нет ответа' : lab(e.sel[k])}`).join('; ') : 'Всё верно',
+      right: wrong.map(k => `«${item.items[k][0]}» — ${lab(item.items[k][1])}`).join('; ')};
+  }
+  const missing = item.words.filter(w => !e.found.has(w));
+  return {ok: missing.length === 0 && !e.revealed,
+    given: `Найдено ${e.found.size} из ${item.words.length}`,
+    right: missing.length ? 'Не найдены: ' + missing.join(', ') : 'Все слова найдены'};
+}
+
+function finalize(e){
+  if (e.graded) return;
+  e.graded = true;
+  const g = grade(e);
+  S.res[S.i] = {e, ...g};
+  award(e, g);
+  if (S.mode !== 'practice') return;
+  const {cat, item} = e;
+  if (cat.kind === 'choice') {
+    app.querySelectorAll('.opt').forEach(b => {
+      const k = +b.dataset.k; b.disabled = true;
+      if (k === item.a) b.classList.add('right'); else if (k === e.sel) b.classList.add('wrong');
+    });
+  }
+  if (cat.kind === 'order') {
+    e.redraw();
+    app.querySelectorAll('#chosen li').forEach((li, i) => li.classList.add(e.sel[i] === i ? 'right' : 'wrong'));
+  }
+  if (cat.kind === 'sort') {
+    app.querySelectorAll('.srow').forEach(row => { const k = +row.dataset.k; row.classList.add(e.sel[k] === item.items[k][1] ? 'right' : 'wrong'); row.querySelectorAll('button').forEach(b => b.disabled = true); });
+  }
+  if (cat.kind === 'words') {
+    const cells = app.querySelectorAll('.cell');
+    item.words.filter(w => !e.found.has(w)).forEach(w => locate(e.grid, w).forEach(i => cells[i].classList.add('miss')));
+  }
+  const fb = $('#fb');
+  const ex = exOf(e);
+  fb.className = 'fb ' + (g.ok ? 'good' : 'bad');
+  fb.innerHTML = `<p class="fb-title">${g.ok ? `Верно! <span class="plus">+1 ${PAW}</span>` : 'Не совсем'}</p>${g.ok ? '' : `<p><b>${cat.kind === 'words' ? '' : 'Правильно: '}</b>${esc(g.right)}</p>`}${ex ? `<p>${esc(ex)}</p>` : ''}`;
+  fb.hidden = false;
+}
+
+function go(){
+  S.i++;
+  if (S.i >= S.q.length) renderResults(); else { renderQ(); window.scrollTo(0, 0); }
+}
+
+function renderResults(){
+  document.body.classList.remove('wide');
+  if (S.ret) markDone(S.ret.u, S.ret.i);
+  const r = S.res, n = r.length, c = r.filter(x => x.ok).length, pct = Math.round(c * 100 / n);
+  const m = pct >= 90 ? ['5', 'Старший детектив'] : pct >= 75 ? ['4', 'Детектив'] : pct >= 50 ? ['3', 'Стажёр'] : ['2', 'Нужна ещё тренировка'];
+  if (S.mode === 'test') saveBest(S.key, pct);
+  const mist = r.filter(x => !x.ok);
+  let breakdown = '';
+  if (S.key === 'final' || LES[S.key]) {
+    const by = {};
+    r.forEach(x => { const id = x.e.cat.id; by[id] = by[id] || {t: x.e.cat.title, n:0, c:0}; by[id].n++; if (x.ok) by[id].c++; });
+    breakdown = `<section class="card" style="display:flex;flex-direction:column;gap:10px"><h2>По разделам</h2><div class="tablewrap"><table><tr><th>Раздел</th><th style="text-align:right">Верно</th></tr>${Object.values(by).map(b => `<tr><td>${esc(b.t)}</td><td class="num">${b.c} из ${b.n}</td></tr>`).join('')}</table></div></section>`;
+  }
+  app.innerHTML = `
+  <section style="display:flex;flex-direction:column;gap:8px;padding-top:12px">
+    <p class="eyebrow">${S.mode === 'test' ? 'Результат теста' : 'Итог тренировки'}</p>
+    <h1>${esc(S.title)}</h1>
+  </section>
+  <section class="card score">
+    <p class="big">${c}<small> из ${n}</small></p>
+    <div class="stats">
+      <span>${pct}% правильных ответов</span>
+      <span class="ok">Верно: ${c}</span>
+      <span class="no">Ошибок: ${n - c}</span>
+      <span><span class="mark">Оценка ${m[0]} · ${m[1]}</span></span>
+    </div>
+  </section>
+  <section class="card tip" style="justify-content:space-between;flex-wrap:wrap">
+    <p class="pawline">${PAW}<span>Заработано лапок: <b>${c}</b>. Всего: <b>${P.paws}</b>. Звание: <b>${esc(rankOf(P.paws).name)}</b></span></p>
+    <button class="btn ghost" id="r-ach" type="button">Мои ачивки</button>
+  </section>
+  ${breakdown}
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2>${mist.length ? 'Разбор ошибок' : 'Ошибок нет — отличная работа!'}</h2>
+    <div class="mist">${mist.map((x, i) => `
+      <div class="mitem">
+        <span class="lbl">${esc(x.e.cat.title)}</span>
+        <p><b>${esc(qText(x.e))}</b></p>
+        <p class="yours">Твой ответ: ${esc(x.given)}</p>
+        <p class="rightans">${x.e.cat.kind === 'words' ? '' : 'Правильный ответ: '}${esc(x.right)}</p>
+        ${exOf(x.e) ? `<p>${esc(exOf(x.e))}</p>` : ''}
+      </div>`).join('')}</div>
+  </section>
+  <div class="actions">
+    ${S.ret ? '<button class="btn" id="r-back" type="button">Продолжить урок →</button>' : ''}
+    <button class="btn ${S.ret ? 'ghost' : ''}" id="again" type="button">Пройти ещё раз</button>
+    ${mist.length ? '<button class="btn ghost" id="retry" type="button">Повторить только ошибки</button>' : ''}
+    <button class="btn ghost" id="r-home" type="button">Все тренажёры</button>
+  </div>`;
+  const cfg = {mode: S.mode, key: S.key, ret: S.ret, title: S.title, mist: mist.map(x => ({cat: x.e.cat, item: x.e.item}))};
+  $('#again').onclick = () => cfg.ret ? launchStep(cfg.ret.u, cfg.ret.i) : start(cfg.mode, cfg.key);
+  if (mist.length) $('#retry').onclick = () => { P.retried++; checkBadges(); start(cfg.mode, cfg.key, cfg.mist, {ret: cfg.ret, title: cfg.title}); };
+  if (cfg.ret) $('#r-back').onclick = () => { const nx = nextPos(cfg.ret.u, cfg.ret.i); if (!nx) return renderHome(); const nk = COURSE.findIndex(x => x.id === nx[0]); unlocked(nk) ? openStep(nx[0], nx[1]) : openStep(cfg.ret.u, cfg.ret.i); window.scrollTo(0, 0); };
+  $('#r-home').onclick = renderHome;
+  $('#r-ach').onclick = renderAch;
+  window.scrollTo(0, 0);
+}
+
+/* ---------- course: lessons, timeline, sidebar ---------- */
+const MAGPIE = `<svg viewBox="0 0 420 420" aria-hidden="true"><defs><radialGradient id="mgBody" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#4A5060"/><stop offset="1" stop-color="#0F1218"/></radialGradient><radialGradient id="mgBelly" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D3D9E2"/></radialGradient><linearGradient id="mgWing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A8FB0"/><stop offset="1" stop-color="#16324A"/></linearGradient><linearGradient id="mgTail" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2B7A8F"/><stop offset="0.5" stop-color="#3D5FA8"/><stop offset="1" stop-color="#1B2D4F"/></linearGradient><linearGradient id="mgBeak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A505E"/><stop offset="1" stop-color="#12151C"/></linearGradient><linearGradient id="mgPhone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5A96E8"/><stop offset="1" stop-color="#1F4FA0"/></linearGradient></defs><path d="M290 250 Q360 280 412 350 L392 366 Q340 312 280 286 Z" fill="url(#mgTail)"/><path d="M200 318 L194 372 M244 318 L250 372" stroke="#5B4A32" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M176 376 L212 376 M232 376 L268 376" stroke="#5B4A32" stroke-width="8" stroke-linecap="round" fill="none"/><ellipse cx="225" cy="245" rx="100" ry="80" fill="url(#mgBody)"/><ellipse cx="195" cy="272" rx="62" ry="46" fill="url(#mgBelly)"/><path d="M215 196 Q305 182 336 258 Q292 292 222 268 Q200 236 215 196 Z" fill="url(#mgWing)"/><ellipse cx="268" cy="222" rx="34" ry="14" fill="#F4F6F9" transform="rotate(12 268 222)"/><path d="M150 250 Q118 246 104 262" stroke="#16324A" stroke-width="20" stroke-linecap="round" fill="none"/><g transform="rotate(-12 89 253)"><rect x="66" y="214" width="46" height="78" rx="9" fill="url(#mgPhone)" stroke="#0E1320" stroke-width="5"/><rect x="74" y="224" width="30" height="50" rx="4" fill="#CFE6F7"/></g><circle cx="140" cy="150" r="64" fill="url(#mgBody)"/><ellipse cx="118" cy="118" rx="26" ry="14" fill="#FFFFFF" opacity="0.18" transform="rotate(-25 118 118)"/><circle cx="160" cy="206" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><circle cx="177" cy="213" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><circle cx="194" cy="216" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><path d="M86 144 Q54 148 34 164 Q60 170 88 166 Z" fill="url(#mgBeak)"/><path d="M88 172 Q62 182 46 188 Q68 190 92 180 Z" fill="#2A2F3A"/><circle cx="122" cy="138" r="17" fill="#FFFFFF"/><circle cx="118" cy="139" r="9" fill="#0E1320"/><circle cx="114" cy="134" r="3.5" fill="#FFFFFF"/><path d="M104 112 Q122 100 142 110" stroke="#0E1320" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`;
+const CHECK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>';
+const LOCK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+function people(k){
+  let s = `<svg class="people" viewBox="0 0 760 120" role="img" aria-label="${k} из 10 школьников">`;
+  for (let j = 0; j < 10; j++) { const x = 38 + 76 * j; s += `<g fill="${j < k ? '#F07F2E' : '#C9D0DA'}"><circle cx="${x}" cy="26" r="18"/><rect x="${x - 26}" y="50" width="52" height="66" rx="24"/></g>`; }
+  return s + '</svg>';
+}
+
+const COURSE = [
+{id:'u1', n:1, title:'Зачем нам этот курс', min:24, test:'lesson1', steps:[
+  {t:'warm', title:'Разминка', q:'Что можно увидеть с закрытыми глазами?', a:'Сон.'},
+  {t:'card', title:'Знакомьтесь: Енот Чек', hero:'r', html:`<p>Еноты-полоскуны перед едой окунают её в воду и тщательно ощупывают лапами. Чек так же «ощупывает» каждую новость, прежде чем её «проглотить».</p><p>Его имя — от английского <b>fact-check</b>, «проверка фактов».</p><p class="motto">«Сначала проверю — потом поверю!»</p>`},
+  {t:'comic', title:'Знакомьтесь: Сорока Трещотка', lines:[['m','Привет! Я всё-всё знаю — мне все всё рассказывают!'],['r','А ты проверяешь то, что тебе рассказывают?'],['m','Зачем? Раз рассказали — значит, правда!'],['r','Вот этому мы и научимся. Сначала проверю — потом поверю!']]},
+  {t:'card', eyebrow:'Зачем нам этот курс', title:'Мошенники охотятся на подростков', html:`${people(6)}<p class="bignum">63% — больше 6 школьников из 10</p><p>хотя бы раз сталкивались с попыткой обмана или взлома. <span class="src">Опрос онлайн-школы «Умскул», 2026</span></p><div class="tiles"><div class="tile"><b class="big">1 из 5 → 1 из 3</b><span>школьников несколько раз попадались мошенникам: 22% в 9 классе и 36% в 11-м.</span><span class="src">«Умскул», 2026</span></div><div class="tile"><b class="big">≈ 1 из 5</b><span>пострадавших от мошенников в 2025 году — молодые люди 14–24 лет (22%).</span><span class="src">Банк России</span></div><div class="tile"><b class="big">было 10 → стало 12</b><span>атак на подростков 14–17 лет через «лёгкую подработку» (рост на 20%).</span><span class="src">Т-Банк, 2026</span></div></div><p><b>Мошенники рассчитывают на тех, кто верит сразу.</b> Кто умеет проверять, того обмануть намного труднее — этому мы и будем учиться.</p>`},
+  {t:'card', title:'Где пригодится критическое мышление', html:`<div class="tiles"><div class="tile"><b>Чаты и соцсети</b><span>Слухи разлетаются быстрее, чем их успевают проверить.</span></div><div class="tile"><b>Реклама</b><span>Её задача — чтобы ты купил, а не задумался.</span></div><div class="tile"><b>Мошенники</b><span>«Ты выиграл телефон! Перейди по ссылке и введи код из СМС».</span></div><div class="tile"><b>Учёба и споры</b><span>Доказывать свою точку зрения и честно слышать чужую.</span></div></div>`},
+  {t:'card', title:'Что такое критическое мышление', html:`<p class="lead">Это <b>не</b> умение всё критиковать. Это умение <b>проверять</b> информацию, прежде чем ей поверить.</p><ol><li><b>Остановись:</b> «А это точно правда?»</li><li><b>Проверь:</b> задай вопросы и поищи доказательства.</li><li><b>Реши:</b> верю, не верю — или пока не знаю.</li></ol><p class="motto">Чек: «Я не знаю» и «Я передумал» — это тоже умные ответы!</p>`},
+  {t:'card', eyebrow:'Азбука логики', title:'Высказывание: правда или ложь', html:`<p><b>Высказывание</b> — предложение, про которое можно сказать: оно истинно или ложно.</p><div class="tiles"><div class="tile"><span class="tag good">Истинное</span><b>«Байкал — это озеро».</b></div><div class="tile"><span class="tag bad">Ложное</span><b>«2 + 2 = 5».</b><span>Тоже высказывание, просто неверное.</span></div><div class="tile"><span class="tag">Не высказывание</span><b>«Закрой окно!»</b><span>Это просьба.</span></div><div class="tile"><span class="tag">Не высказывание</span><b>«Который час?»</b><span>Это вопрос.</span></div></div>`},
+  {t:'practice', title:'Тренировка: высказывания', spec:[['logic', 4, 'st']]},
+  {t:'test', title:'Закрепление: тест урока 1'}
+]},
+{id:'u2', n:2, title:'Логично — не значит правда', min:24, test:'lesson2', steps:[
+  {t:'warm', title:'Разминка', q:'Сколько будет 2 + 2 × 2?', a:'6: сначала умножение (2 × 2 = 4), потом сложение.'},
+  {t:'comic', title:'Летает ли пингвин?', lines:[['m','Все птицы летают. Пингвин — птица. Значит, пингвин летает!'],['r','Рассуждаешь логично. Но первая посылка ложная!'],['m','Как это ложная? Я же летаю!'],['r','Ты летаешь, а пингвин и страус — нет. Проверяй кирпичи!']]},
+  {t:'card', eyebrow:'Азбука логики', title:'Рассуждение: посылки → вывод', html:`<p><b>Посылки</b> — то, что мы уже знаем. <b>Вывод</b> — то, что из них следует.</p><div class="chain"><div class="tile">Посылка 1: все кошки — млекопитающие.</div><div class="tile">Посылка 2: Мурка — кошка.</div><div class="tile concl">Вывод: значит, Мурка — млекопитающее.</div></div><p>Слова-подсказки. Перед посылкой: <i>потому что, так как</i>. Перед выводом: <i>значит, поэтому, следовательно</i>.</p>`},
+  {t:'card', eyebrow:'Азбука логики', title:'Логично — ещё не значит правда', html:`<div class="msg"><p>Все рыбы умеют летать. <span class="tag bad">Ложь</span></p><p>Акула — рыба.</p><p><b>Значит, акула умеет летать.</b></p></div><p>Вывод построен по правилам, но первая посылка ложная — и вывод получился ложным.</p><div class="tile"><b>Выводу можно доверять, только если:</b><span>1. Все посылки истинны.</span><span>2. Вывод действительно из них следует.</span></div><p class="motto">Чек: «Проверяй и кирпичи, и то, как из них построен дом!»</p>`},
+  {t:'card', eyebrow:'Азбука логики', title:'Два способа рассуждать', html:`<div class="tiles"><div class="tile"><b class="big">Дедукция</b><span>От общего правила к частному случаю.</span><i>«Все металлы проводят ток. Медь — металл. Значит, медь проводит ток».</i><span>Если посылки верны, вывод <b>точно</b> верен.</span></div><div class="tile"><b class="big">Индукция</b><span>От примеров к общему правилу.</span><i>«Я видел 100 белых лебедей. Значит, все лебеди белые».</i><span>Вывод только <b>вероятный</b>: в Австралии живут чёрные лебеди!</span></div></div>`},
+  {t:'card', eyebrow:'Азбука логики', title:'«Если…, то…»: ловушка обратного хода', html:`<div class="msg"><b>«Если идёт дождь, то асфальт мокрый».</b></div><div class="tiles"><div class="tile"><span class="tag good">Верно</span><span>Идёт дождь → значит, асфальт мокрый.</span></div><div class="tile"><span class="tag bad">Ловушка</span><span>Асфальт мокрый → значит, шёл дождь? Не обязательно! Могла проехать поливальная машина.</span></div></div><p><b>Правило:</b> «Если А, то Б» не значит «Если Б, то А». Каждый пятиклассник — школьник, но не каждый школьник — пятиклассник.</p>`},
+  {t:'practice', title:'Тренировка: посылки и выводы', spec:[['logic', 4, 'arg|val|ind|if']]},
+  {t:'test', title:'Закрепление: тест урока 2'}
+]},
+{id:'u3', n:3, title:'Дело №1: факт или мнение?', min:20, test:'lesson3', steps:[
+  {t:'warm', title:'Разминка', q:'Что всегда увеличивается и никогда не уменьшается?', a:'Возраст.'},
+  {t:'comic', title:'Самая вкусная ягода', lines:[['m','Это факт: малина — самая вкусная ягода!'],['r','Это не факт, а мнение. Вкус нельзя проверить.'],['m','А «малина растёт на кустах» — тоже мнение?'],['r','Нет, это факт: можно пойти в лес и посмотреть!']]},
+  {t:'card', title:'Факт или мнение: как отличить', html:`<div class="tiles"><div class="tile"><span class="tag good">Факт</span><span>Можно <b>проверить</b>: измерить, посчитать, увидеть, найти в надёжном источнике.</span><i>«Вода кипит при 100 °C на уровне моря»</i></div><div class="tile"><span class="tag">Мнение</span><span>Чьё-то <b>отношение</b>, вкус или оценка. Его можно обсуждать, но нельзя доказать.</span><i>«Математика — самый скучный предмет»</i><span>Слова-подсказки: лучший, скучный, по-моему, я считаю.</span></div></div><p><b>Главный вопрос:</b> можно ли это проверить?</p><div class="tile"><span class="tag bad">Осторожно</span><span>«Факт» бывает ложным: «Пингвины живут на Северном полюсе» — это можно проверить… и это неправда.</span></div>`},
+  {t:'practice', title:'Тренировка: факт или мнение', spec:[['factopinion', 5]]},
+  {t:'test', title:'Закрепление: тест урока 3'}
+]},
+{id:'u4', n:4, title:'Дело №2: суперсила вопросов', min:20, test:'lesson4', steps:[
+  {t:'warm', title:'Разминка', q:'Ты капитан корабля. На борту 20 матросов и 3 пушки. Сколько лет капитану?', a:'Столько же, сколько тебе — ведь капитан ты.'},
+  {t:'comic', title:'Зиму отменяют?!', lines:[['m','СРОЧНО! В лесу отменяют зиму! Перешли всем!'],['r','Стоп. Кто это сказал? И откуда он знает?'],['m','Ну… дятел слышал от ежа, а ёж — от белки…'],['r','Значит, это слух. Давай сначала проверим!']]},
+  {t:'card', title:'5 вопросов Енота Чека', hero:'r', html:`<ol><li><b>Кто это говорит?</b> Знаем ли мы автора? Разбирается ли он в теме?</li><li><b>Откуда он это знает?</b> Видел сам, изучал — или «где-то слышал»?</li><li><b>Какие доказательства?</b> Факты, фото, исследования — или только слова?</li><li><b>Кому это выгодно?</b> Может, кто-то хочет продать, напугать или прославиться?</li><li><b>Что говорят другие?</b> Подтверждают ли это надёжные источники?</li></ol>`},
+  {t:'case', title:'Найди красные флажки', ctx:'<b>Чат класса · 21:47</b><br>СРОЧНО!!! Мне сказала подруга сестры, что завтра школу закрывают на карантин. Учителя пока скрывают!!! Перешли всем, пока не удалили!!!', q:'Найди минимум 4 подозрительные детали. Что сделать вместо того, чтобы переслать?', reveal:`<ol><li><b>«СРОЧНО!!!»</b> — капс и восклицательные знаки давят на эмоции и торопят.</li><li><b>«Подруга сестры»</b> — источник неизвестен, новость «через третьи руки».</li><li><b>«Учителя скрывают»</b> — заранее объясняет, почему нет доказательств.</li><li><b>«Перешли всем»</b> — просят распространить, пока никто не проверил.</li><li><b>Ни ссылки, ни подписи</b> — нет официального источника.</li></ol><p><b>Что делать:</b> не пересылать. Проверить на сайте школы или спросить классного руководителя.</p>`},
+  {t:'practice', title:'Тренировка: кому верить', spec:[['sources', 4]]},
+  {t:'test', title:'Закрепление: тест урока 4'}
+]},
+{id:'u5', n:5, title:'Осторожно, мошенники!', min:22, test:'lesson5', steps:[
+  {t:'warm', title:'Разминка', q:'Что принадлежит тебе, но другие пользуются этим чаще, чем ты?', a:'Твоё имя. А пароли, коды и данные карты — только твои, ими никто другой пользоваться не должен.'},
+  {t:'comic', title:'Золотое гнездо', lines:[['m','Ура! Я выиграла золотое гнездо! Нужен только код из СМС!'],['r','Стоп! Код из СМС — никому. Это мошенники.'],['m','Но тут написано «срочно» и «никому не говори»!'],['r','Срочно + выгодно + секретно = обман. Не отвечай!']]},
+  {t:'card', title:'На какую «кнопку» жмут мошенники', html:`<ul><li><b>«Ответы на ОГЭ и ЕГЭ — скачай файл».</b> Жмут на страх и желание лёгкого пути. Настоящие ответы заранее не продают.</li><li><b>«Учитель» просит код из СМС.</b> Жмут на доверие к взрослым. Код — никому, перезвони учителю сам.</li><li><b>«Лёгкая подработка», первая выплата сразу.</b> Слишком хорошо, чтобы быть правдой. Первая выплата — приманка.</li><li><b>Бесплатные скины и игровая валюта.</b> Жмут на азарт. Не вводи пароль на чужих сайтах.</li><li><b>Звонок «из полиции»: «Спаси родителей!»</b> Страх и секретность. Положи трубку и сам позвони родителям.</li></ul><div class="tile"><b>Формула обмана:</b><span>срочно + страшно (или очень выгодно) + «никому не говори». Видишь её — стоп!</span></div>`},
+  {t:'case', title:'«Работа мечты»', ctx:'<b>Незнакомый номер</b><br>Привет! Ищем ребят 14+ на подработку. Ставишь лайки — получаешь 3000 ₽ в день! Первая выплата сразу. Нужно только принять перевод на свою карту и переслать дальше. Мест мало! Родителям лучше не говорить — пусть будет сюрприз.', q:'Найди все красные флажки. Зачем им твоя карта? Чем это опасно для тебя?', reveal:`<ul><li><b>«3000 ₽ за лайки»</b> — слишком много денег за слишком простое дело.</li><li><b>«Мест мало!»</b> — торопят, чтобы не успел подумать.</li><li><b>«Родителям не говори»</b> — честному работодателю секреты от семьи не нужны.</li></ul><p><b>«Принять перевод и переслать» = стать дроппером.</b> Дроппер — человек, через чью карту преступники переводят украденные деньги. Отвечать придётся владельцу карты — вплоть до уголовной ответственности.</p>`},
+  {t:'practice', title:'Тренировка: распознай обман', spec:[['fake', 4, 'scam']]},
+  {t:'test', title:'Закрепление: тест урока 5'}
+]},
+{id:'u6', n:6, title:'Дело №3: ловушки в спорах', min:25, test:'lesson6', steps:[
+  {t:'warm', title:'Разминка', q:'Электричка едет на север, ветер дует на юг. Куда летит дым от электрички?', a:'Никуда: у электрички нет дыма.'},
+  {t:'comic', title:'Две ловушки за минуту', lines:[['m','Все сороки носят блестящие бусы — значит, и тебе надо!'],['r','«Все так делают» — это не довод, а ловушка.'],['m','Да что ты понимаешь в моде, ты же енот!'],['r','А это «переход на личности». Уже вторая ловушка!']]},
+  {t:'trap', n:1, title:'«Все так делают»', quote:'«Все в классе уже купили эти кроссовки — значит, они крутые!»', ans:'Если многие во что-то верят, это ещё не делает это правдой.', reply:'«А чем они крутые, кроме того, что их все купили?»'},
+  {t:'trap', n:2, title:'«Переход на личности»', quote:'«Что ты понимаешь в экологии? У тебя тройка по химии!»', ans:'Спорят с человеком, а не с его доводами.', reply:'«Давай обсуждать мои доводы, а не мои оценки».'},
+  {t:'trap', n:3, title:'«Или — или»', quote:'«Либо ты играешь с нами, либо ты нам не друг!»', ans:'Вариантов почти всегда больше двух.', reply:'«Я вам друг, просто сегодня хочу заняться другим».'},
+  {t:'trap', n:4, title:'«После — значит из-за»', quote:'«Я надел счастливые носки — и получил пятёрку. Носки работают!»', ans:'Если одно случилось после другого, это ещё не причина.', reply:'«А может, пятёрка — потому что ты готовился?»'},
+  {t:'trap', n:5, title:'«Снежный ком»', quote:'«Разрешишь телефон на перемене — все бросят учиться и провалят экзамены!»', ans:'Каждый шаг такой страшной цепочки нужно доказать.', reply:'«Почему одно обязательно приведёт к другому?»'},
+  {t:'trap', n:6, title:'«Соломенное чучело»', quote:'— Давайте сделаем перемены длиннее.\n— То есть ты хочешь вообще не учиться?!', ans:'Чужие слова искажают и спорят с искажённой версией.', reply:'«Я этого не говорил. Я предложил сделать перемены длиннее».'},
+  {t:'practice', title:'Тренировка: узнай ловушку', spec:[['fallacies', 5]]},
+  {t:'test', title:'Закрепление: тест урока 6'}
+]},
+{id:'u7', n:7, title:'Дело №4: как мозг нас обманывает', min:22, test:'lesson7', steps:[
+  {t:'warm', title:'Разминка', q:'В комнате горели 5 свечей. 2 задули. Сколько свечей останется к утру?', a:'2: задутые свечи не сгорели, а остальные три сгорели полностью.'},
+  {t:'comic', title:'Кто будит солнце?', lines:[['m','Я затрещала — и взошло солнце! Это я его разбудила!'],['r','Ты затрещала раньше, но это ещё не причина.'],['m','Но так было уже три утра подряд!'],['r','Солнце встаёт каждое утро — и без тебя. Вместе — не значит «из-за»!']]},
+  {t:'card', title:'Три хитрости нашего мозга', html:`<div class="tiles"><div class="tile"><b>«Вижу то, что хочу»</b><span>Замечаем то, что согласно с нашим мнением, и пропускаем остальное.</span><span><b>Тренировка:</b> ищи факты против своего мнения.</span></div><div class="tile"><b>«Слышал сто раз — значит, правда»</b><span>Знакомая фраза кажется верной. «Мы используем только 10% мозга» — миф, хотя его слышали почти все.</span><span><b>Тренировка:</b> «знакомо» — не значит «доказано».</span></div><div class="tile"><b>«Эмоции у руля»</b><span>Когда страшно или очень радостно, проверять труднее. Мошенники этим пользуются.</span><span><b>Тренировка:</b> правило 10 секунд — вдох, пауза, потом решение.</span></div></div>`},
+  {t:'card', title:'Вместе — не значит «из-за»', html:`<p>Летом продают больше мороженого — и больше людей обгорает на солнце. Значит, мороженое вызывает ожоги?</p><div class="cz"><div class="tile top">Жаркое солнце</div><div class="tile">↓ Больше продают мороженого</div><div class="tile">↓ Больше людей обгорает</div><div class="tile no">Мороженое → ожоги? Нет!</div></div><p class="motto">Правило Чека: если два явления идут вместе, ищи общую причину!</p>`},
+  {t:'practice', title:'Тренировка: причина или совпадение', spec:[['cause', 5]]},
+  {t:'test', title:'Закрепление: тест урока 7'}
+]},
+{id:'u8', n:8, title:'Дело №5: проверка новостей', min:20, test:'lesson8', steps:[
+  {t:'warm', title:'Разминка', q:'На какой вопрос никогда нельзя честно ответить «да»?', a:'«Ты спишь?»'},
+  {t:'comic', title:'Сенсация от «Сорочьих новостей»', lines:[['m','Читай: «Учёные доказали: сороки умнее всех людей!»'],['r','Давай по алгоритму С-Т-О-П. Кто это написал?'],['m','Сайт «Сорочьи новости». Автора нет…'],['r','Ищем другие источники и само исследование. Пока не верим!']]},
+  {t:'card', title:'Алгоритм Чека: С-Т-О-П', html:`<div class="tiles"><div class="tile"><b class="big">С — Стоп!</b><span>Не пересылай сразу. Заметь, какие чувства вызывает новость.</span></div><div class="tile"><b class="big">Т — Тот, кто пишет</b><span>Кто автор или сайт? Можно ли ему доверять?</span></div><div class="tile"><b class="big">О — Обзор других</b><span>Пишут ли об этом надёжные СМИ (газеты, новостные сайты) и специалисты?</span></div><div class="tile"><b class="big">П — Первоисточник</b><span>Найди, откуда всё началось: исследование, документ, оригинальное видео.</span></div></div><div class="tile"><b>Лайфхак фактчекеров — «боковое чтение»</b><span>Не изучай подозрительный сайт изнутри. Открой новую вкладку и поищи, что пишут о нём другие.</span></div>`},
+  {t:'case', title:'Проверь новость', ctx:'<b>Сайт «Вкусные новости» · автор не указан</b><br><b>УЧЁНЫЕ ДОКАЗАЛИ: ШОКОЛАД ДЕЛАЕТ ДЕТЕЙ ГЕНИЯМИ!</b><br>Исследование провели на 10 добровольцах, которые неделю ели шоколад. После этого они лучше решали головоломки. Исследование оплатила шоколадная фабрика.', q:'Пройди по шагам С-Т-О-П. Можно ли верить заголовку?', reveal:`<ul><li><b>С:</b> капс, «учёные доказали» и обещание чуда — повод насторожиться.</li><li><b>Т:</b> сайт неизвестный, автора нет.</li><li><b>О:</b> ищем, пишут ли об этом научные журналы и крупные СМИ.</li><li><b>П:</b> всего 10 человек и одна неделя; платила фабрика шоколада. И «лучше решали головоломки» — это не «стали гениями».</li></ul><p><b>Вывод:</b> заголовку верить нельзя — доказательств слишком мало.</p>`},
+  {t:'practice', title:'Тренировка: проверка новостей', spec:[['sources', 2], ['fake', 3]]},
+  {t:'test', title:'Закрепление: тест урока 8'}
+]},
+{id:'u9', n:9, title:'Экзамен детектива', min:25, test:'final', steps:[
+  {t:'warm', title:'Разминка', q:'Что можно держать, не беря в руки?', a:'Обещание (слово).'},
+  {t:'card', title:'Памятка детектива: 7 правил Чека', hero:'r', html:`<ol><li>Остановись, прежде чем поверить или переслать.</li><li>Отличай факт от мнения.</li><li>Задавай 5 вопросов: кто? откуда знает? доказательства? кому выгодно? что говорят другие?</li><li>Ищи ловушки в рассуждениях.</li><li>Помни: вместе — не значит «из-за».</li><li>Код из СМС, пароль и карту — никому.</li><li>«Я не знаю» и «я передумал» — это нормально.</li></ol>`},
+  {t:'card', title:'Словарик детектива', html:`<div class="tablewrap"><table><tr><th>Слово</th><th>Что значит</th></tr><tr><td>Факт</td><td>То, что можно проверить</td></tr><tr><td>Мнение</td><td>Чья-то оценка, отношение или вкус</td></tr><tr><td>Довод (аргумент)</td><td>Причина, почему стоит поверить выводу</td></tr><tr><td>Вывод</td><td>То, что следует из доводов</td></tr><tr><td>Источник</td><td>Откуда пришла информация</td></tr><tr><td>Первоисточник</td><td>Самое первое место, где появилась информация</td></tr><tr><td>Фейк</td><td>Ложная информация, которую выдают за правду</td></tr><tr><td>Фактчекер</td><td>Человек, который проверяет факты в новостях</td></tr><tr><td>СМИ</td><td>Газеты, ТВ, новостные сайты</td></tr><tr><td>Гипотеза</td><td>Предположение, которое нужно проверить</td></tr><tr><td>Дроппер</td><td>Тот, через чью карту мошенники переводят украденные деньги</td></tr></table></div>`},
+  {t:'test', title:'Итоговый тест: 20 вопросов', key:'final'},
+  {t:'challenge', title:'Челлендж на неделю'},
+  {t:'cert', title:'Сертификат детектива'}
+]}
+];
+const CH = ['Найди в рекламе одну ловушку рассуждений.', 'Запиши 3 факта и 3 мнения, которые услышал за день.', 'Проверь одну новость по алгоритму С-Т-О-П.', 'Найди в жизни пример «вместе — не значит из-за».', 'Расскажи семье о схемах мошенников и правиле «код из СМС — никому».'];
+
+function sk(u, i){ return u + ':' + i; }
+function lessonDone(L){ return L.steps.every((s, i) => P.course.done[sk(L.id, i)]); }
+function lessonsDone(){ return COURSE.filter(lessonDone).length; }
+function testDone(L){ const i = L.steps.findIndex(s => s.t === 'test'); return i < 0 ? lessonDone(L) : !!P.course.done[sk(L.id, i)]; }
+function unlocked(k){ return P.course.all || k === 0 || testDone(COURSE[k - 1]) || lessonDone(COURSE[k - 1]); }
+function coursePct(){ const tot = COURSE.reduce((a, L) => a + L.steps.length, 0); const d = COURSE.reduce((a, L) => a + L.steps.filter((s, i) => P.course.done[sk(L.id, i)]).length, 0); return Math.round(d * 100 / tot); }
+function markDone(u, i){
+  const L = COURSE.find(x => x.id === u); if (!L || P.course.done[sk(u, i)]) return;
+  const was = lessonDone(L); P.course.done[sk(u, i)] = Date.now();
+  if (!was && lessonDone(L)) { P.paws += 5; toast(`${PAW}<span><b>Урок ${L.n} пройден!</b><br>+5 лапок</span>`); }
+  saveP(); checkBadges();
+}
+function nextPos(u, i){
+  const k = COURSE.findIndex(x => x.id === u), L = COURSE[k];
+  if (i + 1 < L.steps.length) return [u, i + 1];
+  if (k + 1 < COURSE.length) return [COURSE[k + 1].id, 0];
+  return null;
+}
+function prevPos(u, i){
+  const k = COURSE.findIndex(x => x.id === u);
+  if (i > 0) return [u, i - 1];
+  if (k > 0) return [COURSE[k - 1].id, COURSE[k - 1].steps.length - 1];
+  return null;
+}
+function firstOpen(L){ const i = L.steps.findIndex((s, j) => !P.course.done[sk(L.id, j)]); return i < 0 ? 0 : i; }
+function openCourse(){
+  const c = P.course.cur, k = c ? COURSE.findIndex(u => u.id === c.u) : -1;
+  if (k >= 0 && unlocked(k)) return openStep(c.u, c.i);
+  let f = COURSE.findIndex(L => !lessonDone(L)); if (f < 0) f = COURSE.length - 1;
+  openStep(COURSE[f].id, firstOpen(COURSE[f]));
+}
+function launchStep(u, i){
+  const L = COURSE.find(x => x.id === u), st = L.steps[i], ret = {u, i};
+  if (st.t === 'practice') start('practice', 'course', shuffle(st.spec.flatMap(([id, n, tag]) => pick(id, n, tag))), {ret, title:`Урок ${L.n}: ${st.title}`});
+  else start('test', st.key || L.test, undefined, {ret, title: st.key === 'final' ? 'Итоговый тест' : `Урок ${L.n}: закрепление`});
+}
+
+function sidebar(uid, si){
+  const pct = coursePct();
+  return `<div class="sidehead"><button class="link side-hide" id="s-hide" type="button">« Скрыть панель</button><p class="eyebrow">Мой прогресс</p><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><span style="width:${pct}%"></span></div><p class="note">${pct}% курса · ${lessonsDone()} из ${COURSE.length} уроков</p></div>
+  <ol class="timeline">${COURSE.map((L, k) => {
+    const st = lessonDone(L) ? 'done' : unlocked(k) ? 'open' : 'lock', act = L.id === uid;
+    return `<li class="tl ${st} ${act ? 'active' : ''}"><button class="tl-btn" type="button" data-u="${L.id}" data-k="${k}"><span class="tl-dot">${st === 'done' ? CHECK : st === 'lock' ? LOCK : L.n}</span><span class="tl-txt"><b>Урок ${L.n} · ${L.min} мин</b><span>${esc(L.title)}</span></span></button>${act ? `<ol class="tl-steps">${L.steps.map((s, j) => `<li><button class="tl-step ${j === si ? 'cur' : ''} ${P.course.done[sk(L.id, j)] ? 'done' : ''}" type="button" data-u="${L.id}" data-j="${j}">${P.course.done[sk(L.id, j)] ? CHECK : '<span class="ico"></span>'}<span>${esc(s.title)}</span></button></li>`).join('')}</ol>` : ''}</li>`;
+  }).join('')}</ol>
+  <div class="sidefoot"><button class="link" id="s-home" type="button">Все тренажёры</button><button class="link" id="s-ach" type="button">Мои лапки и ачивки</button><label class="chk small"><input type="checkbox" id="s-all" ${P.course.all ? 'checked' : ''}> Открыть все уроки (для учителя)</label></div>`;
+}
+
+function stepBody(L, st, i){
+  const done = P.course.done[sk(L.id, i)];
+  const head = (eb, t) => `<p class="eyebrow">${eb}</p><h1 class="steptitle">${esc(t)}</h1>`;
+  if (st.t === 'warm') return `${head('Разминка', st.title)}<p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><p class="motto">${esc(st.a)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать ответ</button></div>`;
+  if (st.t === 'card') return `${head(st.eyebrow || 'Теория', st.title)}${st.hero ? `<div class="hero">${RACCOON}<div class="prose">${st.html}</div></div>` : `<div class="prose">${st.html}</div>`}`;
+  if (st.t === 'comic') return `${head('Комикс', st.title)}<div class="comic">${st.lines.map((l, j) => `<div class="bubble ${l[0]}" data-j="${j}" ${j > 0 && !done ? 'hidden' : ''}><span class="ava">${l[0] === 'r' ? RACCOON : MAGPIE}</span><div><p class="who">${l[0] === 'r' ? 'Чек' : 'Трещотка'}</p><p class="hand">${esc(l[1])}</p></div></div>`).join('')}</div>${done ? '' : '<div><button class="btn ghost" id="more" type="button">Следующая реплика</button></div>'}<p class="note">Можно читать по ролям: один за Трещотку, другой за Чека.</p>`;
+  if (st.t === 'case') return `${head('Расследование', st.title)}<div class="msg">${st.ctx}</div><p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><div class="prose">${st.reveal}</div></div><div><button class="btn ghost" id="rvbtn" type="button">Показать разбор</button></div>`;
+  if (st.t === 'trap') return `${head(`Ловушка ${st.n} из 6`, st.title)}<div class="comic"><div class="bubble m"><span class="ava">${MAGPIE}</span><div><p class="who">Трещотка</p><p class="hand" style="white-space:pre-line">${esc(st.quote)}</p></div></div></div><p class="bigq">Что здесь не так?</p><div class="reveal" id="rv" hidden><p><b>Разгадка:</b> ${esc(st.ans)}</p><p><b>Как ответить:</b> ${esc(st.reply)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать разгадку</button></div>`;
+  if (st.t === 'practice') { const n = st.spec.reduce((a, s) => a + s[1], 0); return `${head('Тренировка', st.title)}<p class="lead">${n} ${plural(n, 'задание', 'задания', 'заданий')} с подсказками. После каждого ответа — объяснение, за каждый правильный ответ — лапка.</p>${done ? `<p class="best">${CHECK} Тренировка пройдена — можно повторить.</p>` : ''}<div><button class="btn" id="launch" type="button">${done ? 'Пройти ещё раз' : 'Начать тренировку'}</button></div>`; }
+  if (st.t === 'test') { const key = st.key || L.test, b = P.tests[key]; return `${head(key === 'final' ? 'Экзамен' : 'Закрепление', st.title)}<p class="lead">${key === 'final' ? '20 вопросов из всех разделов' : '10 вопросов по материалу урока'}. Подсказок не будет: в конце — оценка, лапки и разбор каждой ошибки.</p>${b != null ? `<p class="best">${CHECK} Лучший результат: ${b}%${b < 75 ? ' — попробуй улучшить!' : ''}</p>` : ''}<div><button class="btn" id="launch" type="button">${b != null ? 'Пройти ещё раз' : 'Пройти тест'}</button></div>`; }
+  if (st.t === 'challenge') return `${head('Задание на неделю', st.title)}<p class="lead">Выполни все пять миссий и отметь их здесь.</p><div class="checks">${CH.map((c, j) => `<label class="chk"><input type="checkbox" data-j="${j}" ${(P.course.ch || [])[j] ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>`;
+  if (st.t === 'cert') { const r = rankOf(P.paws), nm = P.course.name || ''; return `${head('Финал', st.title)}<label class="field" for="c-name">Твоё имя для сертификата <input id="c-name" type="text" maxlength="40" value="${esc(nm)}" placeholder="Имя и фамилия"></label><div class="cert">${RACCOON}<p class="eyebrow">Сертификат</p><h2>Юный детектив</h2><p class="certname" id="c-out">${esc(nm || 'Имя ученика')}</p><p>прошёл курс «Не верь на слово!» вместе с Енотом Чеком</p><p><b>Звание:</b> ${esc(r.name)} · <b>Лапок:</b> ${P.paws} · <b>Уроков:</b> ${lessonsDone()} из ${COURSE.length}</p><p class="motto">«Сначала проверю — потом поверю!»</p></div><p class="note">Сделай снимок экрана, чтобы сохранить сертификат.</p>`; }
+  return '';
+}
+
+function openStep(uid, i){
+  S = null;
+  const k = COURSE.findIndex(u => u.id === uid);
+  if (k < 0) return openCourse();
+  if (!unlocked(k)) { toast('<span>Этот урок откроется, когда пройдёшь предыдущий</span>'); return; }
+  document.body.classList.add('wide');
+  const L = COURSE[k]; i = Math.max(0, Math.min(i, L.steps.length - 1)); const st = L.steps[i];
+  P.course.cur = {u: uid, i}; saveP();
+  const nx = nextPos(uid, i), pv = prevPos(uid, i);
+  app.innerHTML = `<div class="course">
+    <button class="btn ghost navtoggle" id="navtoggle" type="button" aria-controls="side" aria-expanded="false">Содержание курса · ${coursePct()}%</button>
+    <aside class="side" id="side" aria-label="Содержание курса">${sidebar(uid, i)}</aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <section class="stage">
+      <div class="qtop"><span class="qcount">Урок ${L.n} из ${COURSE.length} · шаг ${i + 1} из ${L.steps.length}</span><span class="qcount">≈ ${L.min} мин</span></div>
+      <div class="dots">${L.steps.map((s, j) => `<button class="dot ${j === i ? 'cur' : ''} ${P.course.done[sk(uid, j)] ? 'done' : ''}" type="button" data-j="${j}" aria-label="Шаг ${j + 1}: ${esc(s.title)}"></button>`).join('')}</div>
+      <article class="card step">${stepBody(L, st, i)}</article>
+      <div class="stepnav"><button class="btn ghost" id="prev" type="button" ${pv ? '' : 'disabled'}>← Назад</button><button class="btn" id="next" type="button">${nx ? (nx[0] !== uid ? 'Следующий урок →' : 'Дальше →') : 'На главную'}</button></div>
+    </section></div>`;
+  const passive = !['practice', 'test'].includes(st.t);
+  const side = $('#side'), scrim = $('#scrim'), tg = $('#navtoggle');
+  const setNav = o => { side.classList.toggle('open', o); scrim.hidden = !o; tg.setAttribute('aria-expanded', String(o)); };
+  const mobile = () => window.matchMedia('(max-width: 900px)').matches;
+  const setCollapsed = c => { document.body.classList.toggle('side-collapsed', c); try { localStorage.setItem('chek-side', c ? '1' : '0'); } catch (_) {} };
+  let collapsedPref = false; try { collapsedPref = localStorage.getItem('chek-side') === '1'; } catch (_) {}
+  document.body.classList.toggle('side-collapsed', collapsedPref);
+  tg.onclick = () => { if (mobile()) setNav(!side.classList.contains('open')); else setCollapsed(false); };
+  $('#s-hide').onclick = () => { if (mobile()) setNav(false); else setCollapsed(true); };
+  scrim.onclick = () => setNav(false);
+  app.querySelectorAll('.tl-btn').forEach(b => b.onclick = () => { const kk = +b.dataset.k; if (!unlocked(kk)) { toast('<span>Этот урок откроется, когда пройдёшь предыдущий</span>'); return; } openStep(b.dataset.u, b.dataset.u === uid ? i : firstOpen(COURSE[kk])); window.scrollTo(0, 0); });
+  app.querySelectorAll('.tl-step').forEach(b => b.onclick = () => { openStep(b.dataset.u, +b.dataset.j); window.scrollTo(0, 0); });
+  app.querySelectorAll('.dot').forEach(b => b.onclick = () => openStep(uid, +b.dataset.j));
+  $('#s-home').onclick = renderHome; $('#s-ach').onclick = renderAch;
+  $('#s-all').onchange = e => { P.course.all = e.target.checked; saveP(); openStep(uid, i); };
+  const rvb = $('#rvbtn'); if (rvb) rvb.onclick = () => { $('#rv').hidden = false; rvb.remove(); };
+  const more = $('#more');
+  if (more) more.onclick = () => { const h = app.querySelector('.bubble[hidden]'); if (h) h.hidden = false; if (!app.querySelector('.bubble[hidden]')) more.remove(); };
+  const ln = $('#launch'); if (ln) ln.onclick = () => launchStep(uid, i);
+  app.querySelectorAll('.checks input').forEach(c => c.onchange = () => { P.course.ch = P.course.ch || []; P.course.ch[+c.dataset.j] = c.checked; saveP(); });
+  const nmIn = $('#c-name'); if (nmIn) nmIn.oninput = () => { P.course.name = nmIn.value; saveP(); $('#c-out').textContent = nmIn.value || 'Имя ученика'; };
+  $('#prev').onclick = () => { if (pv) { openStep(pv[0], pv[1]); window.scrollTo(0, 0); } };
+  $('#next').onclick = () => {
+    if (passive) markDone(uid, i);
+    if (!nx) { renderHome(); return; }
+    const nk = COURSE.findIndex(x => x.id === nx[0]);
+    if (!unlocked(nk)) { toast('<span>Пройди тест урока — и следующий урок откроется</span>'); openStep(uid, i); return; }
+    openStep(nx[0], nx[1]); window.scrollTo(0, 0);
+  };
+}
+
+/* ---------- profiles, share code, teacher journal ---------- */
+function pcClass(v){ return v == null ? 'pc-none' : v >= 75 ? 'pc-good' : v < 50 ? 'pc-bad' : ''; }
+function summary(){ const pr = curProf() || {}; return {v:2, n:curName(), login: pr.login || '', i: pr.bot || null, p:P.paws, r:rankOf(P.paws).name, l:lessonsDone(), c:coursePct(), t:LESSONS.map(l => (l.final ? P.tests.final : P.tests[l.id]) ?? null), b:BADGES.filter(b => P.badges[b.id]).length, d:new Date().toISOString().slice(0, 10)}; }
+function b64(bytes){ let s = ''; for (let k = 0; k < bytes.length; k += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(k, k + 0x8000)); return btoa(s); }
+function unb64(str){ const bin = atob(str); return Uint8Array.from(bin, c => c.charCodeAt(0)); }
+async function pipeBytes(bytes, stream){ return new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(stream)).arrayBuffer()); }
+async function encodeFull(){
+  const pr = curProf() || {};
+  const o = Object.assign(summary(), {pin: pr.pin || '', full: P});
+  if (typeof CompressionStream === 'function') { try { return 'CHEK2:' + b64(await pipeBytes(new TextEncoder().encode(JSON.stringify(o)), new CompressionStream('deflate-raw'))); } catch (_) {} }
+  const s = summary(); s.v = 1; return 'CHEK1:' + b64(new TextEncoder().encode(JSON.stringify(s)));
+}
+async function decodeAll(text){
+  const out = []; const re = /CHEK([12]):([A-Za-z0-9+/=]+)/g; let m;
+  while ((m = re.exec(text || ''))) {
+    try {
+      let bytes = unb64(m[2]);
+      if (m[1] === '2') bytes = await pipeBytes(bytes, new DecompressionStream('deflate-raw'));
+      const o = JSON.parse(new TextDecoder().decode(bytes));
+      if (o && (o.v === 1 || o.v === 2) && typeof o.n === 'string') out.push(o);
+    } catch (_) {}
+  }
+  return out;
+}
+async function shareText(){ const s = summary(); return `Енот Чек · ${s.n || 'Ученик'} · лапок: ${s.p} · уроков: ${s.l} из ${COURSE.length} · ${s.r}\n${await encodeFull()}`; }
+
+let PENDING = null;
+const LOGIN_RE = /^[a-z0-9_.-]{3,20}$/;
+function newId(){ return 'p' + Date.now().toString(36) + Math.floor(Math.random() * 1000); }
+function enterAs(id, remember){
+  setCur(id, remember);
+  const pr = curProf();
+  if (PENDING && pr) { pr.bot = PENDING.bot; if (PENDING.botName) pr.botName = PENDING.botName; PENDING = null; saveProfiles(); }
+  P = loadP(); if (!P.course.name) { P.course.name = curName(); saveP(); }
+  updateHud();
+  try { if (/^s-/.test(location.hash.slice(1))) history.replaceState(null, '', location.pathname + location.search); } catch (_) {}
+  route();
+}
+function logout(){ setCur(null); P = freshP(); updateHud(); renderWho(); }
+
+function renderWho(mode, arg){
+  S = null; document.body.classList.remove('wide');
+  mode = typeof mode === 'string' ? mode : (PR.list.length ? 'list' : 'reg');
+  const botNote = PENDING ? `<p class="tile">Ты зарегистрирован в Telegram-боте${PENDING.botName ? ' @' + esc(PENDING.botName) : ''}. Создай кабинет или войди — бот привяжется к нему.</p>` : '';
+  const header = (t, lead) => `<section style="display:flex;flex-direction:column;gap:10px;padding-top:12px"><p class="eyebrow">Личный кабинет</p><h1>${t}</h1>${lead ? `<p class="lead">${lead}</p>` : ''}</section>${botNote}`;
+  const remember = '<label class="chk small"><input type="checkbox" id="rem" checked> Запомнить меня на этом устройстве (на общем планшете сними галочку)</label>';
+  if (mode === 'list') {
+    app.innerHTML = header('Вход в Академию', 'Выбери себя и введи свой код. Впервые здесь? Зарегистрируйся.') + `
+    <div class="lessons">${PR.list.map(p => `<button class="lesson prof" type="button" data-id="${p.id}"><span class="ln">${esc((p.name || '?').charAt(0).toUpperCase())}</span><span class="lt">${esc(p.name)}${p.login ? `<br><span class="src">${esc(p.login)}</span>` : ''}</span></button>`).join('')}</div>
+    <div class="actions"><button class="btn" id="go-reg" type="button">Я новенький — регистрация</button><button class="btn ghost" id="go-restore" type="button">Перенести прогресс с другого устройства</button></div>
+    <p class="note">Учителю: <button class="link" id="w-journal" type="button">Журнал учителя</button></p>`;
+    app.querySelectorAll('.prof').forEach(b => b.onclick = () => renderWho('pin', b.dataset.id));
+    $('#go-reg').onclick = () => renderWho('reg');
+    $('#go-restore').onclick = () => renderWho('restore');
+    $('#w-journal').onclick = renderJournal;
+  } else if (mode === 'pin') {
+    const p = PR.list.find(x => x.id === arg);
+    if (!p) return renderWho('list');
+    if (!p.pin) return renderWho('reg', arg);
+    app.innerHTML = header(esc(p.name), `Логин: <b>${esc(p.login)}</b>. Введи свой код для входа.`) + `
+    <form class="card form" id="pinf">
+      <label class="field" for="pin">Код для входа (4 цифры)<input id="pin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required></label>
+      ${remember}<p class="err" id="perr" aria-live="polite"></p>
+      <div class="actions"><button class="btn" type="submit">Войти</button><button class="btn ghost" type="button" id="back">Назад</button></div>
+      <p class="note">Забыл код? Попроси учителя сбросить его в «Журнале учителя» на этом устройстве.</p>
+    </form>`;
+    $('#back').onclick = () => renderWho('list');
+    $('#pinf').onsubmit = ev => {
+      ev.preventDefault();
+      if (pinHash(p.login, $('#pin').value.trim()) === p.pin) enterAs(p.id, $('#rem').checked);
+      else { $('#perr').textContent = 'Неверный код. Попробуй ещё раз.'; $('#pin').value = ''; $('#pin').focus(); }
+    };
+    $('#pin').focus();
+  } else if (mode === 'reg') {
+    const legacy = arg ? PR.list.find(x => x.id === arg) : null;
+    app.innerHTML = header(legacy ? 'Придумай логин и код' : 'Регистрация', legacy ? `Для «${esc(legacy.name)}» нужно придумать логин и код, чтобы никто другой не смог зайти в твой кабинет.` : 'Заполни поля. Логин и код запомни или запиши — они нужны для входа.') + `
+    <form class="card form" id="regf">
+      <label class="field" for="rn">Имя и первая буква фамилии<input id="rn" type="text" maxlength="40" value="${legacy ? esc(legacy.name) : ''}" placeholder="Маша К." autocomplete="off" required></label>
+      <label class="field" for="rl">Логин: латинские буквы и цифры, 3–20 символов<input id="rl" type="text" maxlength="20" value="${legacy && legacy.login ? esc(legacy.login) : ''}" placeholder="masha_k" autocapitalize="off" autocomplete="off" spellcheck="false" required></label>
+      <label class="field" for="rp">Код для входа: 4 цифры<input id="rp" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required></label>
+      <label class="field" for="rp2">Повтори код<input id="rp2" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required></label>
+      ${remember}<p class="err" id="rerr" aria-live="polite"></p>
+      <div class="actions"><button class="btn" type="submit">${legacy ? 'Сохранить и войти' : 'Создать кабинет'}</button>${PR.list.length ? '<button class="btn ghost" type="button" id="back">Назад</button>' : '<button class="btn ghost" type="button" id="go-restore">У меня уже есть код прогресса</button>'}</div>
+    </form>`;
+    const bk = $('#back'); if (bk) bk.onclick = () => renderWho('list');
+    const gr = $('#go-restore'); if (gr) gr.onclick = () => renderWho('restore');
+    $('#regf').onsubmit = ev => {
+      ev.preventDefault();
+      const err = $('#rerr'), name = $('#rn').value.replace(/\s+/g, ' ').trim(), login = $('#rl').value.trim().toLowerCase(), pin = $('#rp').value.trim(), pin2 = $('#rp2').value.trim();
+      if (name.length < 2) { err.textContent = 'Напиши имя.'; return; }
+      if (!LOGIN_RE.test(login)) { err.textContent = 'Логин: 3–20 латинских букв или цифр (можно точку, дефис, подчёркивание).'; return; }
+      if (PR.list.some(x => x.login === login && (!legacy || x.id !== legacy.id))) { err.textContent = 'Такой логин уже есть на этом устройстве. Придумай другой.'; return; }
+      if (!/^\d{4}$/.test(pin)) { err.textContent = 'Код — это 4 цифры.'; return; }
+      if (pin !== pin2) { err.textContent = 'Коды не совпадают.'; return; }
+      let id;
+      if (legacy) { Object.assign(legacy, {name, login, pin: pinHash(login, pin)}); id = legacy.id; }
+      else { id = newId(); PR.list.push({id, name, login, pin: pinHash(login, pin)}); }
+      saveProfiles(); enterAs(id, $('#rem').checked);
+    };
+  } else if (mode === 'restore') {
+    app.innerHTML = header('Перенос прогресса', 'Возьми код из «Моего кабинета» на старом устройстве или напиши Telegram-боту /restore — и вставь код сюда.') + `
+    <form class="card form" id="resf">
+      <label class="field" for="rc">Код прогресса<textarea id="rc" class="codebox" rows="5" placeholder="CHEK2:…" required></textarea></label>
+      <p class="err" id="serr" aria-live="polite"></p>
+      <div class="actions"><button class="btn" type="submit">Перенести</button><button class="btn ghost" type="button" id="back">Назад</button></div>
+    </form>`;
+    $('#back').onclick = () => renderWho(PR.list.length ? 'list' : 'reg');
+    $('#resf').onsubmit = async ev => {
+      ev.preventDefault();
+      const found = (await decodeAll($('#rc').value)).filter(o => o.v === 2 && o.full && o.login && o.pin);
+      if (!found.length) { $('#serr').textContent = 'Код не подошёл. Нужен полный код из «Моего кабинета» — он начинается с CHEK2:.'; return; }
+      const o = found[found.length - 1];
+      let p = PR.list.find(x => x.login === o.login);
+      if (!p) { p = {id: newId()}; PR.list.push(p); }
+      Object.assign(p, {name: o.n, login: o.login, pin: o.pin});
+      if (o.i) p.bot = o.i;
+      saveProfiles();
+      try { localStorage.setItem('chek-progress:' + p.id, JSON.stringify(o.full)); } catch (_) {}
+      toast('<span>Прогресс перенесён. Войди со своим кодом.</span>');
+      renderWho('pin', p.id);
+    };
+  }
+  window.scrollTo(0, 0);
+}
+
+const JKEY = 'chek-journal';
+function loadJ(){ try { return JSON.parse(localStorage.getItem(JKEY) || '{}') || {}; } catch (_) { return {}; } }
+function saveJ(j){ try { localStorage.setItem(JKEY, JSON.stringify(j)); } catch (_) {} }
+function renderJournal(){
+  S = null; document.body.classList.add('wide');
+  const J = loadJ(), rows = Object.values(J).sort((a, b) => a.n.localeCompare(b.n, 'ru'));
+  app.innerHTML = `
+  <button class="back" id="j-home" type="button">← На главную</button>
+  <section style="display:flex;flex-direction:column;gap:10px">
+    <p class="eyebrow">Для учителя</p>
+    <h1>Журнал класса</h1>
+    <p class="lead">Ученики присылают код из «Моего кабинета». Вставьте сюда один или сразу много кодов — журнал обновится. Журнал хранится только на этом устройстве.</p>
+  </section>
+  <section class="card" style="display:flex;flex-direction:column;gap:12px">
+    <label class="field" for="jcodes">Коды учеников<textarea id="jcodes" class="codebox" rows="5" placeholder="Вставьте сюда сообщения учеников с кодами CHEK1:…"></textarea></label>
+    <div class="actions"><button class="btn" id="jadd" type="button">Добавить в журнал</button></div>
+    <p class="note" id="jmsg" aria-live="polite"></p>
+  </section>
+  <section class="card" style="display:flex;flex-direction:column;gap:12px">
+    <h2>Учеников в журнале: ${rows.length}</h2>
+    ${rows.length ? `<div class="tablewrap"><table class="jt"><tr><th>Ученик</th><th>Лапки</th><th>Звание</th><th>Курс</th>${LESSONS.map(l => `<th>${l.final ? 'Итог' : 'У' + l.n}</th>`).join('')}<th>Ачивки</th><th>Дата</th></tr>${rows.map(s => `<tr><td>${esc(s.n)}</td><td class="num">${s.p}</td><td>${esc(s.r)}</td><td class="num">${s.l}/${COURSE.length} · ${s.c}%</td>${LESSONS.map((l, k) => { const v = (s.t || [])[k]; return `<td class="num ${pcClass(v)}">${v == null ? '—' : v + '%'}</td>`; }).join('')}<td class="num">${s.b}</td><td class="num">${esc(s.d)}</td></tr>`).join('')}</table></div>
+    <p class="note">Зелёным — 75% и выше, красным — ниже 50%. «—» значит, что тест ещё не пройден.</p>` : '<p class="note">Пока пусто. Попросите учеников открыть «Мой кабинет» и прислать код.</p>'}
+  </section>
+  ${rows.length ? '<div class="actions"><button class="btn ghost" id="jclear" type="button">Очистить журнал</button></div>' : ''}
+  <section class="card" style="display:flex;flex-direction:column;gap:10px">
+    <h2>Ученики на этом устройстве</h2>
+    ${PR.list.length ? `<div class="tablewrap"><table><tr><th>Ученик</th><th>Логин</th><th></th></tr>${PR.list.map(p => `<tr><td>${esc(p.name)}</td><td>${esc(p.login || '—')}</td><td class="num">${p.pin ? `<button class="link resetpin" type="button" data-id="${p.id}">Сбросить код</button>` : 'код не задан'}</td></tr>`).join('')}</table></div><p class="note">После сброса ученик при входе сам придумает новый код. Прогресс сохранится.</p>` : '<p class="note">На этом устройстве пока никто не зарегистрирован.</p>'}
+  </section>`;
+  $('#j-home').onclick = () => CUR ? renderHome() : renderWho();
+  app.querySelectorAll('.resetpin').forEach(b => b.onclick = () => { const p = PR.list.find(x => x.id === b.dataset.id); if (p) { p.pin = null; saveProfiles(); toast(`<span>Код для «${esc(p.name)}» сброшен</span>`); renderJournal(); } });
+  $('#jadd').onclick = async () => {
+    const found = await decodeAll($('#jcodes').value);
+    if (!found.length) { $('#jmsg').textContent = 'Коды не найдены. Проверьте, что скопирован текст целиком, вместе с «CHEK».'; return; }
+    const j = loadJ();
+    found.forEach(s => { const {full, pin, ...rest} = s; const k = (rest.login || rest.n).trim().toLowerCase(); if (!j[k] || rest.d >= j[k].d) j[k] = rest; });
+    saveJ(j);
+    renderJournal(); toast(`<span>Добавлено: ${found.length}</span>`);
+  };
+  const jc = $('#jclear');
+  if (jc) jc.onclick = () => { if (jc.dataset.armed) { saveJ({}); renderJournal(); return; } jc.dataset.armed = '1'; jc.textContent = 'Точно очистить? Нажмите ещё раз'; };
+  window.scrollTo(0, 0);
+}
+
+function route(){
+  const h = location.hash.slice(1);
+  if (h === 'journal') return renderJournal();
+  const sm = h.match(/^s-([a-z0-9]{6,16})(?:-([A-Za-z0-9_]{3,40}))?$/);
+  if (sm) {
+    const pr = PR.list.find(p => p.bot === sm[1]);
+    if (pr && CUR === pr.id) { try { history.replaceState(null, '', location.pathname + location.search); } catch (_) {} return renderHome(); }
+    PENDING = {bot: sm[1], botName: sm[2] || ''};
+    return pr ? renderWho('pin', pr.id) : renderWho(PR.list.length ? 'list' : 'reg');
+  }
+  if (!CUR) return renderWho();
+  const uk = COURSE.findIndex(u => u.id === h);
+  if (uk >= 0 && unlocked(uk)) openStep(h, firstOpen(COURSE[uk]));
+  else if (h === 'course') openCourse();
+  else if (h === 'final' || CAT[h] || LES[h]) renderIntro(h); else if (h === 'achievements') renderAch(); else renderHome();
+}
+$('#hud').onclick = renderAch;
+updateHud();
+window.addEventListener('hashchange', route);
+route();
+</script>
+
+</body>
+</html>

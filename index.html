@@ -242,6 +242,10 @@ body.wide .wrap{max-width:none}
 .form{display:flex;flex-direction:column;gap:14px;max-width:560px}
 .modebtn{background:var(--ink);color:var(--paper);border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px}
 .chipsrow{display:flex;gap:8px;flex-wrap:wrap}
+.btn.small{padding:5px 12px;font-size:14px;box-shadow:2px 2px 0 var(--shadow)}
+details.more{border-top:2px solid var(--tint);padding-top:10px;display:flex;flex-direction:column;gap:10px}
+details.more summary{cursor:pointer;font-weight:800;color:var(--accent-ink)}
+details.more[open]{display:flex}
 .chipf{border:2px solid var(--line);border-radius:999px;padding:4px 14px;background:var(--card);font-weight:800}
 .chipf.on{background:var(--accent);color:var(--on-accent)}
 .newb{background:var(--bad);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:800}
@@ -852,9 +856,13 @@ function renderAch(){
   </section>
   <section class="card" style="display:flex;flex-direction:column;gap:12px">
     <h2>Отправить результат учителю</h2>
-    <p class="note">${curProf() && curProf().botName ? `Скопируй код и отправь его боту @${esc(curProf().botName)}. Бот сохранит твой прогресс и передаст результат учителю.` : 'Скопируй код и отправь учителю (или Telegram-боту курса). Код хранит весь твой прогресс: по нему можно продолжить на другом устройстве.'}</p>
-    <textarea id="sendcode" class="codebox" rows="4" readonly>Готовлю код…</textarea>
-    <div class="actions"><button class="btn" id="copycode" type="button">Скопировать</button>${curProf() && curProf().botName ? `<a class="btn ghost" href="https://t.me/${esc(curProf().botName)}" target="_blank" rel="noopener">Открыть бота</a>` : ''}</div>
+    <p class="note">Нажми кнопку — откроется Telegram с Енотом Чеком. Нажми там «Запустить» (Start) — и учитель увидит твои лапки, уроки и тесты. Если ты ещё не знаком с ботом, он спросит имя и класс — это один раз.</p>
+    <div class="actions"><a class="btn" id="sendtg" href="${esc(sendLink())}" target="_blank" rel="noopener">Отправить учителю в Telegram</a></div>
+    <details class="more"><summary>Перенести прогресс на другое устройство</summary>
+      <p class="note">Скопируй этот код и на новом устройстве выбери «Перенести прогресс с другого устройства». Код можно сохранить у бота: пришли его в чат, а потом получишь обратно командой /restore.</p>
+      <textarea id="sendcode" class="codebox" rows="4" readonly>Готовлю код…</textarea>
+      <div class="actions"><button class="btn ghost" id="copycode" type="button">Скопировать код</button></div>
+    </details>
   </section>
   <section class="card" style="display:flex;flex-direction:column;gap:10px">
     <h2>Мои тесты</h2>
@@ -1272,6 +1280,7 @@ function renderResults(){
   </section>
   <div class="actions">
     ${S.ret ? '<button class="btn" id="r-back" type="button">Продолжить урок →</button>' : ''}
+    ${S.mode === 'test' && CUR ? `<a class="btn" href="${esc(sendLink())}" target="_blank" rel="noopener">Отправить учителю</a>` : ''}
     <button class="btn ${S.ret ? 'ghost' : ''}" id="again" type="button">Пройти ещё раз</button>
     ${mist.length ? '<button class="btn ghost" id="retry" type="button">Повторить только ошибки</button>' : ''}
     <button class="btn ghost" id="r-home" type="button">Все тренажёры</button>
@@ -1661,6 +1670,15 @@ function renderJournal(){
 
 /* ---------- режим учителя: данные Telegram-бота с этого компьютера ---------- */
 const BOT_API = 'http://localhost:8765';
+const BOT_USERNAME = 'EnotCheckKursBot';
+function b36(n){ return Math.max(0, Math.round(n || 0)).toString(36); }
+function resultPayload(){
+  const pr = curProf() || {};
+  const sid = /^[0-9a-f]{8}$/.test(pr.bot || '') ? pr.bot : '-';
+  const t = LESSONS.map(l => { const v = l.final ? P.tests.final : P.tests[l.id]; return v == null ? 'zz' : b36(Math.min(100, v)).padStart(2, '0'); }).join('');
+  return ['r', sid, b36(Math.min(P.paws, 60466175)), String(Math.min(lessonsDone(), 9)), b36(Math.min(coursePct(), 100)), b36(Math.min(BADGES.filter(b => P.badges[b.id]).length, 1295)), t].join('_');
+}
+function sendLink(){ const pr = curProf(); return `https://t.me/${(pr && pr.botName) || BOT_USERNAME}?start=${resultPayload()}`; }
 let MODE = 'student'; try { MODE = sessionStorage.getItem('chek-mode') || 'student'; } catch (_) {}
 let TT = null; try { TT = sessionStorage.getItem('chek-tt'); } catch (_) {}
 let TPOLL = null;
@@ -1718,21 +1736,28 @@ async function renderTeacher(klass){
     return;
   }
   let j;
-  try { j = await (await tapi('/api/class' + (klass ? '?klass=' + encodeURIComponent(klass) : ''))).json(); }
+  try { j = await (await tapi('/api/class')).json(); }
   catch (e) { return renderTeacher(klass); }
-  const st = j.students || [];
+  const all = j.students || [];
+  const st = klass ? all.filter(s => s.klass === klass) : all;
   const chips = `<button class="chipf ${!klass ? 'on' : ''}" data-k="" type="button">Все</button>` + (j.classes || []).map(k => `<button class="chipf ${k === klass ? 'on' : ''}" data-k="${esc(k)}" type="button">${esc(k)}</button>`).join('');
   const rows = st.map(s => { const d = s.data || {}; const t = (d.t || []).concat(Array(9).fill(null)).slice(0, 9);
-    return `<tr><td class="num">${s.num}</td><td>${esc(s.klass)}</td><td><button class="link tstud" data-n="${s.num}" type="button">${esc(s.name)}</button>${s.unread ? ` <span class="newb">${s.unread} новых</span>` : ''}</td><td class="num">${d.p ?? '—'}</td><td>${esc(String(d.r ?? '—'))}</td><td class="num">${d.l ?? 0}/9</td><td class="num">${d.c ?? 0}%</td>${t.map(v => `<td class="num ${pcClass(v)}">${v == null ? '—' : v + '%'}</td>`).join('')}<td>${esc(s.received ? s.received.replace('T', ' ') : 'ещё нет')}</td></tr>`; }).join('');
+    return `<tr class="trow" data-q="${esc((s.name + ' ' + s.klass + ' ' + s.num).toLowerCase())}"><td class="num">${s.num}</td><td>${esc(s.klass)}</td><td><button class="link tstud" data-n="${s.num}" type="button">${esc(s.name)}</button>${s.unread ? ` <span class="newb">${s.unread} новых</span>` : ''}</td><td><button class="btn ghost small twrite" data-n="${s.num}" type="button">Написать</button></td><td class="num">${d.p ?? '—'}</td><td>${esc(String(d.r ?? '—'))}</td><td class="num">${d.l ?? 0}/9</td><td class="num">${d.c ?? 0}%</td>${t.map(v => `<td class="num ${pcClass(v)}">${v == null ? '—' : v + '%'}</td>`).join('')}<td>${esc(s.received ? s.received.replace('T', ' ') : 'ещё нет')}</td></tr>`; }).join('');
+  const whoOpts = `<option value="">Всем ученикам</option>` + (j.classes || []).map(k => `<option value="k:${esc(k)}"${k === klass ? ' selected' : ''}>Класс ${esc(k)}</option>`).join('')
+    + `<optgroup label="Один ученик">` + all.map(s => `<option value="s:${s.num}">№${s.num} ${esc(s.name)} (${esc(s.klass)})</option>`).join('') + `</optgroup>`;
   app.innerHTML = tHead('Кабинет учителя' + (klass ? ' · ' + esc(klass) : '')) + `
   <section class="card" style="display:flex;flex-direction:column;gap:12px">
     <div class="chipsrow">${chips}</div>
     <p>Учеников: <b>${st.length}</b> · прислали результат: <b>${st.filter(s => s.data).length}</b></p>
-    ${st.length ? `<div class="tablewrap"><table class="jt"><tr><th>№</th><th>Класс</th><th>Ученик</th><th>Лапки</th><th>Звание</th><th>Уроков</th><th>Курс</th>${LESSONS.map(l => `<th>${l.final ? 'Итог' : 'У' + l.n}</th>`).join('')}<th>Результат прислан</th></tr>${rows}</table></div><p class="note">Зелёным — 75% и выше, красным — ниже 50%. Нажмите на имя: результаты, переписка и личное сообщение.</p>` : '<p class="note">Пока нет учеников. Дайте классу ссылку на бота — ученики зарегистрируются через /start.</p>'}
+    ${st.length ? `<label class="field" for="tq" style="max-width:420px">Найти ученика<input id="tq" type="search" placeholder="Имя, класс или номер" autocomplete="off"></label>
+    <div class="tablewrap"><table class="jt"><tr><th>№</th><th>Класс</th><th>Ученик</th><th></th><th>Лапки</th><th>Звание</th><th>Уроков</th><th>Курс</th>${LESSONS.map(l => `<th>${l.final ? 'Итог' : 'У' + l.n}</th>`).join('')}<th>Результат прислан</th></tr>${rows}</table></div>
+    <p class="note" id="tqnone" hidden>Никого не нашлось.</p>
+    <p class="note">Зелёным — 75% и выше, красным — ниже 50%. «Написать» — личное сообщение ученику; имя — его результаты и переписка.</p>` : '<p class="note">Пока нет учеников. Ученики появятся здесь, когда нажмут «Отправить учителю» в Академии или напишут боту /start.</p>'}
     <div class="actions"><button class="btn ghost" id="t-excel" type="button">Скачать Excel</button><button class="btn ghost" id="t-refresh" type="button">Обновить</button></div>
   </section>
   <form class="card form" id="tbc" style="max-width:none">
-    <h2>Сообщение ${klass ? 'классу ' + esc(klass) : 'всем ученикам'}</h2>
+    <h2>Отправить сообщение</h2>
+    <label class="field" for="tbcw">Кому<select id="tbcw">${whoOpts}</select></label>
     <label class="field" for="tbct">Текст<textarea id="tbct" class="codebox" rows="3" placeholder="Например: Сегодня новое дело — заходите в Академию!"></textarea></label>
     <label class="field" for="tbcl">Кнопка урока (необязательно)<select id="tbcl"><option value="">— без кнопки —</option>${lessonOpts()}</select></label>
     <p class="note" id="tbcm" aria-live="polite"></p>
@@ -1741,6 +1766,9 @@ async function renderTeacher(klass){
   <p class="note">Без бота: <button class="link" id="t-journal" type="button">журнал по кодам</button> и сброс кодов входа учеников на этом устройстве.</p>`;
   app.querySelectorAll('.chipf').forEach(b => b.onclick = () => renderTeacher(b.dataset.k || undefined));
   app.querySelectorAll('.tstud').forEach(b => b.onclick = () => renderTeacherStudent(+b.dataset.n, klass));
+  app.querySelectorAll('.twrite').forEach(b => b.onclick = () => renderTeacherStudent(+b.dataset.n, klass, true));
+  const tq = $('#tq');
+  if (tq) tq.oninput = () => { const q = tq.value.trim().toLowerCase(); let shown = 0; app.querySelectorAll('.trow').forEach(r => { const ok = !q || r.dataset.q.includes(q); r.hidden = !ok; if (ok) shown++; }); $('#tqnone').hidden = shown > 0; };
   $('#t-refresh').onclick = () => renderTeacher(klass);
   $('#t-journal').onclick = renderJournal;
   $('#t-excel').onclick = async () => {
@@ -1752,16 +1780,23 @@ async function renderTeacher(klass){
   };
   $('#tbc').onsubmit = async ev => {
     ev.preventDefault();
-    const text = $('#tbct').value.trim(), lesson = $('#tbcl').value;
+    const text = $('#tbct').value.trim(), lesson = $('#tbcl').value, who = $('#tbcw').value;
     if (!text && !lesson) { $('#tbcm').textContent = 'Напишите текст или выберите урок.'; return; }
-    try { const r = await (await tapi('/api/broadcast', {method: 'POST', json: {klass: klass || '', lesson, text}})).json();
-      $('#tbcm').textContent = r.error || `Отправлено: ${r.sent} из ${r.total}.`; if (!r.error) $('#tbct').value = '';
+    try {
+      if (who.startsWith('s:')) {
+        if (!text) { $('#tbcm').textContent = 'Для личного сообщения напишите текст.'; return; }
+        const r = await (await tapi('/api/student/' + who.slice(2) + '/send', {method: 'POST', json: {text, lesson}})).json();
+        $('#tbcm').textContent = r.error || 'Личное сообщение отправлено.'; if (!r.error) $('#tbct').value = '';
+      } else {
+        const r = await (await tapi('/api/broadcast', {method: 'POST', json: {klass: who.startsWith('k:') ? who.slice(2) : '', lesson, text}})).json();
+        $('#tbcm').textContent = r.error || `Отправлено: ${r.sent} из ${r.total}.`; if (!r.error) $('#tbct').value = '';
+      }
     } catch (_) { $('#tbcm').textContent = 'Нет связи с ботом.'; }
   };
   window.scrollTo(0, 0);
 }
 
-async function renderTeacherStudent(num, klass){
+async function renderTeacherStudent(num, klass, focusWrite){
   S = null; stopPoll(); setMode('teacher'); document.body.classList.add('wide');
   let j;
   try { const r = await tapi('/api/student/' + num); j = await r.json(); if (!r.ok) return renderTeacher(klass); }
@@ -1787,6 +1822,7 @@ async function renderTeacherStudent(num, klass){
   </section>`;
   const scrollChat = () => { const c = $('#tchat'); if (c) c.scrollTop = c.scrollHeight; };
   scrollChat();
+  if (focusWrite) { const ta = $('#tst'); if (ta) { if (ta.scrollIntoView) ta.scrollIntoView({block: 'center'}); ta.focus(); } }
   $('#t-back').onclick = () => renderTeacher(klass);
   const refresh = async () => { if (!$('#tchat')) return stopPoll(); try { const r = await tapi('/api/student/' + num); const k = await r.json(); const c = $('#tchat'); if (c && k.messages) { c.innerHTML = chatHtml(k.messages); scrollChat(); } } catch (_) {} };
   TPOLL = setInterval(refresh, 15000);

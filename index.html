@@ -61,6 +61,10 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .note{font-size:14px;color:var(--muted)}
 .tip{display:flex;gap:14px;align-items:center;background:var(--tint);border-radius:18px;padding:14px 18px}
 .tip svg{width:64px;height:64px;flex:none}
+.tip svg.rfull{width:74px;height:96px}
+.hero svg.rfull{width:150px;height:193px;flex:none}
+.cert svg.rfull{width:130px;height:167px}
+@media (max-width:560px){ .hero svg.rfull{width:110px;height:141px} }
 .hand{font-family:var(--hand);font-size:26px;line-height:1.15}
 .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
 .mode{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
@@ -133,7 +137,7 @@ td.num{text-align:right;white-space:nowrap}
 .paw{width:1.1em;height:1.1em;fill:currentColor;flex:none;vertical-align:-0.15em}
 .hud{display:flex;align-items:center;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:800;color:var(--accent-ink)}
 .hud-rank{color:var(--muted);font-weight:700;font-size:14px}
-header.top .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:560px){ header.top .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis} }
 .hud,.modebtn,#home-btn{flex:none;white-space:nowrap}
 @media (max-width:560px){
   .hud-rank{display:none}
@@ -259,6 +263,9 @@ details.more summary{cursor:pointer;font-weight:800;color:var(--accent-ink)}
 details.more[open]{display:flex}
 .chipf{border:2px solid var(--line);border-radius:999px;padding:4px 14px;background:var(--card);font-weight:800}
 .chipf.on{background:var(--accent);color:var(--on-accent)}
+.agepick{border:0;padding:0;margin:0}
+.agepick legend{font-weight:700;margin-bottom:6px}
+.agechips{display:flex;gap:18px;flex-wrap:wrap}
 .goals{background:var(--tint);border-radius:16px;padding:12px 18px;margin-bottom:6px}
 .goals ul{margin:6px 0 0;padding-left:20px}
 .revtag{background:var(--accent);color:var(--on-accent);border-radius:999px;padding:1px 8px;font-size:11px}
@@ -314,7 +321,21 @@ select{font:inherit;padding:8px 10px;border:2px solid var(--line);border-radius:
 </div>
 
 <script>
-const RACCOON = `<svg viewBox="0 0 420 420" aria-hidden="true"><defs><radialGradient id="rcHead" cx="0.4" cy="0.32" r="0.75"><stop offset="0" stop-color="#C9CED6"/><stop offset="0.55" stop-color="#99A0AB"/><stop offset="1" stop-color="#5F6673"/></radialGradient><radialGradient id="rcEar" cx="0.45" cy="0.35" r="0.7"><stop offset="0" stop-color="#8C93A0"/><stop offset="1" stop-color="#474E5C"/></radialGradient><radialGradient id="rcInner" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#FBDCC6"/><stop offset="1" stop-color="#D49A78"/></radialGradient><radialGradient id="rcMuzzle" cx="0.45" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.6" stop-color="#F0E8DB"/><stop offset="1" stop-color="#CFC3B1"/></radialGradient><radialGradient id="rcMask" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stop-color="#4B5266"/><stop offset="1" stop-color="#1E2331"/></radialGradient><radialGradient id="rcEye" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D5DCE5"/></radialGradient><radialGradient id="rcIris" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#8A5E36"/><stop offset="1" stop-color="#2A1A0E"/></radialGradient><radialGradient id="rcNose" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#5A6480"/><stop offset="1" stop-color="#121826"/></radialGradient><linearGradient id="rcScarf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAD6B"/><stop offset="1" stop-color="#D9621A"/></linearGradient><linearGradient id="rcHandle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#B9530F"/></linearGradient><radialGradient id="rcLens" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.95"/><stop offset="0.45" stop-color="#CFE6F7" stop-opacity="0.7"/><stop offset="1" stop-color="#6FA3D4" stop-opacity="0.6"/></radialGradient><linearGradient id="rcRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B6680"/><stop offset="1" stop-color="#151B2B"/></linearGradient></defs><ellipse cx="200" cy="402" rx="140" ry="12" fill="#1F2A44" opacity="0.18"/><ellipse cx="95" cy="95" rx="48" ry="58" fill="url(#rcEar)" transform="rotate(-20 95 95)"/><ellipse cx="97" cy="104" rx="26" ry="34" fill="url(#rcInner)" transform="rotate(-20 97 104)"/><ellipse cx="285" cy="95" rx="48" ry="58" fill="url(#rcEar)" transform="rotate(20 285 95)"/><ellipse cx="283" cy="104" rx="26" ry="34" fill="url(#rcInner)" transform="rotate(20 283 104)"/><path d="M60 238 L20 256 L58 268 L28 296 L84 286 Z" fill="#6E7582"/><path d="M320 238 L360 256 L322 268 L352 296 L296 286 Z" fill="#6E7582"/><ellipse cx="190" cy="205" rx="150" ry="128" fill="url(#rcHead)"/><ellipse cx="135" cy="125" rx="68" ry="30" fill="#FFFFFF" opacity="0.25" transform="rotate(-20 135 125)"/><ellipse cx="190" cy="262" rx="108" ry="78" fill="url(#rcMuzzle)"/><ellipse cx="190" cy="118" rx="16" ry="44" fill="#4E5563"/><path d="M48 200 Q110 140 190 185 Q270 140 332 200 Q300 252 238 236 Q190 222 142 236 Q80 252 48 200 Z" fill="url(#rcMask)"/><path d="M78 192 Q118 160 166 178" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="142" cy="200" r="26" fill="url(#rcEye)"/><circle cx="238" cy="200" r="26" fill="url(#rcEye)"/><circle cx="146" cy="204" r="15" fill="url(#rcIris)"/><circle cx="242" cy="204" r="15" fill="url(#rcIris)"/><circle cx="146" cy="205" r="7" fill="#0E1320"/><circle cx="242" cy="205" r="7" fill="#0E1320"/><circle cx="152" cy="197" r="5" fill="#FFFFFF"/><circle cx="248" cy="197" r="5" fill="#FFFFFF"/><circle cx="141" cy="211" r="2.5" fill="#FFFFFF" opacity="0.8"/><circle cx="237" cy="211" r="2.5" fill="#FFFFFF" opacity="0.8"/><path d="M212 158 Q240 140 272 156" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M112 168 Q140 162 168 170" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><ellipse cx="190" cy="262" rx="22" ry="16" fill="url(#rcNose)"/><ellipse cx="183" cy="256" rx="7" ry="4" fill="#FFFFFF" opacity="0.6"/><path d="M168 290 Q190 306 214 288" stroke="#1F2A44" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M150 346 L130 392 L156 396 L174 346 Z" fill="url(#rcScarf)"/><path d="M110 318 Q190 350 270 318 L262 345 Q190 372 118 345 Z" fill="url(#rcScarf)"/><path d="M124 334 Q190 360 256 334" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="345" y1="345" x2="400" y2="400" stroke="url(#rcHandle)" stroke-width="22" stroke-linecap="round"/><circle cx="315" cy="315" r="52" fill="url(#rcLens)" stroke="url(#rcRim)" stroke-width="14"/><path d="M284 296 Q292 282 308 278" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"/></svg>`;
+/* Енот Чек в полный рост (с анимацией: моргает, машет, качает хвостом) */
+let RACCOON_FULL = `<svg class="rfull" viewBox="0 0 420 540" aria-hidden="true"><style>
+.rf-blink{animation:rf-blink 5s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes rf-blink{0%,93%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+.rf-tail{animation:rf-tail 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:92% 92%}
+@keyframes rf-tail{50%{transform:rotate(-9deg)}}
+.rf-lens{animation:rf-lens 4s ease-in-out infinite;transform-box:fill-box;transform-origin:0% 100%}
+@keyframes rf-lens{50%{transform:rotate(-9deg)}}
+.rf-wave{animation:rf-wave 3s ease-in-out infinite;transform-box:fill-box;transform-origin:95% 95%}
+@keyframes rf-wave{0%,55%,100%{transform:rotate(0)}65%{transform:rotate(16deg)}75%{transform:rotate(-6deg)}85%{transform:rotate(12deg)}}
+.rf-bob{animation:rf-bob 3.2s ease-in-out infinite}
+@keyframes rf-bob{50%{transform:translateY(4px)}}
+@media (prefers-reduced-motion: reduce){.rf-blink,.rf-tail,.rf-lens,.rf-wave,.rf-bob{animation:none}}
+</style><defs><radialGradient id="rfHead" cx="0.4" cy="0.32" r="0.75"><stop offset="0" stop-color="#C9CED6"/><stop offset="0.55" stop-color="#99A0AB"/><stop offset="1" stop-color="#5F6673"/></radialGradient><radialGradient id="rfBody" cx="0.38" cy="0.3" r="0.8"><stop offset="0" stop-color="#BEC4CD"/><stop offset="0.6" stop-color="#8F96A2"/><stop offset="1" stop-color="#5B6270"/></radialGradient><radialGradient id="rfEar" cx="0.45" cy="0.35" r="0.7"><stop offset="0" stop-color="#8C93A0"/><stop offset="1" stop-color="#474E5C"/></radialGradient><radialGradient id="rfInner" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#FBDCC6"/><stop offset="1" stop-color="#D49A78"/></radialGradient><radialGradient id="rfMuzzle" cx="0.45" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.6" stop-color="#F0E8DB"/><stop offset="1" stop-color="#CFC3B1"/></radialGradient><radialGradient id="rfMask" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stop-color="#4B5266"/><stop offset="1" stop-color="#1E2331"/></radialGradient><radialGradient id="rfEye" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D5DCE5"/></radialGradient><radialGradient id="rfIris" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#8A5E36"/><stop offset="1" stop-color="#2A1A0E"/></radialGradient><radialGradient id="rfNose" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#5A6480"/><stop offset="1" stop-color="#121826"/></radialGradient><linearGradient id="rfLimb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6E7582"/><stop offset="1" stop-color="#3A4150"/></linearGradient><linearGradient id="rfScarf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAD6B"/><stop offset="1" stop-color="#D9621A"/></linearGradient><linearGradient id="rfHandle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#B9530F"/></linearGradient><radialGradient id="rfLens" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.95"/><stop offset="0.45" stop-color="#CFE6F7" stop-opacity="0.7"/><stop offset="1" stop-color="#6FA3D4" stop-opacity="0.6"/></radialGradient><linearGradient id="rfRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B6680"/><stop offset="1" stop-color="#151B2B"/></linearGradient></defs><ellipse cx="210" cy="522" rx="135" ry="12" fill="#1F2A44" opacity="0.18"/><g class="rf-tail"><ellipse cx="138" cy="430" rx="38" ry="28" fill="#8F96A2" transform="rotate(30 138 430)"/><ellipse cx="106" cy="404" rx="36" ry="27" fill="#3A4150" transform="rotate(45 106 404)"/><ellipse cx="82" cy="370" rx="34" ry="26" fill="#A4ABB6" transform="rotate(60 82 370)"/><ellipse cx="67" cy="334" rx="30" ry="24" fill="#3A4150" transform="rotate(72 67 334)"/><ellipse cx="62" cy="302" rx="22" ry="19" fill="#2A303D" transform="rotate(80 62 302)"/></g><rect x="166" y="410" width="40" height="92" rx="20" fill="url(#rfLimb)"/><rect x="214" y="410" width="40" height="92" rx="20" fill="url(#rfLimb)"/><ellipse cx="180" cy="504" rx="34" ry="15" fill="#2E3442"/><ellipse cx="240" cy="504" rx="34" ry="15" fill="#2E3442"/><ellipse cx="174" cy="499" rx="14" ry="5" fill="#FFFFFF" opacity="0.15"/><ellipse cx="234" cy="499" rx="14" ry="5" fill="#FFFFFF" opacity="0.15"/><ellipse cx="210" cy="332" rx="84" ry="104" fill="url(#rfBody)"/><ellipse cx="210" cy="350" rx="54" ry="74" fill="url(#rfMuzzle)"/><ellipse cx="176" cy="282" rx="26" ry="40" fill="#FFFFFF" opacity="0.15" transform="rotate(20 176 282)"/><g class="rf-wave"><path d="M150 282 Q118 252 104 210" stroke="url(#rfLimb)" stroke-width="30" stroke-linecap="round" fill="none"/><circle cx="102" cy="204" r="19" fill="#3A4150"/><path d="M90 190 L86 178 M101 186 L100 173 M112 189 L116 177" stroke="#3A4150" stroke-width="8" stroke-linecap="round"/></g><g class="rf-bob"><g transform="translate(96 20) scale(0.6)"><ellipse cx="95" cy="95" rx="48" ry="58" fill="url(#rfEar)" transform="rotate(-20 95 95)"/><ellipse cx="97" cy="104" rx="26" ry="34" fill="url(#rfInner)" transform="rotate(-20 97 104)"/><ellipse cx="285" cy="95" rx="48" ry="58" fill="url(#rfEar)" transform="rotate(20 285 95)"/><ellipse cx="283" cy="104" rx="26" ry="34" fill="url(#rfInner)" transform="rotate(20 283 104)"/><path d="M60 238 L20 256 L58 268 L28 296 L84 286 Z" fill="#6E7582"/><path d="M320 238 L360 256 L322 268 L352 296 L296 286 Z" fill="#6E7582"/><ellipse cx="190" cy="205" rx="150" ry="128" fill="url(#rfHead)"/><ellipse cx="135" cy="125" rx="68" ry="30" fill="#FFFFFF" opacity="0.25" transform="rotate(-20 135 125)"/><ellipse cx="190" cy="262" rx="108" ry="78" fill="url(#rfMuzzle)"/><ellipse cx="190" cy="118" rx="16" ry="44" fill="#4E5563"/><path d="M48 200 Q110 140 190 185 Q270 140 332 200 Q300 252 238 236 Q190 222 142 236 Q80 252 48 200 Z" fill="url(#rfMask)"/><path d="M78 192 Q118 160 166 178" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6" fill="none" stroke-linecap="round"/><g class="rf-blink"><circle cx="142" cy="200" r="26" fill="url(#rfEye)"/><circle cx="238" cy="200" r="26" fill="url(#rfEye)"/><circle cx="146" cy="204" r="15" fill="url(#rfIris)"/><circle cx="242" cy="204" r="15" fill="url(#rfIris)"/><circle cx="146" cy="205" r="7" fill="#0E1320"/><circle cx="242" cy="205" r="7" fill="#0E1320"/><circle cx="152" cy="197" r="5" fill="#FFFFFF"/><circle cx="248" cy="197" r="5" fill="#FFFFFF"/></g><path d="M212 158 Q240 140 272 156" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M112 168 Q140 162 168 170" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><ellipse cx="190" cy="262" rx="22" ry="16" fill="url(#rfNose)"/><ellipse cx="183" cy="256" rx="7" ry="4" fill="#FFFFFF" opacity="0.6"/><path d="M168 290 Q190 306 214 288" stroke="#1F2A44" stroke-width="6" fill="none" stroke-linecap="round"/></g></g><path d="M146 222 Q210 252 274 222 L270 246 Q210 274 150 246 Z" fill="url(#rfScarf)"/><path d="M174 244 L160 300 L184 304 L196 250 Z" fill="url(#rfScarf)"/><path d="M156 236 Q210 260 264 236" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="4" fill="none" stroke-linecap="round"/><g class="rf-lens"><path d="M270 288 Q302 292 318 262" stroke="url(#rfLimb)" stroke-width="30" stroke-linecap="round" fill="none"/><line x1="322" y1="252" x2="340" y2="226" stroke="url(#rfHandle)" stroke-width="15" stroke-linecap="round"/><circle cx="320" cy="258" r="18" fill="#3A4150"/><circle cx="360" cy="194" r="38" fill="url(#rfLens)" stroke="url(#rfRim)" stroke-width="11"/><path d="M338 180 Q344 168 356 165" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.85"/></g></svg>`;
+let RACCOON = `<svg viewBox="0 0 420 420" aria-hidden="true"><defs><radialGradient id="rcHead" cx="0.4" cy="0.32" r="0.75"><stop offset="0" stop-color="#C9CED6"/><stop offset="0.55" stop-color="#99A0AB"/><stop offset="1" stop-color="#5F6673"/></radialGradient><radialGradient id="rcEar" cx="0.45" cy="0.35" r="0.7"><stop offset="0" stop-color="#8C93A0"/><stop offset="1" stop-color="#474E5C"/></radialGradient><radialGradient id="rcInner" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#FBDCC6"/><stop offset="1" stop-color="#D49A78"/></radialGradient><radialGradient id="rcMuzzle" cx="0.45" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.6" stop-color="#F0E8DB"/><stop offset="1" stop-color="#CFC3B1"/></radialGradient><radialGradient id="rcMask" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stop-color="#4B5266"/><stop offset="1" stop-color="#1E2331"/></radialGradient><radialGradient id="rcEye" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D5DCE5"/></radialGradient><radialGradient id="rcIris" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#8A5E36"/><stop offset="1" stop-color="#2A1A0E"/></radialGradient><radialGradient id="rcNose" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#5A6480"/><stop offset="1" stop-color="#121826"/></radialGradient><linearGradient id="rcScarf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAD6B"/><stop offset="1" stop-color="#D9621A"/></linearGradient><linearGradient id="rcHandle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#B9530F"/></linearGradient><radialGradient id="rcLens" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.95"/><stop offset="0.45" stop-color="#CFE6F7" stop-opacity="0.7"/><stop offset="1" stop-color="#6FA3D4" stop-opacity="0.6"/></radialGradient><linearGradient id="rcRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B6680"/><stop offset="1" stop-color="#151B2B"/></linearGradient></defs><ellipse cx="200" cy="402" rx="140" ry="12" fill="#1F2A44" opacity="0.18"/><ellipse cx="95" cy="95" rx="48" ry="58" fill="url(#rcEar)" transform="rotate(-20 95 95)"/><ellipse cx="97" cy="104" rx="26" ry="34" fill="url(#rcInner)" transform="rotate(-20 97 104)"/><ellipse cx="285" cy="95" rx="48" ry="58" fill="url(#rcEar)" transform="rotate(20 285 95)"/><ellipse cx="283" cy="104" rx="26" ry="34" fill="url(#rcInner)" transform="rotate(20 283 104)"/><path d="M60 238 L20 256 L58 268 L28 296 L84 286 Z" fill="#6E7582"/><path d="M320 238 L360 256 L322 268 L352 296 L296 286 Z" fill="#6E7582"/><ellipse cx="190" cy="205" rx="150" ry="128" fill="url(#rcHead)"/><ellipse cx="135" cy="125" rx="68" ry="30" fill="#FFFFFF" opacity="0.25" transform="rotate(-20 135 125)"/><ellipse cx="190" cy="262" rx="108" ry="78" fill="url(#rcMuzzle)"/><ellipse cx="190" cy="118" rx="16" ry="44" fill="#4E5563"/><path d="M48 200 Q110 140 190 185 Q270 140 332 200 Q300 252 238 236 Q190 222 142 236 Q80 252 48 200 Z" fill="url(#rcMask)"/><path d="M78 192 Q118 160 166 178" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="142" cy="200" r="26" fill="url(#rcEye)"/><circle cx="238" cy="200" r="26" fill="url(#rcEye)"/><circle cx="146" cy="204" r="15" fill="url(#rcIris)"/><circle cx="242" cy="204" r="15" fill="url(#rcIris)"/><circle cx="146" cy="205" r="7" fill="#0E1320"/><circle cx="242" cy="205" r="7" fill="#0E1320"/><circle cx="152" cy="197" r="5" fill="#FFFFFF"/><circle cx="248" cy="197" r="5" fill="#FFFFFF"/><circle cx="141" cy="211" r="2.5" fill="#FFFFFF" opacity="0.8"/><circle cx="237" cy="211" r="2.5" fill="#FFFFFF" opacity="0.8"/><path d="M212 158 Q240 140 272 156" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M112 168 Q140 162 168 170" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><ellipse cx="190" cy="262" rx="22" ry="16" fill="url(#rcNose)"/><ellipse cx="183" cy="256" rx="7" ry="4" fill="#FFFFFF" opacity="0.6"/><path d="M168 290 Q190 306 214 288" stroke="#1F2A44" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M150 346 L130 392 L156 396 L174 346 Z" fill="url(#rcScarf)"/><path d="M110 318 Q190 350 270 318 L262 345 Q190 372 118 345 Z" fill="url(#rcScarf)"/><path d="M124 334 Q190 360 256 334" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="345" y1="345" x2="400" y2="400" stroke="url(#rcHandle)" stroke-width="22" stroke-linecap="round"/><circle cx="315" cy="315" r="52" fill="url(#rcLens)" stroke="url(#rcRim)" stroke-width="14"/><path d="M284 296 Q292 282 308 278" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"/></svg>`;
 
 const AL = ['Всегда', 'Иногда', 'Никогда'];
 
@@ -393,16 +414,16 @@ const CATS = [
   {ctx:'«Солнце вращается вокруг Земли».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Проверяемо — и неверно: Земля вращается вокруг Солнца.'},
   {ctx:'«В неделе семь дней».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это легко проверить.'},
   {ctx:'«Математика — скучный предмет».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Кому-то скучно, а кому-то очень интересно.'},
-  {ctx:'«Пауки — это насекомые».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'У пауков восемь ног, а у насекомых шесть. Пауки — паукообразные.'},
-  {ctx:'«Вода состоит из водорода и кислорода».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это установлено химиками и многократно проверено.'},
+  {ctx:'«Кошки откладывают яйца».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Это можно проверить — и это неправда: котята рождаются, а не вылупляются из яиц.'},
+  {ctx:'«Если воду сильно нагреть, она закипит».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это можно проверить на кухне вместе со взрослыми.'},
   {ctx:'«Этот мультфильм самый смешной».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'«Самый смешной» — оценка.'},
   {ctx:'«Москва — столица России».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это записано в Конституции.'},
-  {ctx:'«Летучие мыши слепые».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Проверяемо — и неверно: летучие мыши видят.'},
+  {ctx:'«В неделе пять дней».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Это можно проверить по календарю — и это неправда: в неделе семь дней.'},
   {ctx:'«Пицца вкуснее супа».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'О вкусах спорят, но вкус доказать нельзя.'},
-  {ctx:'«Луна светится сама».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Неверно: Луна отражает свет Солнца.'},
+  {ctx:'«Москва — столица Франции».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Это можно проверить — и это неправда: столица Франции — Париж.'},
   {ctx:'«Сахара — пустыня в Африке».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это можно проверить по карте.'},
   {ctx:'«Кошки лучше собак».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'«Лучше» — это оценка.'},
-  {ctx:'«Человек использует только 10% мозга».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Это известный миф: работают все отделы мозга.'},
+  {ctx:'«2 + 2 = 5».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Это можно проверить — и это неправда: 2 + 2 = 4.'},
   {ctx:'«Синий — самый красивый цвет».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Любимый цвет у всех разный.'},
   {ctx:'«Сердце человека находится в грудной клетке».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это известно из анатомии.'},
   {ctx:'«Пингвины умеют летать».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Неверно: пингвины не летают, зато отлично плавают.'},
@@ -439,7 +460,7 @@ const CATS = [
   {ctx:'«Покупайте наш лимонад: в нём нет ничего лишнего!»', q:'Что не так с этим обещанием?', opts:['Непонятно, что считается «лишним»; надо смотреть состав','Лимонад не бывает вкусным','Всё ясно и честно'], a:0, ex:'Размытые слова звучат хорошо, но ничего конкретного не обещают.'},
   {ctx:'«Подросткам наш новый телефон нравится всё больше!»', q:'Что здесь упущено?', opts:['Больше, чем что? Кто это считал и как?','Как зовут подростков','Какого цвета телефон'], a:0, ex:'Сравнение без «чем» — частая уловка рекламы.'},
   {ctx:'«Продаём новые и подержанные велосипеды и самокаты.»', q:'Подержанными могут быть…', opts:['Непонятно: только велосипеды или самокаты тоже','Только самокаты','Только велосипеды'], a:0, ex:'Чтобы не путать, пишут точнее: «подержанные велосипеды и новые самокаты».'},
-  {ctx:'Табличка в парке: «Собак без поводка не выгуливать».', q:'Есть ли здесь двусмысленность?', opts:['Нет, смысл один: собаку выгуливают только на поводке','Да: можно понять «собак не выгуливать вообще»','Да: можно понять «гулять без собак»'], a:0, ex:'Не всё двусмысленно! Хороший детектив не придумывает загадку там, где её нет.'},
+  {ctx:'Объявление: «Библиотека закрыта в понедельник».', q:'Есть ли здесь двусмысленность?', opts:['Нет, смысл один: в понедельник библиотека не работает','Да: непонятно, какая библиотека','Да: можно понять, что закрыты только книги'], a:0, ex:'Не всё двусмысленно! Хороший детектив не придумывает загадку там, где её нет.'},
   {ctx:'«Я не могу не прийти.»', q:'Что это значит?', opts:['Я обязательно приду','Я не приду','Я не знаю, приду ли'], a:0, ex:'Два «не» гасят друг друга: «не могу не прийти» = «точно приду».'}
 ]},
 { id:'conditions', title:'При каких условиях', kind:'choice',
@@ -496,7 +517,7 @@ const CATS = [
   {ctx:'2, 4, 8, 16, …', q:'Какое число следующее?', opts:['32','24','18','20'], a:0, ex:'Каждое число в 2 раза больше предыдущего.'},
   {ctx:'1, 4, 9, 16, 25, …', q:'Какое число следующее?', opts:['36','30','35','49'], a:0, ex:'Это квадраты чисел: 1, 2², 3², 4², 5², а дальше 6² = 36.'},
   {ctx:'яблоко, груша, морковь, слива', q:'Что здесь лишнее?', opts:['морковь','груша','слива'], a:0, ex:'Морковь — овощ, остальное — фрукты.'},
-  {ctx:'3, 5, 7, 9, 11', q:'Какое число лишнее?', opts:['9','3','11','7'], a:0, ex:'Все, кроме 9, — простые числа. А 9 делится на 3.'},
+  {ctx:'2, 4, 7, 8, 10', q:'Какое число лишнее?', opts:['7','2','10','8'], a:0, ex:'Все числа чётные, кроме 7.'},
   {q:'Сколько букв в слове «алфавит»?', opts:['7','6','8'], a:0, ex:'а-л-ф-а-в-и-т.'},
   {ctx:'КОТ, ТОК, КТО, ОКТ', q:'Какое сочетание не является словом?', opts:['ОКТ','ТОК','КТО','КОТ'], a:0, ex:'Все четыре составлены из одних и тех же букв, но слово есть только у трёх.'}
 ]},
@@ -505,7 +526,7 @@ const CATS = [
   intro:'В этих задачах ответ простой, но мозг спешит и выдаёт неправильный. Тренируем привычку перечитывать условие.',
   tip:'Перечитай условие. Ловушка обычно спрятана в одном слове.',
   items:[
-  {q:'Сколько месяцев в году имеют 28 дней?', opts:['12','1','6'], a:0, ex:'28 дней есть в каждом месяце, просто в большинстве их больше.'},
+  {q:'В скольких месяцах года есть 28-е число?', opts:['12','1','6'], a:0, ex:'28-е число есть в каждом месяце. Многие спешат и думают только о феврале.'},
   {q:'Что тяжелее: килограмм ваты или килограмм железа?', opts:['Одинаково','Железо','Вата'], a:0, ex:'Килограмм — он и есть килограмм.'},
   {q:'У пастуха было 17 овец. Все, кроме 9, убежали. Сколько осталось?', opts:['9','8','17','0'], a:0, ex:'«Все, кроме 9» — значит, 9 остались.'},
   {q:'Ты бежишь в забеге и обогнал того, кто был вторым. Каким ты стал?', opts:['Вторым','Первым','Третьим'], a:0, ex:'Ты занял его место — второе.'},
@@ -521,23 +542,17 @@ const CATS = [
   {q:'Две матери и две дочери съели три апельсина, и каждой достался целый. Как так?', opts:['Это бабушка, мама и дочка','Один апельсин разрезали','Одна из них не ела'], a:0, ex:'Мама — одновременно и мать, и дочь.'},
   {q:'В каждом углу комнаты сидит кошка. Напротив каждой кошки сидят три кошки. Сколько кошек в комнате?', opts:['4','12','16'], a:0, ex:'Каждая кошка видит трёх остальных.'},
   {q:'Одно яйцо варится 4 минуты. Сколько минут варить три яйца?', opts:['4','12','8'], a:0, ex:'Их можно варить вместе в одной кастрюле.'},
-  {q:'Сколько будет: половина от двух плюс два?', opts:['3','2','4'], a:0, ex:'Половина от двух — 1. 1 + 2 = 3.'},
+  {q:'К половине от двух прибавили два. Сколько получилось?', opts:['3','2','4'], a:0, ex:'Половина от двух — 1. 1 + 2 = 3.'},
   {q:'Улитка ползёт на столб высотой 3 м: днём поднимается на 2 м, ночью сползает на 1 м. За сколько дней она доберётся до верха?', opts:['За 2 дня','За 3 дня','За 1 день'], a:0, ex:'После первых суток она на высоте 1 м. На второй день поднимается ещё на 2 м — и она наверху.'},
-  {q:'В каком месяце люди меньше всего разговаривают?', opts:['В феврале','В декабре','В июле'], a:0, ex:'В феврале меньше всего дней.'},
-  {q:'Какое слово всегда пишется «неправильно»?', opts:['Слово «неправильно»','Слово «правильно»','Никакое'], a:0, ex:'Слово «неправильно» именно так и пишется.'},
   {q:'Мальчик упал с 10-метровой лестницы и не ушибся. Как?', opts:['Он упал с нижней ступеньки','Ему просто повезло','Лестница была мягкой'], a:0, ex:'В условии не сказано, что он упал с самого верха.'},
   {q:'Сейчас полночь, идёт дождь. Можно ли ожидать, что через 72 часа будет солнечно?', opts:['Нет: через 72 часа снова будет полночь','Да','Только летом'], a:0, ex:'72 часа — ровно трое суток.'},
   {q:'Какая цифра становится больше, если её перевернуть вверх ногами?', opts:['6','8','1'], a:0, ex:'6 превращается в 9.'},
-  {q:'Под каким кустом сидит заяц во время дождя?', opts:['Под мокрым','Под берёзовым','Под самым большим'], a:0, ex:'Во время дождя любой куст мокрый.'},
   {q:'Летели три страуса. Одного подстрелили. Сколько осталось?', opts:['Страусы не летают','2','3'], a:0, ex:'Ловушка спрятана в первом слове: страусы не умеют летать.'},
   {q:'Сколько яиц можно съесть натощак?', opts:['Одно: остальные уже не натощак','Три','Сколько угодно'], a:0, ex:'«Натощак» — значит на пустой желудок, а после первого яйца он уже не пустой.'},
   {q:'В каком году люди едят больше, чем обычно?', opts:['В високосном: в нём на день больше','В новом','В любом'], a:0, ex:'В високосном году 366 дней.'},
   {q:'Один пастух смотрит на север, другой — на юг. Как они могут увидеть друг друга, не поворачиваясь?', opts:['Они стоят лицом друг к другу','Никак','С помощью зеркала'], a:0, ex:'Если первый стоит южнее второго, они как раз смотрят друг на друга.'},
   {q:'Как далеко заяц может забежать в лес?', opts:['До середины: дальше он уже выбегает из леса','Сколько захочет','На километр'], a:0, ex:'После середины заяц бежит уже из леса, а не в лес.'},
-  {q:'Чем заканчиваются день и ночь?', opts:['Мягким знаком','Темнотой','Утром'], a:0, ex:'Слова «день» и «ночь» оканчиваются на «ь».'},
-  {q:'Что находится посередине Земли?', opts:['Буква «м»','Ядро','Экватор'], a:0, ex:'В слове «Земля» буква «м» стоит в середине. Вопрос про слово, а не про планету.'},
   {q:'Чем её больше, тем меньше видно. Что это?', opts:['Темнота','Свет','Солнце'], a:0, ex:'Чем темнее, тем хуже видно.'},
-  {q:'Кто ходит сидя?', opts:['Шахматист','Пингвин','Никто'], a:0, ex:'Шахматист делает ходы, сидя за доской.'},
   {q:'Врач дал три таблетки и сказал пить по одной каждые полчаса. Через сколько минут ты выпьешь все?', opts:['Через 60 минут','Через 90 минут','Через 30 минут'], a:0, ex:'Первую пьёшь сразу, вторую — через 30 минут, третью — через 60.'},
   {q:'Чему равно произведение всех цифр от 0 до 9?', opts:['0','45','362 880'], a:0, ex:'Среди множителей есть 0, а всё, что умножено на ноль, равно нулю.'}
 ]},
@@ -568,35 +583,35 @@ const CATS = [
   {theme:'Правила Чека', words:['СТОП','ПРОВЕРЬ','ДУМАЙ','СПРОСИ','СОМНЕНИЕ','ЧЕК']},
   {theme:'Эксперты', words:['ВРАЧ','УЧИТЕЛЬ','ПИЛОТ','ПОВАР','СУДЬЯ','ИНЖЕНЕР']}
 ]},
-{ id:'believe', title:'Верю — не верю', kind:'choice', fixed:true, tf:true,
-  opts:['Верю','Не верю'], q:'Верю или не верю?',
-  short:'Знаменитые «факты»: что правда, а что миф?',
-  intro:'Многие «факты» все повторяют, но не все они правда. Реши, где правда, а где миф, — и прочитай объяснение.',
-  tip:'Помни: «слышал сто раз» не значит «доказано».',
+{ id:'believe', title:'Верю — не верю: как проверить?', kind:'choice',
+  q:'Как лучше всего проверить, правда это или миф?',
+  short:'Знаменитые «факты»: учимся выбирать, как их проверить.',
+  intro:'Знаменитые «факты» все повторяют, но не все они правда. Здесь важно не угадать, а выбрать лучший способ проверки. А в объяснении узнаешь, правда это или миф.',
+  tip:'«Все так говорят», «видел в мультике» и «звучит логично» — не проверка. Ищи, кто изучал это всерьёз.',
   items:[
-  {ctx:'Страусы прячут голову в песок, когда боятся.', a:1, ex:'Миф. Страусы опускают голову к земле, чтобы переворачивать яйца в гнезде, а при опасности убегают или ложатся.'},
-  {ctx:'У осьминога три сердца.', a:0, ex:'Правда: два сердца качают кровь через жабры, третье — по всему телу.'},
-  {ctx:'Великую Китайскую стену видно с Луны невооружённым глазом.', a:1, ex:'Миф. Даже с околоземной орбиты её очень трудно разглядеть, а с Луны — невозможно.'},
-  {ctx:'Молния никогда не бьёт дважды в одно место.', a:1, ex:'Миф. Высокие здания и башни получают удары молний много раз в год.'},
-  {ctx:'Мёд может храниться тысячи лет и не испортиться.', a:0, ex:'Правда. Археологи находили мёд в древнеегипетских гробницах.'},
-  {ctx:'Летучие мыши слепые.', a:1, ex:'Миф. Летучие мыши видят, а в темноте ещё и ориентируются с помощью эхолокации.'},
-  {ctx:'Золотая рыбка помнит только последние 3 секунды.', a:1, ex:'Миф. Опыты показывают, что золотые рыбки помнят многое месяцами.'},
-  {ctx:'Вода в раковине закручивается в разные стороны в Северном и Южном полушариях из-за вращения Земли.', a:1, ex:'Миф. Направление зависит от формы раковины и того, как налита вода. На такую маленькую массу воды вращение Земли почти не влияет.'},
-  {ctx:'Бананы растут не на деревьях, а на огромной траве.', a:0, ex:'Правда. У банана нет древесного ствола — это гигантское травянистое растение.'},
-  {ctx:'Человек использует только 10% своего мозга.', a:1, ex:'Миф. Исследования показывают, что работают все отделы мозга, просто в разное время.'},
-  {ctx:'Венера вращается вокруг своей оси в обратную сторону по сравнению с Землёй.', a:0, ex:'Правда. На Венере солнце встаёт на западе.'},
-  {ctx:'Хамелеоны меняют цвет только для того, чтобы слиться с фоном.', a:1, ex:'Миф. Чаще всего они меняют цвет, чтобы «общаться» с другими хамелеонами и регулировать температуру тела.'},
-  {ctx:'Акулы появились на Земле раньше деревьев.', a:0, ex:'Правда. Акулы появились более 400 млн лет назад, а первые деревья — около 385 млн лет назад.'},
-  {ctx:'Быки злятся именно из-за красного цвета.', a:1, ex:'Миф. Быки плохо различают красный цвет. Их раздражает движение плаща.'},
-  {ctx:'Если считать от подножия на дне океана, гора Мауна-Кеа на Гавайях выше Эвереста.', a:0, ex:'Правда. От подножия Мауна-Кеа выше 10 км, а Эверест — около 8,8 км. Но над уровнем моря выше Эверест.'},
-  {ctx:'После смерти у человека продолжают расти волосы и ногти.', a:1, ex:'Миф. Просто кожа подсыхает и стягивается, и кажется, что ногти стали длиннее.'},
-  {ctx:'У улитки есть зубы.', a:0, ex:'Правда. На её языке-тёрке тысячи крошечных зубчиков.'},
-  {ctx:'Проглоченная жвачка остаётся в желудке на 7 лет.', a:1, ex:'Миф. Жвачка не переваривается, но выходит из организма за несколько дней.'},
-  {ctx:'На Марсе есть вулкан выше Эвереста.', a:0, ex:'Правда. Гора Олимп на Марсе примерно в 2,5 раза выше Эвереста.'},
-  {ctx:'Собаки видят мир только чёрно-белым.', a:1, ex:'Миф. Собаки различают цвета, хотя и хуже людей: например, синий и жёлтый.'},
-  {ctx:'В открытом космосе человек ничего бы не услышал: звук там не распространяется.', a:0, ex:'Правда. Звуку нужна среда — воздух, вода или твёрдое тело. В вакууме её нет.'},
-  {ctx:'Летом в Северном полушарии тепло, потому что Земля ближе всего к Солнцу.', a:1, ex:'Миф. Ближе всего к Солнцу Земля в начале января. Времена года зависят от наклона земной оси.'},
-  {ctx:'Коала — это медведь.', a:1, ex:'Миф. Коала — сумчатое животное, родственник кенгуру и вомбата.'}
+  {ctx:'Страусы прячут голову в песок, когда боятся.', opts:['Посмотреть, что пишут зоологи или энциклопедия о животных','Раз это знают все — значит, правда','Найти мультфильм, где страус прячет голову'], a:0, ex:'Миф. Страусы опускают голову к земле, чтобы переворачивать яйца, а при опасности убегают. Мультфильм — не доказательство.'},
+  {ctx:'У осьминога три сердца.', opts:['Найти статью биолога или энциклопедию','Спросить в чате, кто-нибудь об этом слышал','Не верить: так не бывает'], a:0, ex:'Правда: два сердца качают кровь через жабры, третье — по всему телу. «Так не бывает» — это не проверка, а догадка.'},
+  {ctx:'Великую Китайскую стену видно с Луны невооружённым глазом.', opts:['Найти, что рассказывают космонавты и что видно на снимках с Луны','Поверить, раз об этом пишут уже много лет','Найти стену на карте мира'], a:0, ex:'Миф. С Луны стену не разглядеть. «Пишут много лет» — не доказательство.'},
+  {ctx:'Молния никогда не бьёт дважды в одно место.', opts:['Узнать у метеорологов, сколько раз в год молния бьёт в высокие башни','Поверить пословице','В грозу один раз посмотреть в окно'], a:0, ex:'Миф. В высокие башни молния бьёт много раз в год. Одного наблюдения мало.'},
+  {ctx:'Мёд может храниться тысячи лет и не испортиться.', opts:['Почитать, что археологи находили в древних гробницах','Оставить мёд на неделю и посмотреть','Поверить надписи на банке мёда'], a:0, ex:'Правда. Мёд находили в древнеегипетских гробницах. Неделя — слишком короткий опыт для такого вывода.'},
+  {ctx:'Летучие мыши слепые.', opts:['Найти, что учёные выяснили о зрении летучих мышей','Раз так говорят все — значит, правда','Спросить одноклассника'], a:0, ex:'Миф. Летучие мыши видят, а в темноте ещё и ориентируются с помощью эхолокации.'},
+  {ctx:'Золотая рыбка помнит только последние 3 секунды.', opts:['Узнать про опыты учёных: учили ли рыбок что-то запоминать','Минуту посмотреть на рыбку в аквариуме','Поверить смешному мему'], a:0, ex:'Миф. В опытах рыбки запоминали сигналы на месяцы. По одной минуте наблюдения такого не понять.'},
+  {ctx:'Вода в раковине закручивается в разные стороны в Северном и Южном полушариях из-за вращения Земли.', opts:['Проверить самому: много раз спустить воду и посмотреть, всегда ли она крутится в одну сторону','Поверить видео путешественника на экваторе','Это сложная наука, проверить нельзя'], a:0, ex:'Миф. Направление зависит от формы раковины. Простой опыт дома это покажет.'},
+  {ctx:'Бананы растут не на деревьях, а на огромной траве.', opts:['Посмотреть в справочнике по растениям, есть ли у банана деревянный ствол','Раз растёт высоко — значит, дерево','Спросить продавца фруктов'], a:0, ex:'Правда. У банана нет древесного ствола — это гигантское травянистое растение.'},
+  {ctx:'Человек использует только 10% своего мозга.', opts:['Узнать, что показывают снимки мозга, которые делают учёные','Поверить, раз это сказали в фильме','Это известный факт — проверять не нужно'], a:0, ex:'Миф. Снимки показывают, что работают все отделы мозга. «Известный факт» тоже нужно проверять.'},
+  {ctx:'Венера вращается вокруг своей оси в обратную сторону по сравнению с Землёй.', opts:['Найти данные астрономов, например на сайте планетария','Один вечер посмотреть на Венеру в небе','Поверить, раз звучит научно'], a:0, ex:'Правда. «Звучит научно» — не доказательство, но здесь астрономы это подтвердили.'},
+  {ctx:'Хамелеоны меняют цвет только для того, чтобы слиться с фоном.', opts:['Почитать, что пишут биологи, наблюдавшие за хамелеонами','Посмотреть мультфильм про хамелеона','Раз все так думают — значит, правда'], a:0, ex:'Миф. Чаще всего цвет меняется, чтобы «общаться» с другими хамелеонами и греться.'},
+  {ctx:'Акулы появились на Земле раньше деревьев.', opts:['Сравнить по данным учёных, когда появились первые акулы и первые деревья','Такого не может быть — значит, неправда','Поверить интересному посту'], a:0, ex:'Правда: акулы — более 400 млн лет назад, первые деревья — около 385 млн. Удивительное не значит ложное.'},
+  {ctx:'Быки злятся именно из-за красного цвета.', opts:['Узнать, различают ли быки красный цвет и что показали опыты с плащами разного цвета','Поверить, раз у матадора красный плащ','Спросить друга'], a:0, ex:'Миф. Быка раздражает движение плаща, а не цвет.'},
+  {ctx:'Если считать от подножия на дне океана, гора Мауна-Кеа выше Эвереста.', opts:['Сравнить высоту гор от подножия по данным географов','Эверест самый высокий — это все знают','Поверить, раз это показали в видео'], a:0, ex:'Правда: от подножия Мауна-Кеа выше 10 км. А над уровнем моря выше Эверест — важно, как считать.'},
+  {ctx:'Если проглотить арбузную косточку, в животе вырастет арбуз.', opts:['Почитать, что пишут врачи о том, как переваривается еда','Раз так пугают многие взрослые — правда','Поверить старшему брату'], a:0, ex:'Миф. Семечке в животе не прорасти: там нет ни света, ни почвы.'},
+  {ctx:'У улитки есть зубы.', opts:['Посмотреть в энциклопедии увеличенное фото языка улитки','Я смотрел на улитку и зубов не видел — значит, их нет','Звучит странно — значит, неправда'], a:0, ex:'Правда: на языке-тёрке тысячи крошечных зубчиков. «Не вижу» не значит «нет».'},
+  {ctx:'Проглоченная жвачка остаётся в желудке на 7 лет.', opts:['Спросить врача или почитать, что пишут медики','Поверить, раз так говорят родители','Раз звучит страшно — правда'], a:0, ex:'Миф. Жвачка не переваривается, но выходит за несколько дней. Глотать её всё равно не стоит.'},
+  {ctx:'На Марсе есть вулкан выше Эвереста.', opts:['Найти данные космических агентств о горе Олимп','На Марсе гор нет — значит, неправда','Поверить мультфильму про космос'], a:0, ex:'Правда: гора Олимп на Марсе примерно в 2,5 раза выше Эвереста.'},
+  {ctx:'Собаки видят мир только чёрно-белым.', opts:['Узнать, что выяснили учёные в опытах со зрением собак','Спросить у собаки','Раз так пишут в мемах — правда'], a:0, ex:'Миф. Собаки различают цвета, хотя и хуже людей: например, синий и жёлтый.'},
+  {ctx:'В открытом космосе звук не распространяется.', opts:['Узнать у физиков, может ли звук идти без воздуха, и посмотреть опыт со звонком под колпаком','В фильмах взрывы в космосе громкие — значит, слышно','Поверить на слово'], a:0, ex:'Правда. Звуку нужна среда. Фильмы снимают для зрелищности, а не для точности.'},
+  {ctx:'Летом тепло, потому что Земля ближе всего к Солнцу.', opts:['Узнать, когда Земля ближе всего к Солнцу, и сравнить с временами года','Логично же: ближе — значит теплее','Поверить однокласснику'], a:0, ex:'Миф. Ближе всего к Солнцу Земля в январе. «Звучит логично» ещё не значит «правда».'},
+  {ctx:'Коала — это медведь.', opts:['Посмотреть, к какой группе животных её относят зоологи','Похожа на мишку — значит, медведь','Её же называют «мишка коала» — значит, медведь'], a:0, ex:'Миф. Коала — сумчатое, родственник кенгуру. Похожесть и название — не доказательство.'}
 ]},
 { id:'fake', title:'Правда или фейк', kind:'choice', fixed:true, tf:true,
   opts:['Похоже на правду','Похоже на фейк'], q:'Как ты думаешь?',
@@ -677,7 +692,7 @@ const CATS = [
   {t:'Письмо', steps:['Написали письмо','Отправили по почте','Почтальон доставил','Адресат прочитал']},
   {t:'Как работают учёные', steps:['Задали вопрос','Выдвинули гипотезу (предположение)','Провели эксперимент','Сделали вывод']},
   {t:'Жизнь человека', steps:['Родился','Научился ходить','Пошёл в школу','Окончил школу']},
-  {t:'Фазы Луны', steps:['Новолуние','Растущая Луна','Полнолуние','Убывающая Луна']},
+  {t:'Снеговик', steps:['Выпал снег','Слепили снеговика','Пришла оттепель','Снеговик растаял']},
   {t:'Откуда берётся стол', steps:['Срубили дерево','Распилили его на доски','Сделали стол','Поставили стол на кухню']},
   {t:'Ссора и примирение', steps:['Друг обиделся','Ты заметил, что он молчит','Спросил, что случилось','Вы помирились']},
   {t:'Авария на линии', steps:['Ураган повредил провода','Отключился свет','Приехали ремонтники','Свет снова появился']},
@@ -757,10 +772,10 @@ const CATS = [
   {ctx:'«Один знаменитый предприниматель бросил университет и разбогател — значит, учиться не обязательно».', a:8},
   {ctx:'«Кошки спят по 16 часов в сутки — значит, и людям нужно спать столько же».', a:9},
   {ctx:'«Учитель проверяет тетради дома — значит, и мне можно писать контрольную дома».', a:9},
-  {ctx:'«Взрослые ложатся спать в полночь — значит, и мне можно».', a:9},
+  {ctx:'«Растения растут от солнца — значит, и я вырасту, если буду весь день загорать».', a:9},
   {ctx:'«Машины ездят по дороге — значит, и мне можно кататься на роликах по проезжей части».', a:9},
   {ctx:'«Ты опять опоздал из-за своей лени?»', a:10},
-  {ctx:'«Почему ты всегда со всеми споришь?»', a:10},
+  {ctx:'«Когда ты наконец признаешься, что взял мою ручку?»', a:10},
   {ctx:'«Ты уже извинился за то, что сломал мой карандаш?»', a:10},
   {ctx:'«Куда ты спрятал мой телефон?»', a:10},
   {ctx:'«Поставьте мне пятёрку, пожалуйста, я так старался, и у меня бабушка болеет!»', a:11},
@@ -832,7 +847,7 @@ const CATS = [
   {t:'Завести собаку', items:[['Будет верный друг',0],['Гулять с ней нужно каждый день в любую погоду',1],['Больше движения на свежем воздухе',0],['Расходы на корм и ветеринара',1]]},
   {t:'Учиться онлайн', items:[['Можно учиться из дома',0],['Легко отвлечься',1],['Можно пересмотреть урок',0],['Меньше живого общения',1]]},
   {t:'Брать телефон в школу', items:[['Можно связаться с родителями',0],['Отвлекает на уроке',1],['Можно быстро найти нужную информацию',0],['Можно потерять или разбить',1]]},
-  {t:'Поехать в летний лагерь', items:[['Новые друзья',0],['Скучаешь по дому',1],['Новые навыки',0],['Строгий распорядок дня',1]]},
+  {t:'Поехать в летний лагерь', items:[['Новые друзья',0],['Скучаешь по дому',1],['Новые навыки',0],['Могут кусать комары',1]]},
   {t:'Купить очень дорогие модные кроссовки', items:[['Красивые и удобные',0],['Уходят все накопления',1],['Могут долго прослужить',0],['Быстро выйдут из моды',1]]},
   {t:'Ездить на электросамокате', items:[['Быстро добираться',0],['Можно упасть и травмироваться',1],['Не нужен бензин',0],['Нужно регулярно заряжать',1]]},
   {t:'Ложиться спать поздно', items:[['Больше времени вечером на свои дела',0],['Утром трудно встать',1],['Хуже внимание на уроках',1],['Вечером тихо, никто не мешает',0]]},
@@ -847,7 +862,7 @@ const CATS = [
   {t:'Один пароль для всех сайтов', items:[['Легко запомнить',0],['Взломают один сайт — доберутся до всех',1],['Не нужно записывать',0],['Мошенники часто пробуют украденные пароли на других сайтах',1]]},
   {t:'Ходить в школу пешком', items:[['Полезно для здоровья',0],['Дольше, чем на автобусе',1],['Бесплатно',0],['Можно промокнуть под дождём',1]]},
   {t:'Читать электронные книги', items:[['Много книг в одном устройстве',0],['Нужна зарядка',1],['Можно увеличить шрифт',0],['От экрана устают глаза',1]]},
-  {t:'Выступить на конкурсе', items:[['Опыт и уверенность в себе',0],['Сильное волнение',1],['Можно победить',0],['Нужно долго готовиться',1]]},
+  {t:'Выступить на конкурсе', items:[['Опыт и уверенность в себе',0],['Сильное волнение',1],['Можно победить',0],['Можно растеряться и забыть слова',1]]},
   {t:'Согласиться на «лёгкую подработку» от незнакомца в интернете', items:[['Обещают быстрые деньги',0],['Можно стать соучастником мошенников',1],['Не нужно никуда ходить',0],['Могут украсть твои данные',1]], ex:'Плюсы здесь только обещанные, а минусы — настоящие и серьёзные. Взвешивай не количество, а вес!'},
   {t:'Носить школьную форму', items:[['Не нужно думать, что надеть',0],['Меньше возможностей показать свой стиль',1],['Все выглядят аккуратно',0],['Форма бывает неудобной',1]]},
   {t:'Ездить в школу на велосипеде', items:[['Быстрее, чем пешком',0],['Нужно место, где оставить велосипед',1],['Это тренировка',0],['На дороге может быть опасно',1]]}
@@ -891,13 +906,13 @@ factopinion:[
   {ctx:'«Озеро Байкал находится в Сибири».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это можно проверить по карте.'},
   {ctx:'«Волейбол интереснее баскетбола».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Интерес — дело вкуса.'},
   {ctx:'«Земля плоская».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Проверяемо — и неверно: Земля имеет форму шара.'},
-  {ctx:'«Волга — самая длинная река в мире».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Неверно: Волга — самая длинная река Европы, а в мире есть реки длиннее, например Нил и Амазонка.'},
+  {ctx:'«Летом в Москве обычно холоднее, чем зимой».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Это можно проверить по термометру — и это неправда.'},
   {ctx:'«Шоколадное мороженое вкуснее ванильного».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'О вкусах можно спорить, но доказать вкус нельзя.'},
-  {ctx:'«У насекомых шесть ног».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это известно из биологии.'},
-  {ctx:'«Страус — самая крупная птица на Земле».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это проверяемо: страус — самая крупная из живущих сейчас птиц.'},
+  {ctx:'«У кошки четыре лапы».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это легко проверить.'},
+  {ctx:'«В русском алфавите 33 буквы».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это можно проверить — посчитать буквы в алфавите.'},
   {ctx:'«Летом кататься на велосипеде веселее, чем зимой на лыжах».', q:'Что это?', opts:FOM, fixed:true, a:1, ex:'Кому-то веселее одно, кому-то — другое.'},
   {ctx:'«Молния — это электрический разряд».', q:'Что это?', opts:FOM, fixed:true, a:0, ex:'Это установлено учёными.'},
-  {ctx:'«Верблюды хранят воду в горбах».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Неверно: в горбах у верблюда запас жира, а не воды.'},
+  {ctx:'«У собаки шесть лап».', q:'Что это?', opts:FOM, fixed:true, a:2, ex:'Это легко проверить — и это неправда: у собаки четыре лапы.'},
   {q:'Найди мнение среди этих утверждений о парке.', opts:['Этот парк — лучшее место для прогулок','В парке растёт 200 деревьев','Парк открыли в 1990 году'], a:0, ex:'«Лучшее место» — оценка, а деревья и год можно проверить.'},
   {q:'Найди факт среди этих утверждений о классе.', opts:['В нашем классе 25 учеников','Наш класс самый дружный','Наш класс лучше параллельного'], a:0, ex:'Учеников можно посчитать.'}
 ],
@@ -911,7 +926,7 @@ ambiguity:[
   {ctx:'«Бабушка вязала шарф внучке с узором.»', q:'Почему фраза звучит смешно?', opts:['Можно понять, что узор у внучки, а не у шарфа','Бабушка вязала слишком долго','В ней нет глагола'], a:0, ex:'Лучше: «Бабушка вязала внучке шарф с узором».'},
   {ctx:'«Это атлас.»', q:'Как можно понять это слово?', opts:['А́тлас — сборник карт, атла́с — блестящая ткань','Только как сборник карт','Только как ткань'], a:0, ex:'Смысл меняет ударение.'},
   {ctx:'«Я не мог не заметить ошибку.»', q:'Что это значит?', opts:['Я обязательно заметил ошибку','Я не заметил ошибку','Я не знаю, заметил ли'], a:0, ex:'Два «не» гасят друг друга.'},
-  {ctx:'Табличка: «Вход в бассейн только в шапочке».', q:'Есть ли здесь двусмысленность?', opts:['Нет: смысл один — в бассейн входят в шапочке','Да: можно понять, что входить может только шапочка','Да: можно понять, что шапочку нужно снять'], a:0, ex:'Не всё двусмысленно — не придумывай загадку там, где её нет.'},
+  {ctx:'Объявление: «Магазин работает каждый день с 9:00 до 21:00».', q:'Есть ли здесь двусмысленность?', opts:['Нет: смысл один','Да: непонятно, утро это или вечер','Да: непонятно, работает ли он в выходные'], a:0, ex:'Не всё двусмысленно — «каждый день» включает и выходные, а 21:00 — это вечер.'},
   {ctx:'Друг посмотрел на твой рисунок и сказал: «Ну ты и художник…»', q:'Как понять, похвала это или шутка?', opts:['По интонации, выражению лица и ситуации','Только по словам','Никак нельзя понять'], a:0, ex:'Одни и те же слова могут значить разное. Не уверен — переспроси.'}
 ],
 conditions:[
@@ -948,36 +963,36 @@ attention:[
 ],
 wit:[
   {q:'У Тани три брата, и у каждого из них одна сестра. Сколько всего детей в семье?', opts:['4','6','7'], a:0, ex:'Сестра у всех братьев одна — сама Таня.'},
-  {q:'Сколько раз можно вычесть 2 из 10?', opts:['Один раз: потом это будет уже 8, а не 10','5 раз','10 раз'], a:0, ex:'После первого вычитания у тебя уже не 10.'},
+  {q:'У Пети было 5 карандашей. Он отдал Маше все, кроме двух. Сколько карандашей осталось у Пети?', opts:['2','3','5'], a:0, ex:'«Все, кроме двух» — значит, два остались у Пети.'},
   {q:'На столе лежали 3 яблока. Ты взял 2. Сколько яблок у тебя?', opts:['2','1','3'], a:0, ex:'У тебя те яблоки, которые ты взял.'},
   {q:'Бревно распилили на 4 части. Сколько сделали распилов?', opts:['3','4','5'], a:0, ex:'Каждый распил добавляет одну часть.'},
   {q:'Какой рукой лучше размешивать чай?', opts:['Лучше ложкой','Правой','Левой'], a:0, ex:'Ловушка в вопросе: размешивают ложкой.'},
   {q:'Что становится мокрым, когда сушит?', opts:['Полотенце','Фен','Солнце'], a:0, ex:'Полотенце вытирает — и намокает само.'},
-  {q:'Сколько месяцев в году имеют 30 дней?', opts:['11','4','7'], a:0, ex:'30-е число есть во всех месяцах, кроме февраля.'},
-  {q:'Сколько горошин может войти в один пустой стакан?', opts:['Нисколько: горошины не ходят','Около ста','Около тысячи'], a:0, ex:'Ловушка в слове «войти»: горошины сами не ходят — их можно только насыпать.'},
+  {q:'В скольких месяцах года есть 30-е число?', opts:['11','4','7'], a:0, ex:'30-е число есть во всех месяцах, кроме февраля.'},
+  {q:'Петя старше Коли, а Коля старше Вани. Кто младше всех?', opts:['Ваня','Коля','Петя'], a:0, ex:'Петя старше Коли, Коля старше Вани — значит, Ваня самый младший.'},
   {q:'Сколько будет, если 5 умножить на 0 и прибавить 5?', opts:['5','0','10'], a:0, ex:'5 × 0 = 0, 0 + 5 = 5.'},
   {q:'Чем больше из неё берёшь, тем больше она становится. Что это?', opts:['Яма','Гора','Кастрюля'], a:0, ex:'Чем больше земли выкопаешь, тем больше яма.'},
   {q:'Пять рыбаков поймали пять рыб за пять минут. За сколько минут сто рыбаков поймают сто рыб?', opts:['За 5 минут','За 100 минут','За 20 минут'], a:0, ex:'Каждый рыбак ловит одну рыбу за 5 минут — и все ловят одновременно.'},
   {q:'Сколько получится, если 30 разделить на половину и прибавить 10?', opts:['70','25','40'], a:0, ex:'Разделить на половину — значит разделить на 0,5, то есть умножить на 2: 60 + 10 = 70.'},
-  {q:'Может ли страус назвать себя птицей?', opts:['Нет: страусы не умеют говорить','Да','Только африканский страус'], a:0, ex:'Птица-то он птица, но говорить не умеет.'},
+  {q:'На берёзе выросли 10 яблок. Ветер сорвал 3. Сколько яблок осталось на берёзе?', opts:['Яблоки на берёзе не растут','7','10'], a:0, ex:'Перечитай условие: на берёзе яблоки не растут.'},
   {q:'Брат и сестра родились в один день у одних родителей, но они не двойняшки. Как так?', opts:['Это тройняшки','Они родились в разные годы','Так не бывает'], a:0, ex:'Был ещё третий ребёнок.'},
   {q:'Ты бежишь в забеге и обогнал последнего. Каким ты стал?', opts:['Так не бывает: последнего обогнать нельзя','Предпоследним','Последним'], a:0, ex:'Чтобы обогнать последнего, нужно бежать позади него — а позади последнего никого нет.'},
-  {q:'Чем заканчивается лето и начинается осень?', opts:['Буквой «о»','Августом','Сентябрём'], a:0, ex:'«Лет-о» — «о-сень». Вопрос про слова.'},
+  {q:'Ты зашёл в тёмную комнату со спичкой. Там есть свеча, лампа и камин. Что ты зажжёшь первым?', opts:['Спичку','Свечу','Камин'], a:0, ex:'Чтобы зажечь что угодно, сначала нужно зажечь спичку.'},
   {q:'Тебе дали 5 конфет и сказали есть по одной каждые 10 минут. Через сколько минут съешь все?', opts:['Через 40 минут','Через 50 минут','Через 10 минут'], a:0, ex:'Первую съедаешь сразу, а потом ещё четыре раза ждёшь по 10 минут.'},
   {q:'Летели гуси: один впереди и два позади, один позади и два впереди, один между двумя. Сколько было гусей?', opts:['3','5','7'], a:0, ex:'Три гуся в ряд подходят под все три описания.'}
 ],
 believe:[
-  {ctx:'В шее у жирафа столько же позвонков, сколько у человека, — семь.', a:0, ex:'Правда. Просто каждый позвонок у жирафа очень длинный.'},
-  {ctx:'Ёжик носит на иголках яблоки и грибы, чтобы запасти еду на зиму.', a:1, ex:'Миф. Ежи не делают запасов на иголках — зимой они спят.'},
-  {ctx:'Комары-самцы не кусаются.', a:0, ex:'Правда. Кусаются только самки, а самцы питаются соком растений.'},
-  {ctx:'Если потрогать лягушку или жабу, появятся бородавки.', a:1, ex:'Миф. Бородавки вызывает вирус, который передаётся от людей, а не от лягушек.'},
-  {ctx:'Кровь в венах синего цвета, а красной становится только на воздухе.', a:1, ex:'Миф. Кровь всегда красная, просто вены сквозь кожу кажутся синеватыми.'},
-  {ctx:'Морские звёзды — это не рыбы.', a:0, ex:'Правда. Морские звёзды — иглокожие, родственники морских ежей.'},
-  {ctx:'С точки зрения ботаники помидор — это ягода.', a:0, ex:'Правда. Ботаники называют плод помидора ягодой, хотя на кухне его считают овощем.'},
-  {ctx:'Свет от Солнца доходит до Земли примерно за 8 минут.', a:0, ex:'Правда: около 8 минут 20 секунд.'},
-  {ctx:'Новорождённый кенгурёнок размером всего около 2 сантиметров.', a:0, ex:'Правда. Он рождается крошечным и потом много месяцев растёт в сумке у мамы.'},
-  {ctx:'Кожа у белого медведя чёрная.', a:0, ex:'Правда. Под светлым мехом у белого медведя чёрная кожа.'},
-  {ctx:'Совы могут повернуть голову на полный круг — 360 градусов.', a:1, ex:'Миф. Сова поворачивает голову примерно на 270 градусов — это тоже очень много.'}
+  {ctx:'В шее у жирафа столько же позвонков, сколько у человека, — семь.', opts:['Найти в учебнике биологии сравнение скелетов','Шея длинная — значит, позвонков больше','Поверить комментарию под видео'], a:0, ex:'Правда. Просто каждый позвонок у жирафа очень длинный.'},
+  {ctx:'Ёжик носит на иголках яблоки и грибы, чтобы запасти еду на зиму.', opts:['Почитать, что пишут зоологи о питании ежей','Видел на картинке в книжке — значит, правда','Раз все знают — значит, правда'], a:0, ex:'Миф. Ежи не делают запасов — зимой они спят. Картинка в книжке — не доказательство.'},
+  {ctx:'Комары-самцы не кусаются.', opts:['Узнать у биологов, чем питаются самцы и самки комаров','Меня кусали все комары — значит, кусаются все','Поверить другу'], a:0, ex:'Правда. Кусаются только самки. Свой опыт не всегда всё объясняет.'},
+  {ctx:'Если потрогать лягушку, появятся бородавки.', opts:['Спросить врача, отчего появляются бородавки','Поверить, раз так говорят во дворе','Кожа у лягушки в пупырышках — значит, правда'], a:0, ex:'Миф. Бородавки вызывает вирус от людей, а не лягушки.'},
+  {ctx:'Кровь в венах синего цвета, а красной становится только на воздухе.', opts:['Узнать у врача, какого цвета кровь при заборе из вены','Вены синие — значит, и кровь синяя','На рисунке в учебнике вены синие — значит, правда'], a:0, ex:'Миф. Кровь всегда красная, вены лишь кажутся синими сквозь кожу. На рисунках цвет — просто условность.'},
+  {ctx:'Морские звёзды — это не рыбы.', opts:['Посмотреть, к какой группе животных их относят биологи','Живут в море — значит, рыбы','Поверить, раз в названии нет слова «рыба»'], a:0, ex:'Правда. Морские звёзды — иглокожие, родственники морских ежей.'},
+  {ctx:'С точки зрения ботаники помидор — это ягода.', opts:['Узнать, как ботаники называют такие плоды','Это овощ: его кладут в салат','Поверить смешной картинке в интернете'], a:0, ex:'Правда. На кухне помидор считают овощем, а ботаники называют его плод ягодой. Важно, кто и как считает.'},
+  {ctx:'Свет от Солнца доходит до Земли примерно за 8 минут.', opts:['Найти в справочнике расстояние до Солнца и скорость света','Свет приходит мгновенно — это все знают','Поверить блогеру'], a:0, ex:'Правда: около 8 минут 20 секунд.'},
+  {ctx:'Новорождённый кенгурёнок размером всего около 2 сантиметров.', opts:['Посмотреть материалы зоопарков и зоологов','Кенгуру большие — значит, и детёныш большой','Поверить викторине без источника'], a:0, ex:'Правда. Он рождается крошечным и месяцами растёт в сумке у мамы.'},
+  {ctx:'Кожа у белого медведя чёрная.', opts:['Найти, что пишут зоологи, изучающие белых медведей','Мех белый — значит, и кожа белая','Звучит удивительно — значит, выдумка'], a:0, ex:'Правда. Под светлым мехом чёрная кожа.'},
+  {ctx:'Совы могут повернуть голову на полный круг — 360 градусов.', opts:['Найти исследования о строении шеи совы','Видел в мультике, как сова крутит головой по кругу','Раз все так говорят — правда'], a:0, ex:'Миф. Сова поворачивает голову примерно на 270 градусов.'}
 ],
 fake:[
   {tag:'scam', ctx:'«Поздравляем! Ваш номер выиграл автомобиль. Чтобы получить приз, оплатите налог 2000 ₽ по ссылке».', a:1, ex:'Фейк. Настоящий выигрыш не требует платить по ссылке.'},
@@ -996,6 +1011,8 @@ fake:[
   {ctx:'Тренер написал в официальном чате секции, что субботняя тренировка переносится на 11:00.', a:0, ex:'Правда: знакомый человек и официальный канал.'}
 ],
 consequences:[
+  {ctx:'Ты забыл закрыть кран в ванной и ушёл гулять.', q:'Что может произойти?', opts:['Вода перельётся и может затопить соседей снизу','Кран сам закроется','Вода станет тёплой'], a:0, ex:'Вода льётся, пока кран открыт.'},
+  {ctx:'Ты целый месяц не поливал цветок.', q:'Что может произойти?', opts:['Цветок завянет','Цветок вырастет быстрее','Цветок зацветёт'], a:0, ex:'Растениям нужна вода.'},
   {tag:'scam', ctx:'Человек перешёл по ссылке из СМС «Ваша посылка задержана» и ввёл данные карты.', q:'Что может произойти?', opts:['Мошенники спишут деньги с карты','Посылка придёт быстрее','Карта станет надёжнее'], a:0, ex:'Это фишинг: ссылка ведёт на поддельный сайт.'},
   {tag:'scam', ctx:'Подросток выложил в соцсети фото своего паспорта.', q:'Что может произойти?', opts:['Мошенники могут воспользоваться его данными','Паспорт станет важнее','Ничего не произойдёт'], a:0, ex:'Паспортные данные — ценная добыча для мошенников.'},
   {tag:'scam', ctx:'Ты сказал «другу из игры» пароль от аккаунта.', q:'Что может произойти?', opts:['Аккаунт могут украсть','Тебе дадут бонус','Пароль станет надёжнее'], a:0, ex:'Пароль знает только хозяин аккаунта.'},
@@ -1010,10 +1027,10 @@ consequences:[
 chains:[
   {tag:'scam', t:'Поддельное письмо', steps:['Пришло письмо «Подтвердите аккаунт»','Человек нажал на ссылку','Ввёл логин и пароль на поддельном сайте','Мошенники захватили аккаунт']},
   {tag:'scam', t:'Звонок «из банка»', steps:['Звонит «сотрудник банка»','Пугает: «С вашей карты крадут деньги!»','Человек называет код из СМС','Деньги исчезают со счёта']},
-  {t:'Радуга', steps:['Прошёл дождь','Выглянуло солнце','Свет преломился в капельках воды','На небе появилась радуга']},
+  {t:'Радуга', steps:['Небо затянули тучи','Пошёл дождь','Сквозь капли засветило солнце','На небе появилась радуга']},
   {t:'Как растёт цыплёнок', steps:['Курица снесла яйцо','Курица высиживает яйцо','Вылупился цыплёнок','Цыплёнок вырос в курицу']},
   {t:'Жизнь лягушки', steps:['Лягушка отложила икру','Из икринок появились головастики','У головастиков выросли лапки','Головастики превратились в лягушек']},
-  {t:'Вечер школьника', steps:['Пришёл из школы','Пообедал','Сделал уроки','Лёг спать']},
+  {t:'Домашнее задание', steps:['Учитель задал задание','Записал его в дневник','Сделал дома','Сдал учителю']},
   {t:'Как выходит газета', steps:['Журналист собрал факты','Написал статью','Редактор проверил текст','Газету напечатали']},
   {t:'Зима на пруду', steps:['Похолодало','Вода покрылась тонким льдом','Лёд стал толстым','На пруду открыли каток']},
   {t:'Сообщение «Срочно перешли всем!»', steps:['Получил тревожное сообщение','Не стал сразу пересылать','Нашёл официальный источник','Узнал, что это неправда']},
@@ -1053,7 +1070,7 @@ fallacies:[
   {ctx:'«Один знаменитый музыкант плохо учился в школе — значит, оценки не важны».', a:8},
   {ctx:'«Роботам не нужен отдых — значит, и ученики могут учиться без перемен».', a:9},
   {ctx:'«Птицы не чистят зубы — и ничего. Значит, и мне не нужно».', a:9},
-  {ctx:'«Ты опять забыл сделать домашку, как обычно?»', a:10},
+  {ctx:'«Зачем ты разбил мою кружку?»', a:10},
   {ctx:'«Зачем ты наябедничал учителю?»', a:10},
   {ctx:'«Не ставьте мне двойку — я так переживаю, что сейчас заплачу!»', a:11},
   {ctx:'«Возьми меня в команду — мне так обидно, когда меня не берут!»', a:11}
@@ -1100,11 +1117,95 @@ proscons:[
 ]
 };
 function testPool(id){ return TESTS[id] || CAT[id].items; }
+
+/* Задания по возрасту: age:'t' — только для 12–15. Младшим (7–11) не показываем трудное: отрицательные числа, законы, подработки */
+function forAge(it){ return !it.age || it.age === ageOf(); }
+const TEEN_ONLY = ['Если сложить два числа, получится больше', 'Если умножить число на 2, оно увеличится', 'Если разделить число на 2, оно уменьшится',
+  '1, 4, 9, 16, 25', 'Как правильно пользоваться Википедией', 'историю Великой Отечественной войны', 'Где искать подработку на лето',
+  'Подписан новый закон', 'Один знаменитый предприниматель бросил университет', 'Подросток согласился «принять перевод', 'Подросток выложил в соцсети фото своего паспорта'];
+const tagTeen = i => { const k = (i.ctx || '') + (i.q || '') + (i.t || ''); if (TEEN_ONLY.some(x => k.includes(x))) i.age = 't'; };
+CATS.forEach(c => c.items.forEach(tagTeen)); Object.values(TESTS).forEach(a => a.forEach(tagTeen));
+const TEEN_EXTRA = {
+  fake: {
+    train: [
+      {tag:'scam', ctx:'Сообщение: «Ты выиграл 10 000 подписчиков! Чтобы их получить, введи пароль от аккаунта».', a:1, ex:'Фейк. Пароль просят, чтобы украсть аккаунт. Подписчиков так не «выигрывают».'},
+      {tag:'scam', ctx:'Объявление: «Курьер 14+, доставь пакет по адресу — 3000 ₽ за час. Что внутри — не спрашивай».', a:1, ex:'Опасная ловушка: так подростков втягивают в преступления. Честная работа не бывает «не спрашивай».'},
+      {ctx:'Рособрнадзор опубликовал расписание ЕГЭ на своём сайте; такое же расписание есть на сайте школы.', a:0, ex:'Правда: официальный источник и подтверждение.'},
+      {ctx:'Видео: «Этот лайфхак поднимет балл ЕГЭ на 30 баллов за один день!»', a:1, ex:'Фейк. Обещание чуда за один день — повод насторожиться.'}
+    ],
+    test: [
+      {tag:'scam', ctx:'Канал «Слив ОГЭ»: «Ответы на ОГЭ по математике — 500 ₽, гарантия 100%! Оплата переводом на карту».', a:1, ex:'Фейк. Задания до экзамена не публикуют, а «гарантия» и предоплата незнакомцу — признаки обмана.'},
+      {tag:'scam', ctx:'«Подработка для школьников 14+: сдай свою банковскую карту в аренду на неделю — 5000 ₽».', a:1, ex:'Опасная ловушка: через чужую карту мошенники прогоняют украденные деньги, а отвечать будет владелец.'},
+      {ctx:'На официальном сайте ФИПИ опубликованы демоверсии экзаменов этого года.', a:0, ex:'Правда: ФИПИ готовит задания экзаменов и публикует демоверсии официально.'}
+    ]
+  },
+  sources: {
+    train: [
+      {q:'Блогер с 2 миллионами подписчиков советует, как готовиться к ЕГЭ по химии. Насколько это надёжно?', opts:['Смотря кто он: если не учитель и не химик, лучше проверить у учителя','Надёжно: у него же миллионы подписчиков','Ненадёжно: блогеры всегда врут'], a:0, ex:'Подписчики показывают популярность, а не знания.'},
+      {q:'Как проверить, что аккаунт известного человека настоящий?', opts:['Посмотреть, есть ли на него ссылка с официального сайта и давно ли создан аккаунт','Посчитать лайки под последним постом','Поверить, раз там его фото'], a:0, ex:'Фото легко скопировать. Надёжнее — ссылка с официального сайта.'},
+      {q:'Отзыв на сайте онлайн-курса: «Сдал ЕГЭ на 100 баллов только благодаря этому курсу!» Что подумать?', opts:['Одного отзыва мало: стоит поискать независимые отзывы','Курс точно лучший','Отзывы на сайте курса всегда честные'], a:0, ex:'Сайт продаёт курс и заинтересован в хороших отзывах.'}
+    ],
+    test: [
+      {q:'Где узнать официальные даты ОГЭ и ЕГЭ?', opts:['На сайте Рособрнадзора или ФИПИ','В сторис популярного блогера','В чате выпускников'], a:0, ex:'Даты экзаменов утверждают официальные органы.'},
+      {q:'Вакансия в канале без названия компании, оплата «только в криптовалюте». Можно ли доверять?', opts:['Нет: работодатель неизвестен и прячет, кто он','Да, раз платят много','Да, если у канала много подписчиков'], a:0, ex:'Честный работодатель не прячет своё название.'}
+    ]
+  },
+  consequences: {
+    train: [
+      {ctx:'Ты выложил сторис с геометкой дома и подписью «родители уехали на выходные».', q:'Что может произойти?', opts:['Незнакомцы узнают, где и когда ты дома один','Сторис наберёт меньше просмотров','Ничего: сторис исчезают через сутки'], a:0, ex:'Сторис могут сохранить и переслать, а геометка показывает адрес.'},
+      {ctx:'Ты купил 5000 подписчиков-ботов для своего блога.', q:'Что может произойти?', opts:['Охваты упадут, а аккаунт могут заблокировать','Блог сразу станет популярным','Боты начнут покупать рекламу'], a:0, ex:'Боты не смотрят и не комментируют — важна живая аудитория.'}
+    ],
+    test: [
+      {ctx:'Ты отправил в общий чат фото чужой записки без разрешения.', q:'Что может произойти?', opts:['Однокласснику будет неприятно, а тебе перестанут доверять','Записка станет смешнее','Никто ничего не заметит'], a:0, ex:'Чужие личные тексты без разрешения не публикуют.'}
+    ]
+  },
+  fallacies: {
+    train: [
+      {ctx:'«Все блогеры снимают людей без спроса — значит, и мне можно».', a:0},
+      {ctx:'«Либо ты в тренде, либо тебя никто не замечает».', a:2}
+    ],
+    test: [
+      {ctx:'«Этот курс подготовки к ЕГЭ рекламирует известный рэпер — значит, курс хороший».', a:6},
+      {ctx:'«Одноклассник не готовился к ОГЭ и сдал на пятёрку — значит, готовиться не нужно».', a:8}
+    ]
+  },
+  rulewrong: {
+    train: [
+      {ctx:'Правило: «Подписчики важны для блогера».\nВывод: «Куплю 10 000 ботов — и стану популярным».', opts:['Взяли одну часть: важны живые подписчики, которые смотрят и пишут','Всё верно: подписчиков станет больше','Ошибка: подписчики блогеру не нужны'], a:0, ex:'Боты увеличивают цифру, но не делают блог интересным.'},
+      {ctx:'Правило: «На экзамене важно успеть решить все задания».\nВывод: «Не буду дочитывать условия — так быстрее».', opts:['Взяли одну часть: важно и успеть, и решить правильно','Всё верно: скорость главное','Ошибка: время на экзамене не важно'], a:0, ex:'Невнимательное чтение — частая причина ошибок.'}
+    ],
+    test: [
+      {ctx:'Правило: «Перед экзаменом важно повторить материал».\nВывод: «Буду повторять всю ночь перед экзаменом без сна».', opts:['Довели до крайности: без сна мозг работает хуже','Всё верно: чем больше повторишь, тем лучше','Ошибка: повторять не нужно'], a:0, ex:'Сон помогает запомнить выученное.'}
+    ]
+  },
+  ambiguity: {
+    train: [
+      {ctx:'Вакансия: «Доход до 150 000 ₽ в месяц, опыт не нужен!»', q:'Что здесь скрыто?', opts:['«До» значит, что столько получает в лучшем случае кто-то один','Что все получают 150 000 ₽','Что работа лёгкая'], a:0, ex:'Слово «до» прячет реальную сумму.'}
+    ],
+    test: [
+      {ctx:'Реклама курса: «95% наших учеников повышают баллы!»', q:'Что здесь непонятно?', opts:['На сколько повышают, по сравнению с чем и кто считал','Сколько стоит курс','Ничего, всё понятно'], a:0, ex:'Без «на сколько» и «кто считал» цифра ничего не доказывает.'}
+    ]
+  },
+  cause: {
+    train: [
+      {ctx:'Ученики, которые занимаются с репетитором, в среднем лучше сдают ОГЭ.', q:'Что ещё может влиять?', opts:['Такие ученики часто и сами больше занимаются, а семья помогает с учёбой','Репетитор передаёт знания на расстоянии','Больше ничего не влияет'], a:0, ex:'Связь есть, но причин может быть несколько.'}
+    ],
+    test: [
+      {ctx:'Чем больше у блогера подписчиков, тем дороже стоит реклама у него.', q:'Что здесь причина, а что следствие?', opts:['Подписчики — причина цены рекламы','Цена рекламы создаёт подписчиков','Это совпадение'], a:0, ex:'Рекламодатели платят за охват: больше аудитория — дороже реклама.'}
+    ]
+  }
+};
+Object.entries(TEEN_EXTRA).forEach(([id, {train = [], test = []}]) => {
+  train.forEach(x => CAT[id].items.push(Object.assign({age:'t'}, x)));
+  test.forEach(x => TESTS[id].push(Object.assign({age:'t'}, x)));
+});
 /* Ловушек 12 — в каждом вопросе показываем 4 варианта: верный и три другие ловушки */
 function trapOpts(it){
   if (it.opts) return;
   it.tag = it.a >= 6 ? 'new' : 'old';
-  const k = it.a, idx = shuffle([k].concat(shuffle(range(TRAPS.length).filter(i => i !== k)).slice(0, 3)));
+  const CONF = [[0, 6], [7, 8], [7, 10], [3, 7]];
+  const near = j => CONF.some(([x, y]) => (x === k && y === j) || (y === k && x === j));
+  const k = it.a, idx = shuffle([k].concat(shuffle(range(TRAPS.length).filter(i => i !== k && !near(i))).slice(0, 3)));
   it.ex = it.ex || CAT.fallacies.exA[k]; it.opts = idx.map(i => TRAPS[i]); it.a = idx.indexOf(k);
 }
 CAT.fallacies.items.forEach(trapOpts); TESTS.fallacies.forEach(trapOpts);
@@ -1123,7 +1224,7 @@ const LESSONS = [
 ];
 const LES = Object.fromEntries(LESSONS.map(l => [l.id, l]));
 function pick(id, n, tag, test){
-  let pool = test ? testPool(id) : CAT[id].items;
+  let pool = (test ? testPool(id) : CAT[id].items).filter(forAge);
   if (tag) {
     if (tag[0] === '!') { const t = tag.slice(1); pool = pool.filter(i => i.tag !== t); }
     else { const ts = tag.split('|'); pool = pool.filter(i => ts.includes(i.tag)); }
@@ -1229,6 +1330,7 @@ function renderAch(){
     <p class="eyebrow">Мой кабинет</p>
     <h1>${esc(curName() || 'Ученик')}</h1>
     <p class="lead">${curProf() && curProf().login ? `Логин: <b>${esc(curProf().login)}</b> · ` : ''}Звание: <b>${esc(r.name)}</b> · курс пройден на ${coursePct()}% · уроков: ${lessonsDone()} из ${COURSE.length}</p>
+    <p class="note">Возрастная группа: <b>${ageLabel(ageOf())}</b> · <button class="link" id="age-sw" type="button">сменить на ${ageLabel(ageOf() === 't' ? 'y' : 't')}</button></p>
     <div><button class="link" id="switch-u" type="button">Выйти из кабинета</button></div>
   </section>
   <section class="card" style="display:flex;flex-direction:column;gap:12px">
@@ -1259,6 +1361,7 @@ function renderAch(){
   <p class="note">Прогресс хранится в твоём кабинете на этом устройстве. Чтобы продолжить на другом устройстве, отправь код боту или учителю, а потом выбери «Перенести прогресс» при входе.</p>`;
   $('#b-home').onclick = renderHome;
   $('#switch-u').onclick = logout;
+  const asw = $('#age-sw'); if (asw) asw.onclick = () => { const p = curProf(); if (!p) return; p.age = ageOf() === 't' ? 'y' : 't'; saveProfiles(); applyAge(); toast(`<span>Группа: ${ageLabel(p.age)}. Задания и герои обновлены</span>`); renderAch(); };
   shareText().then(t => { const ta = $('#sendcode'); if (ta) ta.value = t; });
   $('#copycode').onclick = () => { const ta = $('#sendcode'); const done = () => toast('<span>Скопировано — отправь учителю</span>'); try { navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); toast('<span>Текст выделен — нажми «Копировать»</span>'); }); } catch (_) { ta.select(); } };
   const rb = $('#reset-p');
@@ -1323,9 +1426,9 @@ function prep({cat, item, rev}){
 function build(mode, key){
   if (key === 'final') {
     const cats = CATS.filter(c => c.kind !== 'words');
-    const list = cats.map(c => ({cat:c, item: shuffle(testPool(c.id))[0]}));
+    const list = cats.map(c => ({cat:c, item: shuffle(testPool(c.id).filter(forAge))[0]}));
     const used = new Set(list.map(x => x.item));
-    const rest = shuffle(cats.flatMap(c => testPool(c.id).filter(i => !used.has(i)).map(item => ({cat:c, item})))).slice(0, Math.max(0, 20 - list.length));
+    const rest = shuffle(cats.flatMap(c => testPool(c.id).filter(forAge).filter(i => !used.has(i)).map(item => ({cat:c, item})))).slice(0, Math.max(0, 20 - list.length));
     return shuffle(list.concat(rest));
   }
   if (LES[key]) {
@@ -1337,7 +1440,7 @@ function build(mode, key){
     return shuffle(main).concat(rev);
   }
   const c = CAT[key];
-  const items = mode === 'practice' ? shuffle(c.items) : shuffle(testPool(c.id)).slice(0, c.kind === 'words' ? 3 : 10);
+  const items = mode === 'practice' ? shuffle(c.items.filter(forAge)) : shuffle(testPool(c.id).filter(forAge)).slice(0, c.kind === 'words' ? 3 : 10);
   return items.map(item => ({cat:c, item}));
 }
 function start(mode, key, list, opts){
@@ -1386,7 +1489,7 @@ function renderHome(){
   <h2>Все разделы</h2>
   <div class="cats">${CATS.map(c => `
     <button class="cat" data-id="${c.id}" type="button">
-      <span class="meta"><span>${c.items.length} ${plural(c.items.length, 'задание', 'задания', 'заданий')}</span>${best[c.id] != null ? `<span class="best">Тест: ${best[c.id]}%</span>` : ''}</span>
+      <span class="meta"><span>${c.items.filter(forAge).length} ${plural(c.items.filter(forAge).length, 'задание', 'задания', 'заданий')}</span>${best[c.id] != null ? `<span class="best">Тест: ${best[c.id]}%</span>` : ''}</span>
       <h3>${esc(c.title)}</h3>
       <p>${esc(c.short)}</p>
     </button>`).join('')}
@@ -1417,10 +1520,10 @@ function renderIntro(key){
     <h1>${esc(title)}</h1>
     <p class="lead">${esc(intro)}</p>
   </section>
-  <div class="tip">${RACCOON}<p class="hand">Чек советует: ${esc(tip)}</p></div>
+  <div class="tip">${RACCOON_FULL}<p class="hand">Чек советует: ${esc(tip)}</p></div>
   ${key === 'fallacies' || key === 'lesson6' || key === 'lesson7' ? trapSheet() : ''}
   <div class="modes">
-    ${fin || l ? '' : `<div class="card mode"><h3>Тренировка</h3><p>Все ${c.items.length} ${plural(c.items.length, 'задание', 'задания', 'заданий')} в случайном порядке. После каждого ответа — правильный ответ и объяснение.</p><button class="btn" id="m-practice" type="button">Начать тренировку</button></div>`}
+    ${fin || l ? '' : `<div class="card mode"><h3>Тренировка</h3><p>Все ${c.items.filter(forAge).length} ${plural(c.items.filter(forAge).length, 'задание', 'задания', 'заданий')} в случайном порядке. После каждого ответа — правильный ответ и объяснение.</p><button class="btn" id="m-practice" type="button">Начать тренировку</button></div>`}
     <div class="card mode"><h3>Тест</h3><p>${tn} ${plural(tn, 'задание', 'задания', 'заданий')} без подсказок. В конце — сколько верно, оценка и разбор каждой ошибки.${TESTS[key] || fin || l ? ' Вопросы новые — похожие на тренировку, но не те же самые.' : ''}</p><button class="btn ${fin || l ? '' : 'ghost'}" id="m-test" type="button">Пройти тест</button></div>
   </div>`;
   $('#b-home').onclick = renderHome;
@@ -1680,7 +1783,76 @@ function renderResults(){
 }
 
 /* ---------- course: lessons, timeline, sidebar ---------- */
-const MAGPIE = `<svg viewBox="0 0 420 420" aria-hidden="true"><defs><radialGradient id="mgBody" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#4A5060"/><stop offset="1" stop-color="#0F1218"/></radialGradient><radialGradient id="mgBelly" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D3D9E2"/></radialGradient><linearGradient id="mgWing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A8FB0"/><stop offset="1" stop-color="#16324A"/></linearGradient><linearGradient id="mgTail" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2B7A8F"/><stop offset="0.5" stop-color="#3D5FA8"/><stop offset="1" stop-color="#1B2D4F"/></linearGradient><linearGradient id="mgBeak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A505E"/><stop offset="1" stop-color="#12151C"/></linearGradient><linearGradient id="mgPhone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5A96E8"/><stop offset="1" stop-color="#1F4FA0"/></linearGradient></defs><path d="M290 250 Q360 280 412 350 L392 366 Q340 312 280 286 Z" fill="url(#mgTail)"/><path d="M200 318 L194 372 M244 318 L250 372" stroke="#5B4A32" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M176 376 L212 376 M232 376 L268 376" stroke="#5B4A32" stroke-width="8" stroke-linecap="round" fill="none"/><ellipse cx="225" cy="245" rx="100" ry="80" fill="url(#mgBody)"/><ellipse cx="195" cy="272" rx="62" ry="46" fill="url(#mgBelly)"/><path d="M215 196 Q305 182 336 258 Q292 292 222 268 Q200 236 215 196 Z" fill="url(#mgWing)"/><ellipse cx="268" cy="222" rx="34" ry="14" fill="#F4F6F9" transform="rotate(12 268 222)"/><path d="M150 250 Q118 246 104 262" stroke="#16324A" stroke-width="20" stroke-linecap="round" fill="none"/><g transform="rotate(-12 89 253)"><rect x="66" y="214" width="46" height="78" rx="9" fill="url(#mgPhone)" stroke="#0E1320" stroke-width="5"/><rect x="74" y="224" width="30" height="50" rx="4" fill="#CFE6F7"/></g><circle cx="140" cy="150" r="64" fill="url(#mgBody)"/><ellipse cx="118" cy="118" rx="26" ry="14" fill="#FFFFFF" opacity="0.18" transform="rotate(-25 118 118)"/><circle cx="160" cy="206" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><circle cx="177" cy="213" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><circle cx="194" cy="216" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><path d="M86 144 Q54 148 34 164 Q60 170 88 166 Z" fill="url(#mgBeak)"/><path d="M88 172 Q62 182 46 188 Q68 190 92 180 Z" fill="#2A2F3A"/><circle cx="122" cy="138" r="17" fill="#FFFFFF"/><circle cx="118" cy="139" r="9" fill="#0E1320"/><circle cx="114" cy="134" r="3.5" fill="#FFFFFF"/><path d="M104 112 Q122 100 142 110" stroke="#0E1320" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`;
+let MAGPIE = `<svg viewBox="0 0 420 420" aria-hidden="true"><style>
+.mg-blink{animation:mg-blink 4.4s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes mg-blink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.1)}}
+.mg-beak{animation:mg-beak 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:100% 0%}
+@keyframes mg-beak{0%,40%,100%{transform:rotate(0)}50%{transform:rotate(14deg)}60%{transform:rotate(2deg)}70%{transform:rotate(12deg)}80%{transform:rotate(0)}}
+.mg-head{animation:mg-head 3.4s ease-in-out infinite;transform-box:fill-box;transform-origin:70% 90%}
+@keyframes mg-head{0%,100%{transform:rotate(0)}30%{transform:rotate(-6deg)}60%{transform:rotate(3deg)}}
+.mg-tail{animation:mg-tail 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:0% 15%}
+@keyframes mg-tail{50%{transform:rotate(-7deg)}}
+.mg-phone{animation:mg-phone 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:100% 50%}
+@keyframes mg-phone{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(5deg) translateY(-4px)}}
+.mg-scroll{animation:mg-scroll 2.2s linear infinite}
+@keyframes mg-scroll{0%{transform:translateY(0)}100%{transform:translateY(-10px)}}
+@media (prefers-reduced-motion: reduce){.mg-blink,.mg-beak,.mg-head,.mg-tail,.mg-phone,.mg-scroll{animation:none}}
+</style><defs><radialGradient id="mgBody" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#4A5060"/><stop offset="1" stop-color="#0F1218"/></radialGradient><radialGradient id="mgBelly" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D3D9E2"/></radialGradient><linearGradient id="mgWing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A8FB0"/><stop offset="1" stop-color="#16324A"/></linearGradient><linearGradient id="mgTail" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2B7A8F"/><stop offset="0.5" stop-color="#3D5FA8"/><stop offset="1" stop-color="#1B2D4F"/></linearGradient><linearGradient id="mgBeak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A505E"/><stop offset="1" stop-color="#12151C"/></linearGradient><linearGradient id="mgPhone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5A96E8"/><stop offset="1" stop-color="#1F4FA0"/></linearGradient><clipPath id="mgScreen"><rect x="74" y="224" width="30" height="50" rx="4"/></clipPath></defs><ellipse cx="220" cy="402" rx="130" ry="11" fill="#1F2A44" opacity="0.18"/><g class="mg-tail"><path d="M290 250 Q360 280 412 350 L392 366 Q340 312 280 286 Z" fill="url(#mgTail)"/></g><path d="M200 318 L194 372 M244 318 L250 372" stroke="#5B4A32" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M176 376 L212 376 M232 376 L268 376" stroke="#5B4A32" stroke-width="8" stroke-linecap="round" fill="none"/><ellipse cx="225" cy="245" rx="100" ry="80" fill="url(#mgBody)"/><ellipse cx="195" cy="272" rx="62" ry="46" fill="url(#mgBelly)"/><path d="M215 196 Q305 182 336 258 Q292 292 222 268 Q200 236 215 196 Z" fill="url(#mgWing)"/><ellipse cx="268" cy="222" rx="34" ry="14" fill="#F4F6F9" transform="rotate(12 268 222)"/><path d="M232 252 Q280 262 318 252" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="5" fill="none" stroke-linecap="round"/><g class="mg-phone"><path d="M150 250 Q118 246 104 262" stroke="#16324A" stroke-width="20" stroke-linecap="round" fill="none"/><g transform="rotate(-12 89 253)"><rect x="66" y="214" width="46" height="78" rx="9" fill="url(#mgPhone)" stroke="#0E1320" stroke-width="5"/><rect x="74" y="224" width="30" height="50" rx="4" fill="#CFE6F7"/><g clip-path="url(#mgScreen)"><g class="mg-scroll"><path d="M79 236 L99 236 M79 246 L95 246 M79 256 L99 256 M79 266 L93 266 M79 276 L99 276 M79 286 L95 286" stroke="#2F6FC4" stroke-width="4" stroke-linecap="round"/></g></g></g></g><circle cx="160" cy="206" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><circle cx="177" cy="213" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><circle cx="194" cy="216" r="7" fill="#FFD166" stroke="#B9530F" stroke-width="2"/><g class="mg-head"><circle cx="140" cy="150" r="64" fill="url(#mgBody)"/><ellipse cx="118" cy="118" rx="26" ry="14" fill="#FFFFFF" opacity="0.18" transform="rotate(-25 118 118)"/><path d="M86 144 Q54 148 34 164 Q60 170 88 166 Z" fill="url(#mgBeak)"/><g class="mg-beak"><path d="M88 172 Q62 182 46 188 Q68 190 92 180 Z" fill="#2A2F3A"/></g><g class="mg-blink"><circle cx="122" cy="138" r="17" fill="#FFFFFF"/><circle cx="118" cy="139" r="9" fill="#0E1320"/><circle cx="114" cy="134" r="3.5" fill="#FFFFFF"/></g><path d="M104 112 Q122 100 142 110" stroke="#0E1320" stroke-width="6" fill="none" stroke-linecap="round"/></g></svg>`;
+/* ---------- возрастные группы: 7–11 (Чек и Сорока) и 12–15 (повзрослевшие Чек и Сорока-блогерша) ---------- */
+const HERO_KID = {r: RACCOON, f: RACCOON_FULL, m: MAGPIE};
+const HERO_TEEN = {
+  r: `<svg viewBox="118 14 288 250" aria-hidden="true">
+<style>
+.tr-blink{animation:tr-blink 5s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes tr-blink{0%,93%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+.tr-tail{animation:tr-tail 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:10% 5%}
+@keyframes tr-tail{50%{transform:rotate(8deg)}}
+.tr-phone{animation:tr-phone 2.6s ease-in-out infinite}
+@keyframes tr-phone{50%{transform:translateY(-5px)}}
+.tr-nod{animation:tr-nod 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 90%}
+@keyframes tr-nod{50%{transform:rotate(3deg)}}
+@media (prefers-reduced-motion: reduce){.tr-blink,.tr-tail,.tr-phone,.tr-nod{animation:none}}
+</style><defs><radialGradient id="trHead" cx="0.4" cy="0.32" r="0.75"><stop offset="0" stop-color="#C9CED6"/><stop offset="0.55" stop-color="#99A0AB"/><stop offset="1" stop-color="#5F6673"/></radialGradient><radialGradient id="trEar" cx="0.45" cy="0.35" r="0.7"><stop offset="0" stop-color="#8C93A0"/><stop offset="1" stop-color="#474E5C"/></radialGradient><radialGradient id="trInner" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#FBDCC6"/><stop offset="1" stop-color="#D49A78"/></radialGradient><radialGradient id="trMuzzle" cx="0.45" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.6" stop-color="#F0E8DB"/><stop offset="1" stop-color="#CFC3B1"/></radialGradient><radialGradient id="trMask" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stop-color="#4B5266"/><stop offset="1" stop-color="#1E2331"/></radialGradient><radialGradient id="trEye" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D5DCE5"/></radialGradient><radialGradient id="trIris" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#8A5E36"/><stop offset="1" stop-color="#2A1A0E"/></radialGradient><radialGradient id="trNose" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#5A6480"/><stop offset="1" stop-color="#121826"/></radialGradient><linearGradient id="trHood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FB0CC"/><stop offset="1" stop-color="#1F6F8C"/></linearGradient><linearGradient id="trLid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E4E8EE"/><stop offset="1" stop-color="#A9B2C0"/></linearGradient><linearGradient id="trDesk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9A36B"/><stop offset="1" stop-color="#B07A45"/></linearGradient><linearGradient id="trCup" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFAD6B"/><stop offset="1" stop-color="#D9621A"/></linearGradient></defs><ellipse cx="260" cy="506" rx="200" ry="10" fill="#1F2A44" opacity="0.15"/><rect x="170" y="170" width="180" height="230" rx="36" fill="#2E3442"/><rect x="250" y="176" width="20" height="218" rx="6" fill="#F07F2E"/><g class="tr-tail"><ellipse cx="318" cy="414" rx="26" ry="20" fill="#8F96A2" transform="rotate(60 318 414)"/><ellipse cx="330" cy="442" rx="24" ry="19" fill="#3A4150" transform="rotate(70 330 442)"/><ellipse cx="338" cy="469" rx="21" ry="17" fill="#A4ABB6" transform="rotate(78 338 469)"/><ellipse cx="342" cy="492" rx="15" ry="13" fill="#2A303D"/></g><path d="M168 236 Q260 204 352 236 L374 400 L146 400 Z" fill="url(#trHood)"/><path d="M244 228 L240 278 M276 228 L280 278" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/><circle cx="240" cy="280" r="4" fill="#FFFFFF"/><circle cx="280" cy="280" r="4" fill="#FFFFFF"/><g class="tr-nod"><ellipse cx="260" cy="146" rx="114" ry="106" fill="url(#trHood)"/><ellipse cx="260" cy="152" rx="96" ry="90" fill="#16485C"/><g transform="translate(155 30) scale(0.55)"><ellipse cx="95" cy="95" rx="48" ry="58" fill="url(#trEar)" transform="rotate(-20 95 95)"/><ellipse cx="97" cy="104" rx="26" ry="34" fill="url(#trInner)" transform="rotate(-20 97 104)"/><ellipse cx="285" cy="95" rx="48" ry="58" fill="url(#trEar)" transform="rotate(20 285 95)"/><ellipse cx="283" cy="104" rx="26" ry="34" fill="url(#trInner)" transform="rotate(20 283 104)"/><ellipse cx="190" cy="205" rx="150" ry="128" fill="url(#trHead)"/><ellipse cx="135" cy="125" rx="68" ry="30" fill="#FFFFFF" opacity="0.25" transform="rotate(-20 135 125)"/><ellipse cx="190" cy="262" rx="108" ry="78" fill="url(#trMuzzle)"/><ellipse cx="190" cy="118" rx="16" ry="44" fill="#4E5563"/><path d="M48 200 Q110 140 190 185 Q270 140 332 200 Q300 252 238 236 Q190 222 142 236 Q80 252 48 200 Z" fill="url(#trMask)"/><g class="tr-blink"><circle cx="142" cy="200" r="26" fill="url(#trEye)"/><circle cx="238" cy="200" r="26" fill="url(#trEye)"/><circle cx="132" cy="200" r="15" fill="url(#trIris)"/><circle cx="228" cy="200" r="15" fill="url(#trIris)"/><circle cx="132" cy="201" r="7" fill="#0E1320"/><circle cx="228" cy="201" r="7" fill="#0E1320"/><circle cx="138" cy="193" r="5" fill="#FFFFFF"/><circle cx="234" cy="193" r="5" fill="#FFFFFF"/></g><path d="M212 156 Q240 146 272 158" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M112 160 Q140 150 168 166" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><ellipse cx="190" cy="262" rx="22" ry="16" fill="url(#trNose)"/><ellipse cx="183" cy="256" rx="7" ry="4" fill="#FFFFFF" opacity="0.6"/><path d="M168 290 Q194 306 220 284" stroke="#1F2A44" stroke-width="6" fill="none" stroke-linecap="round"/></g><path d="M146 160 Q150 24 260 22 Q370 24 374 160" stroke="#1F2A44" stroke-width="14" fill="none" stroke-linecap="round"/><rect x="124" y="124" width="44" height="78" rx="18" fill="#F07F2E" stroke="#1F2A44" stroke-width="5"/><rect x="352" y="124" width="44" height="78" rx="18" fill="#F07F2E" stroke="#1F2A44" stroke-width="5"/></g><g class="tr-phone"><path d="M180 252 Q128 238 120 196" stroke="url(#trHood)" stroke-width="34" stroke-linecap="round" fill="none"/><g transform="rotate(-8 112 150)"><rect x="88" y="104" width="48" height="78" rx="9" fill="#1F2A44"/><rect x="94" y="112" width="36" height="58" rx="5" fill="#E3F4EA"/><path d="M101 142 L109 151 L122 132" stroke="#1E7A4C" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="118" cy="186" r="18" fill="#3A4150"/></g><path d="M344 258 Q392 296 404 362" stroke="url(#trHood)" stroke-width="32" stroke-linecap="round" fill="none"/><rect x="30" y="384" width="460" height="22" rx="6" fill="url(#trDesk)"/><rect x="60" y="406" width="20" height="96" rx="4" fill="#B07A45"/><rect x="440" y="406" width="20" height="96" rx="4" fill="#B07A45"/><path d="M172 286 L348 286 L356 384 L164 384 Z" fill="url(#trLid)" stroke="#7D8796" stroke-width="3"/><circle cx="260" cy="334" r="20" fill="#1E7A4C"/><path d="M250 334 L257 342 L271 326" stroke="#FFFFFF" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M310 306 l5 10 11 2 -8 8 2 11 -10 -5 -10 5 2 -11 -8 -8 11 -2 Z" fill="#F07F2E"/><ellipse cx="412" cy="378" rx="24" ry="11" fill="#E5E7EB" stroke="#7D8796" stroke-width="2"/><circle cx="406" cy="368" r="17" fill="#3A4150"/><rect x="66" y="338" width="38" height="46" rx="7" fill="url(#trCup)"/><path d="M104 348 Q120 352 116 368 Q112 376 104 374" stroke="#D9621A" stroke-width="6" fill="none"/><path d="M78 330 Q74 320 80 312 M90 330 Q86 318 92 308" stroke="#99A0AB" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+</svg>`,
+  f: `<svg class="rfull" viewBox="0 0 520 520" aria-hidden="true">
+<style>
+.tr-blink{animation:tr-blink 5s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes tr-blink{0%,93%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+.tr-tail{animation:tr-tail 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:10% 5%}
+@keyframes tr-tail{50%{transform:rotate(8deg)}}
+.tr-phone{animation:tr-phone 2.6s ease-in-out infinite}
+@keyframes tr-phone{50%{transform:translateY(-5px)}}
+.tr-nod{animation:tr-nod 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 90%}
+@keyframes tr-nod{50%{transform:rotate(3deg)}}
+@media (prefers-reduced-motion: reduce){.tr-blink,.tr-tail,.tr-phone,.tr-nod{animation:none}}
+</style><defs><radialGradient id="trHead" cx="0.4" cy="0.32" r="0.75"><stop offset="0" stop-color="#C9CED6"/><stop offset="0.55" stop-color="#99A0AB"/><stop offset="1" stop-color="#5F6673"/></radialGradient><radialGradient id="trEar" cx="0.45" cy="0.35" r="0.7"><stop offset="0" stop-color="#8C93A0"/><stop offset="1" stop-color="#474E5C"/></radialGradient><radialGradient id="trInner" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#FBDCC6"/><stop offset="1" stop-color="#D49A78"/></radialGradient><radialGradient id="trMuzzle" cx="0.45" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.6" stop-color="#F0E8DB"/><stop offset="1" stop-color="#CFC3B1"/></radialGradient><radialGradient id="trMask" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stop-color="#4B5266"/><stop offset="1" stop-color="#1E2331"/></radialGradient><radialGradient id="trEye" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D5DCE5"/></radialGradient><radialGradient id="trIris" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#8A5E36"/><stop offset="1" stop-color="#2A1A0E"/></radialGradient><radialGradient id="trNose" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#5A6480"/><stop offset="1" stop-color="#121826"/></radialGradient><linearGradient id="trHood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FB0CC"/><stop offset="1" stop-color="#1F6F8C"/></linearGradient><linearGradient id="trLid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E4E8EE"/><stop offset="1" stop-color="#A9B2C0"/></linearGradient><linearGradient id="trDesk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9A36B"/><stop offset="1" stop-color="#B07A45"/></linearGradient><linearGradient id="trCup" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFAD6B"/><stop offset="1" stop-color="#D9621A"/></linearGradient></defs><ellipse cx="260" cy="506" rx="200" ry="10" fill="#1F2A44" opacity="0.15"/><rect x="170" y="170" width="180" height="230" rx="36" fill="#2E3442"/><rect x="250" y="176" width="20" height="218" rx="6" fill="#F07F2E"/><g class="tr-tail"><ellipse cx="318" cy="414" rx="26" ry="20" fill="#8F96A2" transform="rotate(60 318 414)"/><ellipse cx="330" cy="442" rx="24" ry="19" fill="#3A4150" transform="rotate(70 330 442)"/><ellipse cx="338" cy="469" rx="21" ry="17" fill="#A4ABB6" transform="rotate(78 338 469)"/><ellipse cx="342" cy="492" rx="15" ry="13" fill="#2A303D"/></g><path d="M168 236 Q260 204 352 236 L374 400 L146 400 Z" fill="url(#trHood)"/><path d="M244 228 L240 278 M276 228 L280 278" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/><circle cx="240" cy="280" r="4" fill="#FFFFFF"/><circle cx="280" cy="280" r="4" fill="#FFFFFF"/><g class="tr-nod"><ellipse cx="260" cy="146" rx="114" ry="106" fill="url(#trHood)"/><ellipse cx="260" cy="152" rx="96" ry="90" fill="#16485C"/><g transform="translate(155 30) scale(0.55)"><ellipse cx="95" cy="95" rx="48" ry="58" fill="url(#trEar)" transform="rotate(-20 95 95)"/><ellipse cx="97" cy="104" rx="26" ry="34" fill="url(#trInner)" transform="rotate(-20 97 104)"/><ellipse cx="285" cy="95" rx="48" ry="58" fill="url(#trEar)" transform="rotate(20 285 95)"/><ellipse cx="283" cy="104" rx="26" ry="34" fill="url(#trInner)" transform="rotate(20 283 104)"/><ellipse cx="190" cy="205" rx="150" ry="128" fill="url(#trHead)"/><ellipse cx="135" cy="125" rx="68" ry="30" fill="#FFFFFF" opacity="0.25" transform="rotate(-20 135 125)"/><ellipse cx="190" cy="262" rx="108" ry="78" fill="url(#trMuzzle)"/><ellipse cx="190" cy="118" rx="16" ry="44" fill="#4E5563"/><path d="M48 200 Q110 140 190 185 Q270 140 332 200 Q300 252 238 236 Q190 222 142 236 Q80 252 48 200 Z" fill="url(#trMask)"/><g class="tr-blink"><circle cx="142" cy="200" r="26" fill="url(#trEye)"/><circle cx="238" cy="200" r="26" fill="url(#trEye)"/><circle cx="132" cy="200" r="15" fill="url(#trIris)"/><circle cx="228" cy="200" r="15" fill="url(#trIris)"/><circle cx="132" cy="201" r="7" fill="#0E1320"/><circle cx="228" cy="201" r="7" fill="#0E1320"/><circle cx="138" cy="193" r="5" fill="#FFFFFF"/><circle cx="234" cy="193" r="5" fill="#FFFFFF"/></g><path d="M212 156 Q240 146 272 158" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M112 160 Q140 150 168 166" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round"/><ellipse cx="190" cy="262" rx="22" ry="16" fill="url(#trNose)"/><ellipse cx="183" cy="256" rx="7" ry="4" fill="#FFFFFF" opacity="0.6"/><path d="M168 290 Q194 306 220 284" stroke="#1F2A44" stroke-width="6" fill="none" stroke-linecap="round"/></g><path d="M146 160 Q150 24 260 22 Q370 24 374 160" stroke="#1F2A44" stroke-width="14" fill="none" stroke-linecap="round"/><rect x="124" y="124" width="44" height="78" rx="18" fill="#F07F2E" stroke="#1F2A44" stroke-width="5"/><rect x="352" y="124" width="44" height="78" rx="18" fill="#F07F2E" stroke="#1F2A44" stroke-width="5"/></g><g class="tr-phone"><path d="M180 252 Q128 238 120 196" stroke="url(#trHood)" stroke-width="34" stroke-linecap="round" fill="none"/><g transform="rotate(-8 112 150)"><rect x="88" y="104" width="48" height="78" rx="9" fill="#1F2A44"/><rect x="94" y="112" width="36" height="58" rx="5" fill="#E3F4EA"/><path d="M101 142 L109 151 L122 132" stroke="#1E7A4C" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="118" cy="186" r="18" fill="#3A4150"/></g><path d="M344 258 Q392 296 404 362" stroke="url(#trHood)" stroke-width="32" stroke-linecap="round" fill="none"/><rect x="30" y="384" width="460" height="22" rx="6" fill="url(#trDesk)"/><rect x="60" y="406" width="20" height="96" rx="4" fill="#B07A45"/><rect x="440" y="406" width="20" height="96" rx="4" fill="#B07A45"/><path d="M172 286 L348 286 L356 384 L164 384 Z" fill="url(#trLid)" stroke="#7D8796" stroke-width="3"/><circle cx="260" cy="334" r="20" fill="#1E7A4C"/><path d="M250 334 L257 342 L271 326" stroke="#FFFFFF" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M310 306 l5 10 11 2 -8 8 2 11 -10 -5 -10 5 2 -11 -8 -8 11 -2 Z" fill="#F07F2E"/><ellipse cx="412" cy="378" rx="24" ry="11" fill="#E5E7EB" stroke="#7D8796" stroke-width="2"/><circle cx="406" cy="368" r="17" fill="#3A4150"/><rect x="66" y="338" width="38" height="46" rx="7" fill="url(#trCup)"/><path d="M104 348 Q120 352 116 368 Q112 376 104 374" stroke="#D9621A" stroke-width="6" fill="none"/><path d="M78 330 Q74 320 80 312 M90 330 Q86 318 92 308" stroke="#99A0AB" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+</svg>`,
+  m: `<svg viewBox="128 84 164 172" aria-hidden="true">
+<style>
+.tm-l{animation:tm-l .9s ease-in-out infinite}
+.tm-r{animation:tm-r .9s ease-in-out infinite}
+@keyframes tm-l{0%,100%{transform:translateY(0)}25%{transform:translateY(-14px)}75%{transform:translateY(12px)}}
+@keyframes tm-r{0%,100%{transform:translateY(0)}25%{transform:translateY(12px)}75%{transform:translateY(-14px)}}
+.tm-blink{animation:tm-blink 4.2s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes tm-blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.tm-head{animation:tm-head .9s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes tm-head{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.tm-live{animation:tm-live 1.2s steps(2) infinite}
+@keyframes tm-live{50%{opacity:.35}}
+@media (prefers-reduced-motion: reduce){.tm-l,.tm-r,.tm-blink,.tm-head,.tm-live{animation:none}}
+</style><defs><radialGradient id="tmBody" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#4A5060"/><stop offset="1" stop-color="#0F1218"/></radialGradient><radialGradient id="tmBelly" cx="0.4" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D3D9E2"/></radialGradient><linearGradient id="tmTail" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2B7A8F"/><stop offset="0.5" stop-color="#3D5FA8"/><stop offset="1" stop-color="#1B2D4F"/></linearGradient><linearGradient id="tmSweat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9C8FA"/><stop offset="1" stop-color="#A68AE6"/></linearGradient><linearGradient id="tmBeak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A91A2"/><stop offset="1" stop-color="#3A3F4C"/></linearGradient><linearGradient id="tmPhone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF9EC7"/><stop offset="1" stop-color="#E0559A"/></linearGradient></defs><ellipse cx="250" cy="544" rx="190" ry="11" fill="#1F2A44" opacity="0.15"/><path d="M440 330 L404 534 M440 330 L440 534 M440 330 L476 534" stroke="#3A4150" stroke-width="6" stroke-linecap="round"/><circle cx="440" cy="262" r="52" fill="none" stroke="#FFF3C4" stroke-width="12"/><circle cx="440" cy="262" r="52" fill="none" stroke="#E8D9A0" stroke-width="2"/><rect x="436" y="300" width="8" height="34" fill="#3A4150"/><rect x="416" y="222" width="48" height="80" rx="10" fill="url(#tmPhone)" stroke="#1F2A44" stroke-width="4"/><circle cx="430" cy="236" r="5" fill="#1F2A44"/><circle cx="430" cy="250" r="5" fill="#1F2A44"/><g class="tm-live"><rect x="420" y="182" width="40" height="18" rx="5" fill="#E5483A"/><text x="440" y="195" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">LIVE</text></g><path d="M240 400 Q300 452 336 528 L314 536 Q274 470 220 418 Z" fill="url(#tmTail)"/><path d="M192 440 L188 504 M228 440 L232 504" stroke="#5B4A32" stroke-width="8" stroke-linecap="round"/><path d="M158 518 Q160 498 186 498 Q206 498 210 516 L210 528 Q208 534 198 534 L164 534 Q156 532 158 518 Z" fill="#FFFFFF" stroke="#1F2A44" stroke-width="3"/><path d="M262 518 Q260 498 234 498 Q214 498 210 516 L210 528 Q212 534 222 534 L256 534 Q264 532 262 518 Z" fill="#FFFFFF" stroke="#1F2A44" stroke-width="3"/><path d="M160 526 L208 526 M212 526 L260 526" stroke="#A68AE6" stroke-width="6"/><ellipse cx="210" cy="360" rx="74" ry="98" fill="url(#tmBody)"/><ellipse cx="204" cy="392" rx="46" ry="54" fill="url(#tmBelly)"/><path d="M132 268 Q210 238 288 268 L298 364 Q210 382 122 364 Z" fill="url(#tmSweat)"/><path d="M136 356 Q210 372 284 356" stroke="#8C70D4" stroke-width="6" fill="none"/><path d="M210 306 C200 290 180 300 192 316 L210 332 L228 316 C240 300 220 290 210 306 Z" fill="#E0559A"/><g class="tm-l"><path d="M146 286 Q112 304 92 300" stroke="url(#tmSweat)" stroke-width="28" stroke-linecap="round" fill="none"/><path d="M60 294 Q78 282 96 292 Q86 304 66 304 Z" fill="#1B2030"/><path d="M58 292 L52 284 M66 288 L62 278 M76 286 L74 276" stroke="#1B2030" stroke-width="5" stroke-linecap="round"/></g><g class="tm-r"><path d="M274 286 Q308 304 328 300" stroke="url(#tmSweat)" stroke-width="28" stroke-linecap="round" fill="none"/><path d="M360 294 Q342 282 324 292 Q334 304 354 304 Z" fill="#1B2030"/><path d="M362 292 L368 284 M354 288 L358 278 M344 286 L346 276" stroke="#1B2030" stroke-width="5" stroke-linecap="round"/></g><g class="tm-head"><path d="M196 128 Q192 104 206 96 Q204 112 212 122 Q216 100 232 98 Q222 114 222 130 Z" fill="#1B2030"/><circle cx="210" cy="184" r="62" fill="url(#tmBody)"/><ellipse cx="186" cy="150" rx="24" ry="12" fill="#FFFFFF" opacity="0.18" transform="rotate(-25 186 150)"/><path d="M160 142 Q210 124 260 142" stroke="#E0559A" stroke-width="4" fill="none"/><rect x="164" y="128" width="34" height="22" rx="10" fill="#1F2A44" stroke="#E0559A" stroke-width="4"/><rect x="222" y="128" width="34" height="22" rx="10" fill="#1F2A44" stroke="#E0559A" stroke-width="4"/><path d="M198 138 Q210 132 222 138" stroke="#E0559A" stroke-width="4" fill="none"/><path d="M240 106 l4 9 10 1 -7 7 2 10 -9 -5 -9 5 2 -10 -7 -7 10 -1 Z" fill="#FFD166"/><g class="tm-blink"><ellipse cx="188" cy="184" rx="15" ry="17" fill="#FFFFFF"/><ellipse cx="232" cy="184" rx="15" ry="17" fill="#FFFFFF"/><circle cx="190" cy="187" r="9" fill="#0E1320"/><circle cx="234" cy="187" r="9" fill="#0E1320"/><circle cx="193" cy="183" r="3.5" fill="#FFFFFF"/><circle cx="237" cy="183" r="3.5" fill="#FFFFFF"/></g><path d="M174 170 L168 162 M180 167 L177 158 M246 170 L252 162 M240 167 L243 158" stroke="#0E1320" stroke-width="3" stroke-linecap="round"/><circle cx="172" cy="210" r="9" fill="#F28CB4" opacity="0.45"/><circle cx="248" cy="210" r="9" fill="#F28CB4" opacity="0.45"/><path d="M190 202 Q210 196 230 202 L211 250 Z" fill="url(#tmBeak)"/><path d="M196 218 Q210 222 224 218" stroke="#0E1320" stroke-width="2" fill="none"/><ellipse cx="204" cy="208" rx="6" ry="3" fill="#FFFFFF" opacity="0.35"/></g>
+</svg>`
+};
+function ageOf(){ const p = typeof curProf === 'function' && curProf(); return p && p.age === 't' ? 't' : 'y'; }
+function ageByKlass(k){ const n = parseInt(k, 10); return n >= 6 ? 't' : 'y'; }
+function ageLabel(a){ return a === 't' ? '12–15 лет' : '7–11 лет'; }
+function applyAge(){
+  const h = ageOf() === 't' ? HERO_TEEN : HERO_KID;
+  RACCOON = h.r; RACCOON_FULL = h.f; MAGPIE = h.m;
+  const lg = document.getElementById('logo'); if (lg) lg.innerHTML = RACCOON;
+  document.body.classList.toggle('teen', ageOf() === 't');
+}
+
 const CHECK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>';
 const LOCK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
 function people(k){
@@ -1874,7 +2046,7 @@ function stepBody(L, st, i){
   const done = P.course.done[sk(L.id, i)];
   const head = (eb, t) => `<p class="eyebrow">${eb}</p><h1 class="steptitle">${esc(t)}</h1>`;
   if (st.t === 'warm') return `${L.goals && L.goals.length ? `<div class="goals"><p class="eyebrow">После урока ты сможешь</p><ul>${L.goals.map(g => `<li>${esc(g)}</li>`).join('')}</ul></div>` : ''}${head('Разминка', st.title)}<p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><p class="motto">${esc(st.a)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать ответ</button></div>`;
-  if (st.t === 'card') return `${head(st.eyebrow || 'Теория', st.title)}${st.hero ? `<div class="hero">${RACCOON}<div class="prose">${st.html}</div></div>` : `<div class="prose">${st.html}</div>`}`;
+  if (st.t === 'card') return `${head(st.eyebrow || 'Теория', st.title)}${st.hero ? `<div class="hero">${RACCOON_FULL}<div class="prose">${st.html}</div></div>` : `<div class="prose">${st.html}</div>`}`;
   if (st.t === 'comic') return `${head('Комикс', st.title)}<div class="comic">${st.lines.map((l, j) => `<div class="bubble ${l[0]}" data-j="${j}" ${j > 0 && !done ? 'hidden' : ''}><span class="ava">${l[0] === 'r' ? RACCOON : MAGPIE}</span><div><p class="who">${l[0] === 'r' ? 'Чек' : 'Трещотка'}</p><p class="hand">${esc(l[1])}</p></div></div>`).join('')}</div>${done ? '' : '<div><button class="btn ghost" id="more" type="button">Следующая реплика</button></div>'}<p class="note">Можно читать по ролям: один за Трещотку, другой за Чека.</p>`;
   if (st.t === 'case') return `${head('Расследование', st.title)}<div class="msg">${st.ctx}</div><p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><div class="prose">${st.reveal}</div></div><div><button class="btn ghost" id="rvbtn" type="button">Показать разбор</button></div>`;
   if (st.t === 'trap') return `${head(`Ловушка ${st.n} из ${TRAPS.length}`, st.title)}<div class="comic"><div class="bubble m"><span class="ava">${MAGPIE}</span><div><p class="who">Трещотка</p><p class="hand" style="white-space:pre-line">${esc(st.quote)}</p></div></div></div><p class="bigq">Что здесь не так?</p><div class="reveal" id="rv" hidden><p><b>Разгадка:</b> ${esc(st.ans)}</p><p><b>Как ответить:</b> ${esc(st.reply)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать разгадку</button></div>`;
@@ -1883,7 +2055,7 @@ function stepBody(L, st, i){
   if (st.t === 'open') { const o = (P.open || {})[st.id] || {}; return `${head('Свой ответ', st.title)}${st.ctx ? `<div class="msg" style="white-space:pre-line">${esc(st.ctx)}</div>` : ''}<p class="bigq">${esc(st.task)}</p><label class="field" for="oa">Твой ответ<textarea id="oa" class="codebox" rows="4" placeholder="Напиши своими словами…">${esc(o.t || '')}</textarea></label><div class="reveal" id="orv" ${o.shown ? '' : 'hidden'}><p><b>Пример хорошего ответа:</b> ${esc(st.sample)}</p><p class="eyebrow">Отметь, что есть в твоём ответе</p><div class="checks">${st.checks.map((c, j) => `<label class="chk"><input type="checkbox" data-oc="${j}" ${(o.c || [])[j] ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div><p class="note">Твой ответ не обязан совпадать с примером. Главное — чтобы в нём были эти признаки. За каждый отмеченный признак — лапка.</p></div>${o.shown ? '' : '<div><button class="btn ghost" id="ocmp" type="button">Сравнить с примером</button></div>'}`; }
   if (st.t === 'reflect') { const r = (P.refl || {})[L.id] || {}; return `${head('Рефлексия', st.title)}<p class="lead">Ответь себе честно — это нужно только тебе. Учитель увидит ответы, если ты пришлёшь код прогресса.</p><label class="field" for="rf1">Что нового ты узнал(а)${L.id === 'u10' ? ' за курс' : ' сегодня'}?<textarea id="rf1" class="codebox" rows="3">${esc(r.a || '')}</textarea></label><label class="field" for="rf2">Где это пригодится тебе в жизни?<textarea id="rf2" class="codebox" rows="3">${esc(r.b || '')}</textarea></label><label class="field" for="rf3">Что было непонятно или трудно? (можно пропустить)<textarea id="rf3" class="codebox" rows="2">${esc(r.c || '')}</textarea></label>`; }
   if (st.t === 'challenge') return `${head('Задание на неделю', st.title)}<p class="lead">Выполни все пять миссий и отметь их здесь.</p><div class="checks">${CH.map((c, j) => `<label class="chk"><input type="checkbox" data-j="${j}" ${(P.course.ch || [])[j] ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>`;
-  if (st.t === 'cert') { const r = rankOf(P.paws), nm = P.course.name || ''; return `${head('Финал', st.title)}<label class="field" for="c-name">Твоё имя для сертификата <input id="c-name" type="text" maxlength="40" value="${esc(nm)}" placeholder="Имя и фамилия"></label><div class="cert">${RACCOON}<p class="eyebrow">Сертификат</p><h2>Юный детектив</h2><p class="certname" id="c-out">${esc(nm || 'Имя ученика')}</p><p>прошёл курс «Не верь на слово!» вместе с Енотом Чеком</p><p><b>Звание:</b> ${esc(r.name)} · <b>Лапок:</b> ${P.paws} · <b>Уроков:</b> ${lessonsDone()} из ${COURSE.length}</p><p class="motto">«Сначала проверю — потом поверю!»</p></div><p class="note">Сделай снимок экрана, чтобы сохранить сертификат.</p>`; }
+  if (st.t === 'cert') { const r = rankOf(P.paws), nm = P.course.name || ''; return `${head('Финал', st.title)}<label class="field" for="c-name">Твоё имя для сертификата <input id="c-name" type="text" maxlength="40" value="${esc(nm)}" placeholder="Имя и фамилия"></label><div class="cert">${RACCOON_FULL}<p class="eyebrow">Сертификат</p><h2>Юный детектив</h2><p class="certname" id="c-out">${esc(nm || 'Имя ученика')}</p><p>прошёл курс «Не верь на слово!» вместе с Енотом Чеком</p><p><b>Звание:</b> ${esc(r.name)} · <b>Лапок:</b> ${P.paws} · <b>Уроков:</b> ${lessonsDone()} из ${COURSE.length}</p><p class="motto">«Сначала проверю — потом поверю!»</p></div><p class="note">Сделай снимок экрана, чтобы сохранить сертификат.</p>`; }
   return '';
 }
 
@@ -1947,7 +2119,7 @@ function openStep(uid, i){
 
 /* ---------- profiles, share code, teacher journal ---------- */
 function pcClass(v){ return v == null ? 'pc-none' : v >= 75 ? 'pc-good' : v < 50 ? 'pc-bad' : ''; }
-function summary(){ const pr = curProf() || {}; return {v:2, n:curName(), login: pr.login || '', klass: pr.klass || '', mk: pr.mk || '', i: pr.bot || null, p:P.paws, r:rankOf(P.paws).name, l:lessonsDone(), c:coursePct(), t:LESSONS.map(l => (l.final ? P.tests.final : P.tests[l.id]) ?? null), b:BADGES.filter(b => P.badges[b.id]).length, d:new Date().toISOString().slice(0, 10)}; }
+function summary(){ const pr = curProf() || {}; return {v:2, n:curName(), login: pr.login || '', klass: pr.klass || '', age: pr.age || '', mk: pr.mk || '', i: pr.bot || null, p:P.paws, r:rankOf(P.paws).name, l:lessonsDone(), c:coursePct(), t:LESSONS.map(l => (l.final ? P.tests.final : P.tests[l.id]) ?? null), b:BADGES.filter(b => P.badges[b.id]).length, d:new Date().toISOString().slice(0, 10)}; }
 function b64(bytes){ let s = ''; for (let k = 0; k < bytes.length; k += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(k, k + 0x8000)); return btoa(s); }
 function unb64(str){ const bin = atob(str); return Uint8Array.from(bin, c => c.charCodeAt(0)); }
 async function pipeBytes(bytes, stream){ return new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(stream)).arrayBuffer()); }
@@ -1982,10 +2154,12 @@ function enterAs(id, remember){
   P = loadP(); if (!P.course.name) { P.course.name = curName(); saveP(); }
   updateHud(); INBOX = []; updateBell(); loadInbox();
   try { if (/^s-/.test(location.hash.slice(1))) history.replaceState(null, '', location.pathname + location.search); } catch (_) {}
+  if (pr && !pr.age && pr.klass) { pr.age = ageByKlass(pr.klass); saveProfiles(); }
+  applyAge();
   if (pr && !pr.klass && !pr.klassAsked) return renderWho('klass');
   route();
 }
-function logout(){ setCur(null); P = freshP(); INBOX = []; updateHud(); updateBell(); renderWho(); }
+function logout(){ setCur(null); P = freshP(); INBOX = []; applyAge(); updateHud(); updateBell(); renderWho(); }
 function normKlass(s){ return String(s || '').replace(/\s+/g, '').toUpperCase(); }
 const KLASS_RE = /^\d{1,2}[А-ЯЁA-Z]?$/;
 
@@ -2028,6 +2202,7 @@ function renderWho(mode, arg){
     <form class="card form" id="regf">
       <label class="field" for="rn">Имя и первая буква фамилии<input id="rn" type="text" maxlength="40" value="${legacy ? esc(legacy.name) : ''}" placeholder="Маша К." autocomplete="off" required></label>
       <label class="field" for="rk">Класс<input id="rk" type="text" maxlength="4" value="${legacy && legacy.klass ? esc(legacy.klass) : ''}" placeholder="6Б" autocomplete="off" required></label>
+      <fieldset class="field agepick"><legend>Сколько тебе лет?</legend><div class="agechips"><label class="chk"><input type="radio" name="ra" value="y" ${legacy && legacy.age === 'y' ? 'checked' : ''}> 7–11 лет</label><label class="chk"><input type="radio" name="ra" value="t" ${legacy && legacy.age === 't' ? 'checked' : ''}> 12–15 лет</label></div></fieldset>
       <label class="field" for="rl">Логин: латинские буквы и цифры, 3–20 символов<input id="rl" type="text" maxlength="20" value="${legacy && legacy.login ? esc(legacy.login) : ''}" placeholder="masha_k" autocapitalize="off" autocomplete="off" spellcheck="false" required></label>
       <label class="field" for="rp">Код для входа: 4 цифры<input id="rp" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required></label>
       <label class="field" for="rp2">Повтори код<input id="rp2" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required></label>
@@ -2036,6 +2211,9 @@ function renderWho(mode, arg){
     </form>`;
     const bk = $('#back'); if (bk) bk.onclick = () => renderWho('list');
     const gr = $('#go-restore'); if (gr) gr.onclick = () => renderWho('restore');
+    let ageTouched = !!(legacy && legacy.age);
+    app.querySelectorAll('input[name=ra]').forEach(r => r.onchange = () => { ageTouched = true; });
+    $('#rk').oninput = () => { if (ageTouched) return; const k = normKlass($('#rk').value); if (!KLASS_RE.test(k)) return; const a = ageByKlass(k); app.querySelectorAll('input[name=ra]').forEach(r => { r.checked = r.value === a; }); };
     $('#regf').onsubmit = ev => {
       ev.preventDefault();
       const err = $('#rerr'), name = $('#rn').value.replace(/\s+/g, ' ').trim(), login = $('#rl').value.trim().toLowerCase(), pin = $('#rp').value.trim(), pin2 = $('#rp2').value.trim();
@@ -2046,9 +2224,10 @@ function renderWho(mode, arg){
       if (PR.list.some(x => x.login === login && (!legacy || x.id !== legacy.id))) { err.textContent = 'Такой логин уже есть на этом устройстве. Придумай другой.'; return; }
       if (!/^\d{4}$/.test(pin)) { err.textContent = 'Код — это 4 цифры.'; return; }
       if (pin !== pin2) { err.textContent = 'Коды не совпадают.'; return; }
+      const ra = app.querySelector('input[name=ra]:checked'), age = ra ? ra.value : ageByKlass(klass);
       let id;
-      if (legacy) { Object.assign(legacy, {name, klass, login, pin: pinHash(login, pin)}); id = legacy.id; }
-      else { id = newId(); PR.list.push({id, name, klass, login, pin: pinHash(login, pin), mk: newMk()}); }
+      if (legacy) { Object.assign(legacy, {name, klass, age, login, pin: pinHash(login, pin)}); id = legacy.id; }
+      else { id = newId(); PR.list.push({id, name, klass, age, login, pin: pinHash(login, pin), mk: newMk()}); }
       saveProfiles(); enterAs(id, $('#rem').checked);
     };
   } else if (mode === 'klass') {
@@ -2064,7 +2243,7 @@ function renderWho(mode, arg){
       ev.preventDefault();
       const k = normKlass($('#kk').value);
       if (!KLASS_RE.test(k)) { $('#kerr').textContent = 'Класс — цифрой и буквой, например 6Б.'; return; }
-      p.klass = k; saveProfiles(); loadInbox(); route();
+      p.klass = k; if (!p.age) p.age = ageByKlass(k); saveProfiles(); applyAge(); loadInbox(); route();
     };
     $('#kk').focus();
   } else if (mode === 'restore') {
@@ -2086,6 +2265,7 @@ function renderWho(mode, arg){
       if (o.i) p.bot = o.i;
       if (o.mk) p.mk = o.mk;
       if (o.klass) p.klass = o.klass;
+      if (o.age) p.age = o.age;
       saveProfiles();
       try { localStorage.setItem('chek-progress:' + p.id, JSON.stringify(o.full)); } catch (_) {}
       toast('<span>Прогресс перенесён. Войди со своим кодом.</span>');
@@ -2348,7 +2528,7 @@ async function renderTeacher(klass){
   const st = klass ? all.filter(r => r.klass === klass) : all;
   const chips = `<button class="chipf ${!klass ? 'on' : ''}" data-k="" type="button">Все</button>` + classes.map(k => `<button class="chipf ${k === klass ? 'on' : ''}" data-k="${esc(k)}" type="button">${esc(k)}</button>`).join('');
   const rows = st.map(r => { const i = all.indexOf(r), d = r.data || {}; const t = (d.t || []).concat(Array(LESSONS.length).fill(null)).slice(0, LESSONS.length);
-    return `<tr class="trow" data-q="${esc((r.name + ' ' + r.klass + ' ' + (r.num || '') + ' ' + r.login).toLowerCase())}"><td class="num">${r.num || '—'}</td><td class="l">${esc(r.klass || '—')}</td><td class="l"><button class="link tstud" data-i="${i}" type="button">${esc(r.name)}</button>${r.unread ? ` <span class="newb">${r.unread} новых</span>` : ''}</td><td class="l">${chanBadges(r)}</td><td><button class="btn ghost small twrite" data-i="${i}" type="button">Написать</button></td><td class="num">${d.p ?? '—'}</td><td class="l">${esc(String(d.r ?? '—'))}</td><td class="num">${d.l ?? 0}/9</td><td class="num">${d.c ?? 0}%</td>${t.map(v => `<td class="num ${pcClass(v)}">${v == null ? '—' : v + '%'}</td>`).join('')}<td>${esc(r.received ? String(r.received).replace('T', ' ') : 'ещё нет')}</td></tr>`; }).join('');
+    return `<tr class="trow" data-q="${esc((r.name + ' ' + r.klass + ' ' + (r.num || '') + ' ' + r.login).toLowerCase())}"><td class="num">${r.num || '—'}</td><td class="l">${esc(r.klass || '—')}</td><td class="l"><button class="link tstud" data-i="${i}" type="button">${esc(r.name)}</button>${d.age ? ` <span class="chan">${d.age === 't' ? '12–15' : '7–11'}</span>` : ''}${r.unread ? ` <span class="newb">${r.unread} новых</span>` : ''}</td><td class="l">${chanBadges(r)}</td><td><button class="btn ghost small twrite" data-i="${i}" type="button">Написать</button></td><td class="num">${d.p ?? '—'}</td><td class="l">${esc(String(d.r ?? '—'))}</td><td class="num">${d.l ?? 0}/9</td><td class="num">${d.c ?? 0}%</td>${t.map(v => `<td class="num ${pcClass(v)}">${v == null ? '—' : v + '%'}</td>`).join('')}<td>${esc(r.received ? String(r.received).replace('T', ' ') : 'ещё нет')}</td></tr>`; }).join('');
   const whoOpts = `<option value="">Всем ученикам</option>` + classes.map(k => `<option value="k:${esc(k)}"${k === klass ? ' selected' : ''}>Класс ${esc(k)}</option>`).join('')
     + `<optgroup label="Один ученик">` + all.map((r, i) => `<option value="r:${i}">${esc(r.name)}${r.klass ? ' (' + esc(r.klass) + ')' : ''}</option>`).join('') + `</optgroup>`;
   app.innerHTML = tHead('Кабинет учителя' + (klass ? ' · ' + esc(klass) : '')) + `
@@ -2500,6 +2680,7 @@ function route(){
 $('#hud').onclick = renderAch;
 $('#bell').onclick = () => { stopPoll(); renderInbox(); loadInbox().then(() => { if ($('#i-refresh')) renderInbox(); }); };
 setInterval(() => { if (CUR && MODE !== 'teacher' && !document.hidden) loadInbox(); }, 180000);
+applyAge();
 if (CUR) { const pr0 = curProf(); if (pr0 && !pr0.mk) { pr0.mk = newMk(); saveProfiles(); } loadInbox(); }
 $('#mode-btn').onclick = () => { stopPoll(); if (MODE === 'teacher') { setMode('student'); route(); } else renderTeacher(); };
 updateHud();

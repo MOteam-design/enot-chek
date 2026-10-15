@@ -259,6 +259,9 @@ details.more summary{cursor:pointer;font-weight:800;color:var(--accent-ink)}
 details.more[open]{display:flex}
 .chipf{border:2px solid var(--line);border-radius:999px;padding:4px 14px;background:var(--card);font-weight:800}
 .chipf.on{background:var(--accent);color:var(--on-accent)}
+.goals{background:var(--tint);border-radius:16px;padding:12px 18px;margin-bottom:6px}
+.goals ul{margin:6px 0 0;padding-left:20px}
+.revtag{background:var(--accent);color:var(--on-accent);border-radius:999px;padding:1px 8px;font-size:11px}
 .ohint{display:block;margin-top:3px;font-size:14px;font-weight:600;line-height:1.3;opacity:.75}
 .sheet dl{margin:10px 0 0;display:grid;gap:10px}
 .sheet dt{font-weight:800}
@@ -1161,7 +1164,7 @@ function migrateP(p){
   const map = [['u9', 'u10'], ['u8', 'u9'], ['u7', 'u8']], tmap = [['lesson8', 'lesson9'], ['lesson7', 'lesson8']];
   const c = p.course || {};
   if (c.done) { const d = {}; Object.keys(c.done).forEach(k => { const [u, i] = k.split(':'); const m = map.find(x => x[0] === u); d[(m ? m[1] : u) + ':' + i] = c.done[k]; }); c.done = d; }
-  if (c.cur && c.cur.id) { const m = map.find(x => x[0] === c.cur.id); if (m) c.cur.id = m[1]; }
+  if (c.cur && (c.cur.u || c.cur.id)) { const k = c.cur.u ? 'u' : 'id'; const m = map.find(x => x[0] === c.cur[k]); if (m) c.cur[k] = m[1]; }
   if (p.tests) tmap.forEach(([a, b]) => { if (a in p.tests) { p.tests[b] = p.tests[a]; delete p.tests[a]; } });
   p.cv = 2;
 }
@@ -1309,8 +1312,8 @@ function locate(grid, w){
 /* ---------- sessions ---------- */
 let S = null;
 
-function prep({cat, item}){
-  const e = {cat, item, graded:false};
+function prep({cat, item, rev}){
+  const e = {cat, item, rev: !!rev, graded:false};
   if (cat.kind === 'choice') { const n = (item.opts || cat.opts).length; e.perm = (cat.fixed || item.fixed) ? range(n) : shuffle(range(n)); e.sel = null; }
   if (cat.kind === 'order') { let p = shuffle(range(item.steps.length)); while (p.every((v, i) => v === i)) p = shuffle(p); e.perm = p; e.sel = []; }
   if (cat.kind === 'sort') { e.perm = shuffle(range(item.items.length)); e.sel = {}; }
@@ -1325,7 +1328,14 @@ function build(mode, key){
     const rest = shuffle(cats.flatMap(c => testPool(c.id).filter(i => !used.has(i)).map(item => ({cat:c, item})))).slice(0, Math.max(0, 20 - list.length));
     return shuffle(list.concat(rest));
   }
-  if (LES[key]) return shuffle(LES[key].spec.flatMap(([id, n, tag]) => pick(id, n, tag, true)));
+  if (LES[key]) {
+    const L = LES[key], main = LES[key].spec.flatMap(([id, n, tag]) => pick(id, n, tag, true));
+    /* 2–3 вопроса на повторение прошлых уроков: так материал запоминается лучше */
+    const prev = LESSONS.filter(x => !x.final && x.n < L.n).flatMap(x => x.spec), want = L.n < 2 ? 0 : L.n <= 3 ? 2 : 3;
+    const used = new Set(main.map(m => m.item)), rev = [];
+    for (const sp of shuffle(prev)) { if (rev.length >= want) break; const c = pick(sp[0], 5, sp[2], true).find(x => !used.has(x.item)); if (c) { used.add(c.item); c.rev = true; rev.push(c); } }
+    return shuffle(main).concat(rev);
+  }
   const c = CAT[key];
   const items = mode === 'practice' ? shuffle(c.items) : shuffle(testPool(c.id)).slice(0, c.kind === 'words' ? 3 : 10);
   return items.map(item => ({cat:c, item}));
@@ -1397,7 +1407,7 @@ function renderIntro(key){
   const fin = key === 'final', l = LES[key], c = CAT[key];
   const title = fin ? 'Итоговый тест' : l ? `Закрепление · урок ${l.n}` : c.title;
   const intro = fin ? 'По одному вопросу из каждого раздела и ещё несколько случайных — всего 20. Подсказок не будет: ответы и разбор ошибок появятся в конце.'
-    : l ? `Тема урока: «${l.title}». 10 вопросов по материалу урока. В конце — оценка, лапки и разбор ошибок.` : c.intro;
+    : l ? `Тема урока: «${l.title}». 10 вопросов по материалу урока${l.n > 1 ? ' и 2–3 вопроса на повторение прошлых уроков' : ''}. В конце — оценка, лапки и разбор ошибок.` : c.intro;
   const tip = fin ? 'Не спеши. Перед ответом вспомни алгоритм С-Т-О-П и пять вопросов.' : l ? 'Вспомни, что было на уроке, и не торопись с ответом.' : c.tip;
   const tn = (fin || l) ? (fin ? 20 : 10) : (c.kind === 'words' ? 3 : 10);
   app.innerHTML = `
@@ -1459,7 +1469,7 @@ function renderQ(){
   <div class="qtop"><button class="back" id="quit" type="button">← Выйти</button><span class="qcount">${esc(S.title)} · ${S.mode === 'test' ? 'тест' : 'тренировка'} · ${S.i + 1} из ${n}${S.mode === 'practice' && P.streak > 1 ? ` · серия ${P.streak}` : ''}</span></div>
   <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${S.i}"><span style="width:${S.i / n * 100}%"></span></div>
   <article class="card qcard">
-    <p class="eyebrow">${esc(e.cat.title)}</p>
+    <p class="eyebrow">${esc(e.cat.title)}${e.rev ? ' · <span class="revtag">повторение</span>' : ''}</p>
     ${body(e)}
     <div id="fb" class="fb" hidden></div>
     <div class="qnav"><button class="btn" id="next" type="button" ${e.cat.kind === 'words' && S.mode === 'test' ? '' : 'disabled'}>${needsCheck ? 'Проверить' : (last ? 'Завершить' : 'Дальше →')}</button></div>
@@ -1775,6 +1785,42 @@ const COURSE = [
   {t:'cert', title:'Сертификат детектива'}
 ]}
 ];
+/* ---------- цели, свой ответ, рефлексия ---------- */
+const GOALS = {
+  u1: ['познакомишься с Енотом Чеком и Сорокой Трещоткой', 'узнаешь, почему мошенники выбирают подростков', 'сможешь отличить высказывание от просьбы или вопроса'],
+  u2: ['находить доводы и вывод', 'отличать логичный вывод от правдивого', 'различать дедукцию и индукцию', 'не попадаться в ловушку «если…, то…»'],
+  u3: ['отличать факт от мнения', 'замечать ложные «факты»', 'спокойно спорить о вкусах'],
+  u4: ['задавать 5 вопросов Чека', 'находить красные флажки в слухах', 'понимать, что делать вместо «переслать»'],
+  u5: ['узнавать главные схемы обмана подростков', 'помнить правило «код из СМС — никому»', 'знать, что делать, если обманули'],
+  u6: ['узнавать шесть ловушек в рассуждениях', 'разоблачать их в споре и рекламе', 'отвечать спокойно и по делу'],
+  u7: ['узнавать ещё шесть ловушек', 'замечать, когда из верного правила делают неверный вывод', 'исправлять такие выводы'],
+  u8: ['замечать три хитрости мозга', 'помнить: «вместе» — не значит «из-за»', 'искать общую причину'],
+  u9: ['проверять новость по алгоритму С-Т-О-П', 'пользоваться «боковым чтением»', 'не верить громким заголовкам'],
+  u10: ['повторить 7 правил Чека', 'пройти итоговый тест', 'получить сертификат детектива']
+};
+const OPEN = {
+  u1: [
+    {id:'o1a', title:'Твой ответ: придумай сам', task:'Придумай три предложения: одно истинное высказывание, одно ложное высказывание и одно предложение, которое вообще не высказывание.', sample:'«Волга длиннее Москвы-реки» — истинное. «У паука шесть ног» — ложное. «Пойдём гулять!» — не высказывание: это предложение погулять, его нельзя назвать истинным или ложным.', checks:['Первое можно проверить, и оно верное', 'Второе можно проверить, и оно неверное', 'Третье — вопрос, просьба или приглашение: про него не скажешь «правда» или «ложь»']},
+    {id:'o1b', title:'Твой ответ: убери двусмысленность', ctx:'«Мама попросила дочку принести её сумку».', task:'Перепиши фразу так, чтобы было точно понятно, чья сумка.', sample:'«Мама попросила дочку: "Принеси мою сумку"» или «Мама попросила дочку принести свою сумку».', checks:['Понятно, чья сумка', 'Смысл фразы не изменился', 'Фраза звучит естественно']}
+  ],
+  u2: [{id:'o2', title:'Твой ответ: найди ошибку', ctx:'«Все игроки нашей команды ходят на тренировки. Миша ходит на тренировки. Значит, Миша — игрок нашей команды».', task:'Почему вывод не следует из доводов? Объясни своими словами и приведи пример.', sample:'Вывод не следует: на тренировки ходят и игроки других команд. Например, Миша может заниматься в той же секции, но в другой команде.', checks:['Сказал(а), что вывод не следует из доводов', 'Привёл(а) пример: кто ещё может ходить на тренировки', 'Не спорил(а) с доводами — они могут быть верными']}],
+  u3: [{id:'o3', title:'Твой ответ: преврати мнение в факты', ctx:'«Эта книга скучная».', task:'Напиши два факта об этой книге, которые можно проверить, — без слов-оценок.', sample:'«В книге 400 страниц», «Я дочитал(а) только до 50-й страницы», «В первой главе нет диалогов».', checks:['Нет слов-оценок: скучный, лучший, классный', 'Каждое утверждение можно проверить: посчитать, посмотреть, спросить', 'Факты относятся к той же книге']}],
+  u4: [{id:'o4', title:'Твой ответ: какие вопросы ты задашь?', ctx:'В чате класса: «Завтра из-за ремонта отменят все уроки — так сказали в администрации!»', task:'Напиши три вопроса, которые ты задашь, прежде чем поверить и переслать.', sample:'1. Кто именно в администрации это сказал? 2. Где это написано — на сайте школы или в электронном дневнике? 3. Почему об этом не сообщил классный руководитель?', checks:['Есть вопрос «Кто это сказал?»', 'Есть вопрос про доказательства или официальный источник', 'Вопросы спокойные, без обвинений']}],
+  u5: [{id:'o5', title:'Твой ответ: что ты сделаешь?', ctx:'Незнакомый номер: «Привет! Ты выиграл новый телефон. Пришли код из СМС, чтобы подтвердить доставку».', task:'Напиши, что ты сделаешь и кому расскажешь. Отвечать мошеннику не нужно!', sample:'Не отвечаю и код не присылаю. Блокирую номер и рассказываю родителям. Если код уже отправлен — сразу говорю взрослым, и мы звоним в банк по номеру с карты.', checks:['Код из СМС никому не отправляешь', 'Не переписываешься, блокируешь номер', 'Рассказываешь взрослому, которому доверяешь']}],
+  u6: [{id:'o6', title:'Твой ответ: придумай свою ловушку', task:'Придумай свой пример одной из шести ловушек — из школы, спорта или дома. Напиши, какая это ловушка и как на неё ответить.', sample:'«Все в классе уже прошли этот уровень — значит, игра лёгкая». Ловушка «Все так делают». Ответ: «То, что многие прошли, не значит, что уровень лёгкий — может, они долго тренировались».', checks:['В примере есть вывод, который не следует из доводов', 'Ловушка названа правильно', 'Ответ спокойный и по делу']}],
+  u7: [{id:'o7', title:'Твой ответ: исправь вывод', ctx:'Правило: «Физкультура полезна для здоровья».\nВывод: «Буду заниматься спортом целый день вместо уроков и сна».', task:'Объясни, что не так с выводом, и напиши правильный вывод из этого правила.', sample:'Правило довели до крайности: здоровью нужны и сон, и учёба, и отдых. Правильный вывод: «Буду заниматься спортом регулярно, например по часу три-четыре раза в неделю».', checks:['Назвал(а) ошибку: крайность, забытая часть или правило не к месту', 'Новый вывод не мешает другим важным делам', 'Новый вывод можно выполнить в жизни']}],
+  u8: [{id:'o8', title:'Твой ответ: найди общую причину', ctx:'В дни школьной ярмарки в столовой продают больше пирожков, а в классах больше шума.', task:'Значит ли это, что пирожки делают класс шумным? Назови общую причину и придумай, как это проверить.', sample:'Нет. Общая причина — ярмарка: много гостей, все возбуждены. Проверить можно так: сравнить шум в обычные дни, когда пирожков продают много, и в дни ярмарки.', checks:['Сказал(а), что пирожки не причина шума', 'Назвал(а) общую причину', 'Предложил(а), как проверить или что сравнить']}],
+  u9: [{id:'o9', title:'Твой ответ: перепиши заголовок честно', ctx:'«ШОК! Учёные доказали: компьютерные игры делают детей гениями!»', task:'Перепиши заголовок спокойно и честно. Что нужно проверить, чтобы так написать?', sample:'«Исследование: некоторые игры могут тренировать внимание». Проверить: кто проводил исследование, сколько было участников и что именно измеряли.', checks:['Нет капса, «шока» и преувеличений', 'Нет обещания чуда («гении», «все дети»)', 'Указал(а), что проверить: источник, участников, что измеряли']}],
+  u10: [{id:'o10', title:'Твой ответ: моё правило детектива', task:'Какое правило Чека пригодится тебе больше всего? Опиши ситуацию из жизни, где ты его применишь.', sample:'Правило «Остановись, прежде чем переслать». Когда в чате класса пишут «Срочно перешли всем!», я сначала проверю новость на сайте школы.', checks:['Назвал(а) одно из правил', 'Описал(а) настоящую ситуацию', 'Написал(а), что именно сделаешь']}]
+};
+const SAFE_CARD = {t:'card', eyebrow:'Важно', title:'Если тебя всё-таки обманули', html:`<p><b>Это не стыдно.</b> Мошенники — профессионалы: они специально учатся обманывать, и на их уловки попадаются даже взрослые. Виноват обманщик, а не ты.</p><div class="tiles"><div class="tile"><b>1. Сразу скажи взрослому</b><span>Родителям или учителю. Чем раньше, тем больше можно исправить.</span></div><div class="tile"><b>2. Позвоните в банк</b><span>По номеру на обратной стороне карты или в приложении — карту заблокируют.</span></div><div class="tile"><b>3. Сохрани переписку</b><span>Скриншоты пригодятся полиции: 112 или 102.</span></div><div class="tile"><b>4. Не плати «за возврат денег»</b><span>Часто следом пишут новые мошенники и обещают всё вернуть за плату.</span></div></div><p>Трудно рассказать родителям? Позвони на <b>Детский телефон доверия 8-800-2000-122</b> — бесплатно и анонимно.</p><p class="motto">Если обманули друга — не смейся и не ругай. Скажи: «Это может случиться с каждым. Давай расскажем взрослым».</p>`};
+COURSE.forEach(L => {
+  L.goals = GOALS[L.id] || [];
+  if (L.id === 'u5') L.steps.push(SAFE_CARD);
+  (OPEN[L.id] || []).forEach(o => L.steps.push(Object.assign({t:'open'}, o)));
+  L.steps.push({t:'reflect', title: L.id === 'u10' ? 'Что я узнал(а) за курс' : 'Что я узнал(а)'});
+});
+
 const CH = ['Найди в рекламе одну ловушку рассуждений.', 'Запиши 3 факта и 3 мнения, которые услышал за день.', 'Проверь одну новость по алгоритму С-Т-О-П.', 'Найди в жизни пример «вместе — не значит из-за».', 'Расскажи семье о схемах мошенников и правиле «код из СМС — никому».'];
 
 function sk(u, i){ return u + ':' + i; }
@@ -1827,13 +1873,15 @@ function sidebar(uid, si){
 function stepBody(L, st, i){
   const done = P.course.done[sk(L.id, i)];
   const head = (eb, t) => `<p class="eyebrow">${eb}</p><h1 class="steptitle">${esc(t)}</h1>`;
-  if (st.t === 'warm') return `${head('Разминка', st.title)}<p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><p class="motto">${esc(st.a)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать ответ</button></div>`;
+  if (st.t === 'warm') return `${L.goals && L.goals.length ? `<div class="goals"><p class="eyebrow">После урока ты сможешь</p><ul>${L.goals.map(g => `<li>${esc(g)}</li>`).join('')}</ul></div>` : ''}${head('Разминка', st.title)}<p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><p class="motto">${esc(st.a)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать ответ</button></div>`;
   if (st.t === 'card') return `${head(st.eyebrow || 'Теория', st.title)}${st.hero ? `<div class="hero">${RACCOON}<div class="prose">${st.html}</div></div>` : `<div class="prose">${st.html}</div>`}`;
   if (st.t === 'comic') return `${head('Комикс', st.title)}<div class="comic">${st.lines.map((l, j) => `<div class="bubble ${l[0]}" data-j="${j}" ${j > 0 && !done ? 'hidden' : ''}><span class="ava">${l[0] === 'r' ? RACCOON : MAGPIE}</span><div><p class="who">${l[0] === 'r' ? 'Чек' : 'Трещотка'}</p><p class="hand">${esc(l[1])}</p></div></div>`).join('')}</div>${done ? '' : '<div><button class="btn ghost" id="more" type="button">Следующая реплика</button></div>'}<p class="note">Можно читать по ролям: один за Трещотку, другой за Чека.</p>`;
   if (st.t === 'case') return `${head('Расследование', st.title)}<div class="msg">${st.ctx}</div><p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><div class="prose">${st.reveal}</div></div><div><button class="btn ghost" id="rvbtn" type="button">Показать разбор</button></div>`;
   if (st.t === 'trap') return `${head(`Ловушка ${st.n} из ${TRAPS.length}`, st.title)}<div class="comic"><div class="bubble m"><span class="ava">${MAGPIE}</span><div><p class="who">Трещотка</p><p class="hand" style="white-space:pre-line">${esc(st.quote)}</p></div></div></div><p class="bigq">Что здесь не так?</p><div class="reveal" id="rv" hidden><p><b>Разгадка:</b> ${esc(st.ans)}</p><p><b>Как ответить:</b> ${esc(st.reply)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать разгадку</button></div>`;
   if (st.t === 'practice') { const n = st.spec.reduce((a, s) => a + s[1], 0); return `${head('Тренировка', st.title)}<p class="lead">${n} ${plural(n, 'задание', 'задания', 'заданий')} с подсказками. После каждого ответа — объяснение, за каждый правильный ответ — лапка.</p>${done ? `<p class="best">${CHECK} Тренировка пройдена — можно повторить.</p>` : ''}<div><button class="btn" id="launch" type="button">${done ? 'Пройти ещё раз' : 'Начать тренировку'}</button></div>`; }
-  if (st.t === 'test') { const key = st.key || L.test, b = P.tests[key]; return `${head(key === 'final' ? 'Экзамен' : 'Закрепление', st.title)}<p class="lead">${key === 'final' ? '20 вопросов из всех разделов' : '10 вопросов по материалу урока'}. Подсказок не будет: в конце — оценка, лапки и разбор каждой ошибки.</p>${b != null ? `<p class="best">${CHECK} Лучший результат: ${b}%${b < 75 ? ' — попробуй улучшить!' : ''}</p>` : ''}<div><button class="btn" id="launch" type="button">${b != null ? 'Пройти ещё раз' : 'Пройти тест'}</button></div>`; }
+  if (st.t === 'test') { const key = st.key || L.test, b = P.tests[key]; return `${head(key === 'final' ? 'Экзамен' : 'Закрепление', st.title)}<p class="lead">${key === 'final' ? '20 вопросов из всех разделов' : '10 вопросов по материалу урока' + (L.n > 1 ? ' и 2–3 вопроса на повторение прошлых уроков' : '')}. Подсказок не будет: в конце — оценка, лапки и разбор каждой ошибки.</p>${b != null ? `<p class="best">${CHECK} Лучший результат: ${b}%${b < 75 ? ' — попробуй улучшить!' : ''}</p>` : ''}<div><button class="btn" id="launch" type="button">${b != null ? 'Пройти ещё раз' : 'Пройти тест'}</button></div>`; }
+  if (st.t === 'open') { const o = (P.open || {})[st.id] || {}; return `${head('Свой ответ', st.title)}${st.ctx ? `<div class="msg" style="white-space:pre-line">${esc(st.ctx)}</div>` : ''}<p class="bigq">${esc(st.task)}</p><label class="field" for="oa">Твой ответ<textarea id="oa" class="codebox" rows="4" placeholder="Напиши своими словами…">${esc(o.t || '')}</textarea></label><div class="reveal" id="orv" ${o.shown ? '' : 'hidden'}><p><b>Пример хорошего ответа:</b> ${esc(st.sample)}</p><p class="eyebrow">Отметь, что есть в твоём ответе</p><div class="checks">${st.checks.map((c, j) => `<label class="chk"><input type="checkbox" data-oc="${j}" ${(o.c || [])[j] ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div><p class="note">Твой ответ не обязан совпадать с примером. Главное — чтобы в нём были эти признаки. За каждый отмеченный признак — лапка.</p></div>${o.shown ? '' : '<div><button class="btn ghost" id="ocmp" type="button">Сравнить с примером</button></div>'}`; }
+  if (st.t === 'reflect') { const r = (P.refl || {})[L.id] || {}; return `${head('Рефлексия', st.title)}<p class="lead">Ответь себе честно — это нужно только тебе. Учитель увидит ответы, если ты пришлёшь код прогресса.</p><label class="field" for="rf1">Что нового ты узнал(а)${L.id === 'u10' ? ' за курс' : ' сегодня'}?<textarea id="rf1" class="codebox" rows="3">${esc(r.a || '')}</textarea></label><label class="field" for="rf2">Где это пригодится тебе в жизни?<textarea id="rf2" class="codebox" rows="3">${esc(r.b || '')}</textarea></label><label class="field" for="rf3">Что было непонятно или трудно? (можно пропустить)<textarea id="rf3" class="codebox" rows="2">${esc(r.c || '')}</textarea></label>`; }
   if (st.t === 'challenge') return `${head('Задание на неделю', st.title)}<p class="lead">Выполни все пять миссий и отметь их здесь.</p><div class="checks">${CH.map((c, j) => `<label class="chk"><input type="checkbox" data-j="${j}" ${(P.course.ch || [])[j] ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>`;
   if (st.t === 'cert') { const r = rankOf(P.paws), nm = P.course.name || ''; return `${head('Финал', st.title)}<label class="field" for="c-name">Твоё имя для сертификата <input id="c-name" type="text" maxlength="40" value="${esc(nm)}" placeholder="Имя и фамилия"></label><div class="cert">${RACCOON}<p class="eyebrow">Сертификат</p><h2>Юный детектив</h2><p class="certname" id="c-out">${esc(nm || 'Имя ученика')}</p><p>прошёл курс «Не верь на слово!» вместе с Енотом Чеком</p><p><b>Звание:</b> ${esc(r.name)} · <b>Лапок:</b> ${P.paws} · <b>Уроков:</b> ${lessonsDone()} из ${COURSE.length}</p><p class="motto">«Сначала проверю — потом поверю!»</p></div><p class="note">Сделай снимок экрана, чтобы сохранить сертификат.</p>`; }
   return '';
@@ -1878,6 +1926,14 @@ function openStep(uid, i){
   if (more) more.onclick = () => { const h = app.querySelector('.bubble[hidden]'); if (h) h.hidden = false; if (!app.querySelector('.bubble[hidden]')) more.remove(); };
   const ln = $('#launch'); if (ln) ln.onclick = () => launchStep(uid, i);
   app.querySelectorAll('.checks input').forEach(c => c.onchange = () => { P.course.ch = P.course.ch || []; P.course.ch[+c.dataset.j] = c.checked; saveP(); });
+  const oa = $('#oa');
+  if (oa) {
+    const oget = () => { P.open = P.open || {}; return (P.open[st.id] = P.open[st.id] || {}); };
+    oa.oninput = () => { oget().t = oa.value; saveP(); };
+    const cmp = $('#ocmp'); if (cmp) cmp.onclick = () => { if (oa.value.trim().length < 5) { toast('<span>Сначала напиши свой ответ</span>'); oa.focus(); return; } oget().shown = 1; saveP(); $('#orv').hidden = false; cmp.remove(); };
+    app.querySelectorAll('[data-oc]').forEach(c => c.onchange = () => { const o = oget(); o.c = o.c || []; o.g = o.g || []; const j = +c.dataset.oc; o.c[j] = c.checked; if (c.checked && !o.g[j]) { o.g[j] = 1; P.paws += 1; toast(`${PAW}<span>+1 лапка</span>`); updateHud(); } saveP(); });
+  }
+  ['rf1', 'rf2', 'rf3'].forEach((id, j) => { const t = $('#' + id); if (t) t.oninput = () => { P.refl = P.refl || {}; const r = (P.refl[uid] = P.refl[uid] || {}); r['abc'[j]] = t.value; if (!r.g && (r.a || '').trim().length > 3 && (r.b || '').trim().length > 3) { r.g = 1; P.paws += 2; toast(`${PAW}<span>+2 лапки за рефлексию</span>`); updateHud(); } saveP(); }; });
   const nmIn = $('#c-name'); if (nmIn) nmIn.oninput = () => { P.course.name = nmIn.value; saveP(); $('#c-out').textContent = nmIn.value || 'Имя ученика'; };
   $('#prev').onclick = () => { if (pv) { openStep(pv[0], pv[1]); window.scrollTo(0, 0); } };
   $('#next').onclick = () => {

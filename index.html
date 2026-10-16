@@ -115,7 +115,8 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .fb.good{background:var(--good-bg);border:2px solid var(--good)}
 .fb.bad{background:var(--bad-bg);border:2px solid var(--bad)}
 .fb-title{font-family:var(--display);font-weight:800;font-size:20px}
-.qnav{display:flex;justify-content:flex-end}
+.qnav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.qnav #next{margin-left:auto}
 .score{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
 .big{font-family:var(--display);font-weight:800;font-size:clamp(48px,12vw,72px);line-height:1;font-variant-numeric:tabular-nums}
 .big small{font-size:.4em;color:var(--muted)}
@@ -266,6 +267,7 @@ details.more[open]{display:flex}
 .agepick{border:0;padding:0;margin:0}
 .agepick legend{font-weight:700;margin-bottom:6px}
 .agechips{display:flex;gap:18px;flex-wrap:wrap}
+.callout{background:var(--accent);color:var(--on-accent);border-radius:16px;padding:16px 20px;font-size:20px;line-height:1.4}
 .goals{background:var(--tint);border-radius:16px;padding:12px 18px;margin-bottom:6px}
 .goals ul{margin:6px 0 0;padding-left:20px}
 .revtag{background:var(--accent);color:var(--on-accent);border-radius:999px;padding:1px 8px;font-size:11px}
@@ -1575,16 +1577,31 @@ function renderQ(){
     <p class="eyebrow">${esc(e.cat.title)}${e.rev ? ' · <span class="revtag">повторение</span>' : ''}</p>
     ${body(e)}
     <div id="fb" class="fb" hidden></div>
-    <div class="qnav"><button class="btn" id="next" type="button" ${e.cat.kind === 'words' && S.mode === 'test' ? '' : 'disabled'}>${needsCheck ? 'Проверить' : (last ? 'Завершить' : 'Дальше →')}</button></div>
+    <div class="qnav">${S.i ? '<button class="btn ghost" id="prev" type="button">← Назад</button>' : ''}<button class="btn" id="next" type="button" disabled>${needsCheck && !e.graded ? 'Проверить' : (last ? (S.mode === 'test' ? 'Завершить тест' : 'Завершить') : 'Дальше →')}</button></div>
   </article>`;
   $('#quit').onclick = () => S.ret ? openStep(S.ret.u, S.ret.i) : renderIntro(S.key);
   const next = $('#next');
   next.onclick = () => {
-    if (S.mode === 'test') { finalize(e); go(); return; }
+    /* в тесте ответы проверяются только в конце — до этого можно вернуться и передумать */
+    if (S.mode === 'test') { if (last) { S.q.forEach((x, k) => finalize(x, k)); renderResults(); } else go(); return; }
     if (!e.graded) { finalize(e); next.textContent = last ? 'Завершить' : 'Дальше →'; return; }
     go();
   };
+  const prev = $('#prev');
+  if (prev) prev.onclick = () => { S.i--; renderQ(); window.scrollTo(0, 0); };
   bind(e, next);
+  restore(e);
+  /* в тренажёре прошлое задание показываем с разбором, но ответ уже не меняется */
+  if (e.graded && S.mode === 'practice') reveal(e, grade(e));
+  next.disabled = e.cat.kind === 'words' ? !(S.mode === 'test' || e.graded) : !(ready(e) || e.graded);
+}
+
+function restore(e){
+  const {cat} = e;
+  if (cat.kind === 'choice' && e.sel !== null) app.querySelectorAll('.opt').forEach(x => x.classList.toggle('sel', +x.dataset.k === e.sel));
+  if (cat.kind === 'order' && e.redraw) e.redraw();
+  if (cat.kind === 'sort') app.querySelectorAll('.srow').forEach(row => { const v = e.sel[row.dataset.k]; row.querySelectorAll('button').forEach(b => b.classList.toggle('on', v != null && +b.dataset.v === v)); });
+  if (cat.kind === 'words' && e.repaint) e.repaint();
 }
 
 function ready(e){
@@ -1686,13 +1703,16 @@ function grade(e){
     right: missing.length ? 'Не найдены: ' + missing.join(', ') : 'Все слова найдены'};
 }
 
-function finalize(e){
+function finalize(e, idx){
   if (e.graded) return;
   e.graded = true;
   const g = grade(e);
-  S.res[S.i] = {e, ...g};
+  S.res[idx == null ? S.i : idx] = {e, ...g};
   award(e, g);
-  if (S.mode !== 'practice') return;
+  if (S.mode === 'practice') reveal(e, g);
+}
+
+function reveal(e, g){
   const {cat, item} = e;
   if (cat.kind === 'choice') {
     app.querySelectorAll('.opt').forEach(b => {
@@ -1866,9 +1886,9 @@ const COURSE = [
   {t:'warm', title:'Разминка', q:'Что можно увидеть с закрытыми глазами?', a:'Сон.'},
   {t:'card', title:'Знакомьтесь: Енот Чек', hero:'r', html:`<p>Еноты-полоскуны перед едой окунают её в воду и тщательно ощупывают лапами. Чек так же «ощупывает» каждую новость, прежде чем её «проглотить».</p><p>Его имя — от английского <b>fact-check</b>, «проверка фактов».</p><p class="motto">«Сначала проверю — потом поверю!»</p>`},
   {t:'comic', title:'Знакомьтесь: Сорока Трещотка', lines:[['m','Привет! Я всё-всё знаю — мне все всё рассказывают!'],['r','А ты проверяешь то, что тебе рассказывают?'],['m','Зачем? Раз рассказали — значит, правда!'],['r','Вот этому мы и научимся. Сначала проверю — потом поверю!']]},
-  {t:'card', eyebrow:'Зачем нам этот курс', title:'Мошенники охотятся на подростков', html:`${people(6)}<p class="bignum">63% — больше 6 школьников из 10</p><p>хотя бы раз сталкивались с попыткой обмана или взлома. <span class="src">Опрос онлайн-школы «Умскул», 2026</span></p><div class="tiles"><div class="tile"><b class="big">1 из 5 → 1 из 3</b><span>школьников несколько раз попадались мошенникам: 22% в 9 классе и 36% в 11-м.</span><span class="src">«Умскул», 2026</span></div><div class="tile"><b class="big">≈ 1 из 5</b><span>пострадавших от мошенников в 2025 году — молодые люди 14–24 лет (22%).</span><span class="src">Банк России</span></div><div class="tile"><b class="big">было 10 → стало 12</b><span>атак на подростков 14–17 лет через «лёгкую подработку» (рост на 20%).</span><span class="src">Т-Банк, 2026</span></div></div><p><b>Мошенники рассчитывают на тех, кто верит сразу.</b> Кто умеет проверять, того обмануть намного труднее — этому мы и будем учиться.</p>`},
+  {t:'card', eyebrow:'Зачем нам этот курс', title:'Мошенники охотятся на подростков', html:`<p class="callout"><b>Мошенники рассчитывают на тех, кто верит сразу.</b> Кто умеет проверять, того обмануть намного труднее — этому мы и будем учиться.</p>${people(6)}<p class="bignum">63% — больше 6 школьников из 10</p><p>хотя бы раз сталкивались с попыткой обмана или взлома. <span class="src">Опрос онлайн-школы «Умскул», 2026</span></p><div class="tiles"><div class="tile"><b class="big">1 из 5 → 1 из 3</b><span>школьников несколько раз попадались мошенникам: 22% в 9 классе и 36% в 11-м.</span><span class="src">«Умскул», 2026</span></div><div class="tile"><b class="big">≈ 1 из 5</b><span>пострадавших от мошенников в 2025 году — молодые люди 14–24 лет (22%).</span><span class="src">Банк России</span></div><div class="tile"><b class="big">было 10 → стало 12</b><span>атак на подростков 14–17 лет через «лёгкую подработку» (рост на 20%).</span><span class="src">Т-Банк, 2026</span></div></div>`},
   {t:'card', title:'Где пригодится критическое мышление', html:`<div class="tiles"><div class="tile"><b>Чаты и соцсети</b><span>Слухи разлетаются быстрее, чем их успевают проверить.</span></div><div class="tile"><b>Реклама</b><span>Её задача — чтобы ты купил, а не задумался.</span></div><div class="tile"><b>Мошенники</b><span>«Ты выиграл телефон! Перейди по ссылке и введи код из СМС».</span></div><div class="tile"><b>Учёба и споры</b><span>Доказывать свою точку зрения и честно слышать чужую.</span></div></div>`},
-  {t:'card', title:'Что такое критическое мышление', html:`<p class="lead">Это <b>не</b> умение всё критиковать. Это умение <b>проверять</b> информацию, прежде чем ей поверить.</p><ol><li><b>Остановись:</b> «А это точно правда?»</li><li><b>Проверь:</b> задай вопросы и поищи доказательства.</li><li><b>Реши:</b> верю, не верю — или пока не знаю.</li></ol><p class="motto">Чек: «Я не знаю» и «Я передумал» — это тоже умные ответы!</p>`},
+  {t:'card', title:'Что такое критическое мышление', html:`<p class="lead">Это <b>не</b> умение всё критиковать. Это умение <b>проверять</b> информацию, прежде чем ей поверить.</p><ol><li><b>Остановись:</b> «А это точно правда?»</li><li><b>Проверь:</b> задай вопросы и поищи доказательства.</li><li><b>Реши:</b> верю, не верю — или пока не знаю.</li></ol><p class="tile"><b>Торопят по телефону?</b> Мошенники специально не дают времени подумать. Ты всегда можешь просто положить трубку — и спокойно проверить, например позвонить маме или папе.</p><p class="motto">Чек: «Я не знаю» и «Я передумал» — это тоже умные ответы!</p>`},
   {t:'card', eyebrow:'Азбука логики', title:'Высказывание: правда или ложь', html:`<p><b>Высказывание</b> — предложение, про которое можно сказать: оно истинно или ложно.</p><div class="tiles"><div class="tile"><span class="tag good">Истинное</span><b>«Байкал — это озеро».</b></div><div class="tile"><span class="tag bad">Ложное</span><b>«2 + 2 = 5».</b><span>Тоже высказывание, просто неверное.</span></div><div class="tile"><span class="tag">Не высказывание</span><b>«Закрой окно!»</b><span>Это просьба.</span></div><div class="tile"><span class="tag">Не высказывание</span><b>«Который час?»</b><span>Это вопрос.</span></div></div>`},
   {t:'practice', title:'Тренировка: высказывания', spec:[['logic', 4, 'st']]},
   {t:'test', title:'Закрепление: тест урока 1'}
@@ -1970,6 +1990,20 @@ const GOALS = {
   u9: ['проверять новость по алгоритму С-Т-О-П', 'пользоваться «боковым чтением»', 'не верить громким заголовкам'],
   u10: ['повторить 7 правил Чека', 'пройти итоговый тест', 'получить сертификат детектива']
 };
+/* Для 7–11 лет — одна главная цель урока: длинные списки младшим скучно читать */
+const GOAL_KID = {
+  u1: 'отличать высказывание от просьбы или вопроса',
+  u2: 'отличать логичный вывод от правдивого',
+  u3: 'отличать факт от мнения',
+  u4: 'задавать 5 вопросов Чека, прежде чем поверить',
+  u5: 'помнить: код из СМС — никому',
+  u6: 'узнавать ловушки в спорах',
+  u7: 'замечать неверные выводы из верных правил',
+  u8: 'помнить: «вместе» — не значит «из-за»',
+  u9: 'проверять новость по алгоритму С-Т-О-П',
+  u10: 'повторить 7 правил Чека'
+};
+function goalsOf(L){ return ageOf() === 'y' && GOAL_KID[L.id] ? [GOAL_KID[L.id]] : (L.goals || []); }
 const OPEN = {
   u1: [
     {id:'o1a', title:'Твой ответ: придумай сам', task:'Придумай три предложения: одно истинное высказывание, одно ложное высказывание и одно предложение, которое вообще не высказывание.', sample:'«Волга длиннее Москвы-реки» — истинное. «У паука шесть ног» — ложное. «Пойдём гулять!» — не высказывание: это предложение погулять, его нельзя назвать истинным или ложным.', checks:['Первое можно проверить, и оно верное', 'Второе можно проверить, и оно неверное', 'Третье — вопрос, просьба или приглашение: про него не скажешь «правда» или «ложь»']},
@@ -2045,7 +2079,7 @@ function sidebar(uid, si){
 function stepBody(L, st, i){
   const done = P.course.done[sk(L.id, i)];
   const head = (eb, t) => `<p class="eyebrow">${eb}</p><h1 class="steptitle">${esc(t)}</h1>`;
-  if (st.t === 'warm') return `${L.goals && L.goals.length ? `<div class="goals"><p class="eyebrow">После урока ты сможешь</p><ul>${L.goals.map(g => `<li>${esc(g)}</li>`).join('')}</ul></div>` : ''}${head('Разминка', st.title)}<p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><p class="motto">${esc(st.a)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать ответ</button></div>`;
+  if (st.t === 'warm') return `${goalsOf(L).length ? `<div class="goals"><p class="eyebrow">После урока ты сможешь</p><ul>${goalsOf(L).map(g => `<li>${esc(g)}</li>`).join('')}</ul></div>` : ''}${head('Разминка', st.title)}<p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><p class="motto">${esc(st.a)}</p></div><div><button class="btn ghost" id="rvbtn" type="button">Показать ответ</button></div>`;
   if (st.t === 'card') return `${head(st.eyebrow || 'Теория', st.title)}${st.hero ? `<div class="hero">${RACCOON_FULL}<div class="prose">${st.html}</div></div>` : `<div class="prose">${st.html}</div>`}`;
   if (st.t === 'comic') return `${head('Комикс', st.title)}<div class="comic">${st.lines.map((l, j) => `<div class="bubble ${l[0]}" data-j="${j}" ${j > 0 && !done ? 'hidden' : ''}><span class="ava">${l[0] === 'r' ? RACCOON : MAGPIE}</span><div><p class="who">${l[0] === 'r' ? 'Чек' : 'Трещотка'}</p><p class="hand">${esc(l[1])}</p></div></div>`).join('')}</div>${done ? '' : '<div><button class="btn ghost" id="more" type="button">Следующая реплика</button></div>'}<p class="note">Можно читать по ролям: один за Трещотку, другой за Чека.</p>`;
   if (st.t === 'case') return `${head('Расследование', st.title)}<div class="msg">${st.ctx}</div><p class="bigq">${esc(st.q)}</p><div class="reveal" id="rv" hidden><div class="prose">${st.reveal}</div></div><div><button class="btn ghost" id="rvbtn" type="button">Показать разбор</button></div>`;
